@@ -45,7 +45,7 @@ export function InfrastructurePreview() {
           <div className="lg:w-1/2 relative min-h-[500px] w-full mt-12 lg:mt-0">
             <div className="absolute top-0 right-0 w-3/4 h-3/4 overflow-hidden border-border bg-white/5 border-2 rounded-sm z-10">
               <Image
-                src="https://images.unsplash.com/photo-1504917595217-d4ce5e3668f9?q=80&w=1200&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1200&auto=format&fit=crop"
                 alt="Corrugated Production Line"
                 fill
                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700"

@@ -9,7 +9,7 @@ export function HeroSection() {
       {/* Note: In a real project, replace src with an actual industrial factory picture without faces */}
       <div className="absolute inset-0 z-0 bg-primary">
         <Image
-          src="https://images.unsplash.com/photo-1504917595217-d4ce5e3668f9?q=80&w=2000&auto=format&fit=crop"
+          src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=2000&auto=format&fit=crop"
           alt="Industrial Manufacturing Facility"
           fill
           className="object-cover opacity-20 grayscale"

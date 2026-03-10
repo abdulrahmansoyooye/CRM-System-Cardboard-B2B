@@ -7,7 +7,7 @@ const MEDIA = [
   {
     id: 1,
     cat: "Factory",
-    url: "https://images.unsplash.com/photo-1504917595217-d4ce5e3668f9?q=80&w=800&auto=format&fit=crop",
+    url: "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 2,
@@ -32,7 +32,7 @@ const MEDIA = [
   {
     id: 6,
     cat: "Products",
-    url: "https://images.unsplash.com/photo-1577705495574-d4b8e2d46e27?q=80&w=800&auto=format&fit=crop",
+    url: "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: 7,

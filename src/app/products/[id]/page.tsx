@@ -19,7 +19,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
   // Using generic mock data instead of finding a real product based on params.id
   const name = "Heavy Duty Master Cartons";
   const image =
-    "https://images.unsplash.com/photo-1577705495574-d4b8e2d46e27?q=80&w=1200&auto=format&fit=crop";
+    "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=1200&auto=format&fit=crop";
 
   return (
     <div className="bg-background">

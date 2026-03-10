@@ -12,14 +12,14 @@ const PRODUCTS = [
     name: "Corrugated Master Cartons",
     category: "Heavy",
     image:
-      "https://images.unsplash.com/photo-1577705495574-d4b8e2d46e27?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: "custom-printed",
     name: "Custom Printed Boxes",
     category: "Printed",
     image:
-      "https://images.unsplash.com/photo-1570530752766-0db8ffa42f53?q=80&w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
   },
   {
     id: "heavy-duty",
