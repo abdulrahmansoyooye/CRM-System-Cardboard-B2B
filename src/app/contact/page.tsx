@@ -1,9 +1,16 @@
+"use client";
+
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MapPin, Phone, Mail, Clock } from "lucide-react";
 
 export default function ContactPage() {
+  const onSubmit = (e) => {
+    e.preventDefault();
+    console.log("form submitted");
+  };
+
   return (
     <div className="bg-background">
       <PageHeader
