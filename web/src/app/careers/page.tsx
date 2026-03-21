@@ -59,7 +59,7 @@ export default function CareersPage() {
             THE FUTURE OF LOGISTICS
           </h2>
           <p className="text-muted-foreground text-xl font-medium leading-relaxed">
-            At CARDBOX, we don't just manufacture boxes; we engineer industrial
+            At CARDBOX, we don&apos;t just manufacture boxes; we engineer industrial
             protection. We are looking for operators, engineers, and sales
             professionals who thrive in high-volume, precision-driven
             environments.
