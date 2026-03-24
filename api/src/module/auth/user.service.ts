@@ -41,8 +41,4 @@ export const loginUser = async (payload: any) => {
 export const UserService = {
     createUser,
     loginUser,
-    getUsers,
-    getUserById,
-    updateUser,
-    deactivateUser
 }
