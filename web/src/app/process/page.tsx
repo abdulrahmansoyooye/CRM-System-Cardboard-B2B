@@ -9,8 +9,7 @@ const PROCESS_STEPS = [
     description:
       "Sourcing premium virgin and recycled kraft linerboards with strict burst-strength parameters. Every roll undergoes initial GSM and moisture testing before entering the facility.",
     machinery: "Moisture & GSM Analytics Lab",
-    image:
-      "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/product_cardboard.png",
   },
   {
     step: "02",
@@ -18,8 +17,7 @@ const PROCESS_STEPS = [
     description:
       "High-speed fluting and gluing of kraft papers. We construct 3-ply, 5-ply, and heavy-duty 7-ply corrugated boards configured exactly to customer weight-bearing requirements.",
     machinery: "BHS Corrugator Line (Speed: 300m/min)",
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/factory.png",
   },
   {
     step: "03",
@@ -27,8 +25,7 @@ const PROCESS_STEPS = [
     description:
       "Applying industrial-grade inks directly onto the boards. Using flexographic printing for maximum clarity, branding compliance, and barcode scannability.",
     machinery: "5-Color Flexographic Printer Slotter",
-    image:
-      "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=800&auto=format&fit=crop",
+    image: "/images/hero.png",
   },
   {
     step: "04",
@@ -36,8 +33,7 @@ const PROCESS_STEPS = [
     description:
       "Automated die-cutting mechanisms shape the boards to match precise 3D engineering designs, ensuring folding accuracy and stacking strength.",
     machinery: "Rotary & Flatbed Auto-Platen Die-Cutters",
-    image:
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    image: "/images/factory.png",
   },
   {
     step: "05",
@@ -45,8 +41,7 @@ const PROCESS_STEPS = [
     description:
       "Samples from every batch undergo Edge Crush Test (ECT) and Bursting Strength tests ensuring performance under compression and load.",
     machinery: "Digital ECT & RCT Compressometers",
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/product_cardboard.png",
   },
   {
     step: "06",
@@ -54,8 +49,7 @@ const PROCESS_STEPS = [
     description:
       "Finished boxes are grouped, wrapped in stretch film, and palletized securely for factory delivery directly into your supply chain.",
     machinery: "Automated Strapping & Palletizing Line",
-    image:
-      "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?q=80&w=800&auto=format&fit=crop",
+    image: "/images/hero.png",
   },
 ];
 

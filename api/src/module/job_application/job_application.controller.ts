@@ -12,16 +12,16 @@ export const getAll = asyncHandler(async (req: Request, res: Response, next: Nex
   res.status(200).json({ success: true, data: docs });
 });
 export const getById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await Job_applicationService.getJob_applicationById(req.params.id);
+  const doc = await Job_applicationService.getJob_applicationById(req.params.id as string);
   res.status(200).json({ success: true, data: doc });
 });
 export const update = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await Job_applicationService.updateJob_application(req.params.id, req.body);
+  const doc = await Job_applicationService.updateJob_application(req.params.id as string, req.body);
   res.status(200).json({ success: true, message: 'Updated successfully', data: doc });
 });
 
 export const deleteDoc = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await Job_applicationService.deleteJob_application(req.params.id);
+  const doc = await Job_applicationService.deleteJob_application(req.params.id as string);
   res.status(200).json({ success: true, message: 'Deleted successfully', data: doc });
 });
 

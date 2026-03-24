@@ -34,7 +34,7 @@ export const getBySlug = asyncHandler(async (req: Request, res: Response, next: 
 });
 
 export const update = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const category = await CategoryService.updateCategory(req.params.id, req.body);
+    const category = await CategoryService.updateCategory(req.params.id as string, req.body);
     sendResponse(res, {
         statusCode: 200,
         success: true,
@@ -44,7 +44,7 @@ export const update = asyncHandler(async (req: Request, res: Response, next: Nex
 });
 
 export const deleteCategory = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const category = await CategoryService.deleteCategory(req.params.id);
+    const category = await CategoryService.deleteCategory(req.params.id as string);
     sendResponse(res, {
         statusCode: 200,
         success: true,
@@ -54,9 +54,9 @@ export const deleteCategory = asyncHandler(async (req: Request, res: Response, n
 });
 
 export const CategoryController = {
-  create,
-  getAll,
-  getBySlug,
-  update,
-  deleteCategory
+    create,
+    getAll,
+    getBySlug,
+    update,
+    deleteCategory
 };

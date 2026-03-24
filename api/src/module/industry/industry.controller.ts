@@ -16,12 +16,12 @@ export const getBySlug = asyncHandler(async (req: Request, res: Response, next: 
   res.status(200).json({ success: true, data: doc });
 });
 export const update = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await IndustryService.updateIndustry(req.params.id, req.body);
+  const doc = await IndustryService.updateIndustry(req.params.id as string, req.body);
   res.status(200).json({ success: true, message: 'Updated successfully', data: doc });
 });
 
 export const deleteDoc = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await IndustryService.deleteIndustry(req.params.id);
+  const doc = await IndustryService.deleteIndustry(req.params.id as string);
   res.status(200).json({ success: true, message: 'Deleted successfully', data: doc });
 });
 

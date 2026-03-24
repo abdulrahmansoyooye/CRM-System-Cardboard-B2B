@@ -11,43 +11,37 @@ const PRODUCTS = [
     id: "corrugated-boxes",
     name: "Corrugated Master Cartons",
     category: "Heavy",
-    image:
-      "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: "custom-printed",
     name: "Custom Printed Boxes",
     category: "Printed",
-    image:
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: "heavy-duty",
     name: "7-Ply Heavy Duty Boxes",
     category: "Heavy",
-    image:
-      "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: "die-cut",
     name: "Specialized Die Cut Cartons",
     category: "Custom",
-    image:
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: "export-packaging",
     name: "Export Packaging",
     category: "Export",
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: "pallet-boxes",
     name: "Bulk Pallet Boxes",
     category: "Heavy",
-    image:
-      "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
 ];
 

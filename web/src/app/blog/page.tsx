@@ -15,8 +15,7 @@ const POSTS = [
       "Learn how Edge Crush Test (ECT) and Bursting Strength (BMT) values determine the structural capacity of your packaging under compression and shipping stress.",
     date: "March 5, 2026",
     category: "Technical Guide",
-    image:
-      "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/product_cardboard.png",
   },
   {
     slug: "5-ply-vs-7-ply-packaging",
@@ -25,8 +24,7 @@ const POSTS = [
       "Choosing the right ply count affects everything from transit safety to cost-per-unit. This breakdown helps procurement teams make data-driven packaging decisions.",
     date: "February 20, 2026",
     category: "Packaging Insights",
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     slug: "export-packaging-compliance",
@@ -36,8 +34,7 @@ const POSTS = [
       "ISPM-15, ISTA protocols, and regional labeling — a comprehensive guide for exporters on how to ensure your corrugated packaging is globally compliant.",
     date: "February 8, 2026",
     category: "Export & Compliance",
-    image:
-      "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?q=80&w=800&auto=format&fit=crop",
+    image: "/images/hero.png",
   },
   {
     slug: "sustainable-packaging-kraft",
@@ -47,8 +44,7 @@ const POSTS = [
       "How switching to 100% recycled kraft liner reduces your carbon footprint without compromising on structural integrity, burst resistance, or print quality.",
     date: "January 25, 2026",
     category: "Sustainability",
-    image:
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    image: "/images/product_cardboard.png",
   },
   {
     slug: "die-cutting-precision",
@@ -57,8 +53,7 @@ const POSTS = [
       "Modern flatbed and rotary die-cutting delivers millimeter-accurate carton shapes, enabling tight product fits, reduced void fill, and improved box-to-product ratios.",
     date: "January 10, 2026",
     category: "Technical Guide",
-    image:
-      "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=800&auto=format&fit=crop",
+    image: "/images/factory.png",
   },
   {
     slug: "pharma-packaging-requirements",
@@ -67,8 +62,7 @@ const POSTS = [
       "Corrugated boxes for pharmaceutical use demand specific ECT ratings, anti-humidity coatings, and regulatory markings. Here is what you need to know.",
     date: "December 28, 2025",
     category: "Industry Focus",
-    image:
-      "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=800&auto=format&fit=crop",
+    image: "/images/hero.png",
   },
 ];
 

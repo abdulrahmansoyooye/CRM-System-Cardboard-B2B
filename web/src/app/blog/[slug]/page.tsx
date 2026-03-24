@@ -15,8 +15,7 @@ export default function BlogDetailPage({ params }: BlogDetailProps) {
       "Understanding ECT vs. Burst Strength in Industrial Corrugated Boxes",
     date: "March 5, 2026",
     category: "Technical Guide",
-    image:
-      "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/product_cardboard.png",
     content: [
       {
         heading: "What Is Edge Crush Test (ECT)?",

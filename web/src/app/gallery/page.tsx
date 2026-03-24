@@ -7,42 +7,42 @@ const MEDIA = [
   {
     id: 1,
     cat: "Factory",
-    url: "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=800&auto=format&fit=crop",
+    url: "/images/factory.png",
   },
   {
     id: 2,
     cat: "Machinery",
-    url: "https://images.unsplash.com/photo-1580674285054-bed31e145f59?q=80&w=800&auto=format&fit=crop",
+    url: "/images/factory.png",
   },
   {
     id: 3,
     cat: "Products",
-    url: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
+    url: "/images/box.png",
   },
   {
     id: 4,
     cat: "Factory",
-    url: "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?q=80&w=800&auto=format&fit=crop",
+    url: "/images/factory.png",
   },
   {
     id: 5,
     cat: "Machinery",
-    url: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    url: "/images/factory.png",
   },
   {
     id: 6,
     cat: "Products",
-    url: "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
+    url: "/images/box.png",
   },
   {
     id: 7,
     cat: "Events",
-    url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
+    url: "/images/hero.png",
   },
   {
     id: 8,
     cat: "Factory",
-    url: "https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=800&auto=format&fit=crop",
+    url: "/images/factory.png",
   },
 ];
 

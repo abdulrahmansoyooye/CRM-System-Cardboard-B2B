@@ -34,7 +34,7 @@ const getBySlug = asyncHandler(async (req, res) => {
 });
 
 const update = asyncHandler(async (req, res) => {
-  const result = await ProductService.updateProduct(req.params.id, req.body);
+  const result = await ProductService.updateProduct(req.params.id as string, req.body);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -44,7 +44,7 @@ const update = asyncHandler(async (req, res) => {
 });
 
 const deleteProduct = asyncHandler(async (req, res) => {
-  await ProductService.deleteProduct(req.params.id);
+  await ProductService.deleteProduct(req.params.id as string);
   sendResponse(res, {
     statusCode: 200,
     success: true,

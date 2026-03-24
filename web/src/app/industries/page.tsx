@@ -18,7 +18,7 @@ export default function IndustriesPage() {
           {/* Image */}
           <div className="relative aspect-[4/3] w-full bg-secondary border border-border">
             <Image
-              src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1200&auto=format&fit=crop"
+              src="/images/hero.png"
               alt="FMCG Warehouse Supply Chain"
               fill
               className="object-cover grayscale"

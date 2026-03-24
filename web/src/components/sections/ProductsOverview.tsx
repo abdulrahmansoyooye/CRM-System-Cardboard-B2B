@@ -8,29 +8,25 @@ const PRODUCTS = [
     id: 1,
     name: "Heavy Duty Master Cartons",
     desc: "Multi-wall structured for industrial exports.",
-    image:
-      "https://images.unsplash.com/photo-1605600659873-d808a1d14f48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: 2,
     name: "Custom Printed Boxes",
     desc: "Branded packages with flexo printing technology.",
-    image:
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: 3,
     name: "Die-Cut Corrugated",
     desc: "Precision shapes for exact product fitting.",
-    image:
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
   {
     id: 4,
     name: "Export Packaging",
     desc: "Moisture-resistant boards for shipping logistics.",
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/box.png",
   },
 ];
 

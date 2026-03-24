@@ -23,9 +23,9 @@ export default function LoginPage() {
         password,
         redirect: false,
       });
-
+     console.log(result)
       if (result?.error) {
-        setError("Invalid email or password. Please try again.");
+        setError("An Error Occurred. Please try again.");
       } else {
         router.push("/dashboard");
         router.refresh();

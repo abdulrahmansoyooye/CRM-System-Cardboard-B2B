@@ -10,7 +10,7 @@ export function CompanyOverview() {
           <div className="relative group">
             <div className="aspect-[4/3] w-full overflow-hidden bg-primary/5 rounded-sm flex items-center justify-center">
               <Image
-                src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1200&auto=format&fit=crop"
+                src="/images/company.png"
                 alt="Corrugated Box Manufacturing Plant"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"

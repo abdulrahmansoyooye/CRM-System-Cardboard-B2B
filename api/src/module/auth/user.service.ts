@@ -38,7 +38,47 @@ export const loginUser = async (payload: any) => {
     return { user: userObj, token };
 }
 
+export const getUsers = async () => {
+    const users = await User.find().select('-password')
+    return users
+}
+
+export const getUserById = async (id: string) => {
+    const user = await User.findById(id).select('-password')
+    if (!user) {
+        throw new AppError('User not found', 404)
+    }
+    return user
+}
+
+export const updateUser = async (id: string, data: any) => {
+    const user = await User.findByIdAndUpdate(id, data, { new: true, runValidators: true }).select('-password')
+    if (!user) {
+        throw new AppError('User not found', 404)
+    }
+    return user
+}
+
+export const deactivateUser = async (id: string) => {
+    const user = await User.findByIdAndUpdate(id, { isActive: false }, { new: true, runValidators: true }).select('-password')
+    if (!user) {
+        throw new AppError('User not found', 404)
+    }
+    return user
+}
+
+export const logoutUser = async () => {
+    // Logic for blacklist token or removing refresh token from DB if needed.
+    // For now returning success as JWT is stateless by default.
+    return { success: true };
+}
+
 export const UserService = {
     createUser,
     loginUser,
+    getUsers,
+    getUserById,
+    updateUser,
+    deactivateUser,
+    logoutUser
 }

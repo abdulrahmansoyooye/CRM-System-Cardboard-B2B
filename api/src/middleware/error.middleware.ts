@@ -1,8 +1,14 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { ZodError } from 'zod';
 import { AppError } from '../core/errors/AppError';
+import logger from '../utils/logger';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
+  // Log the error
+  logger.error(`${err.message} - ${req.method} ${req.originalUrl} - ${req.ip}`, {
+    stack: err?.stack,
+  });
+
   let statusCode = err.statusCode || 500;
   let message = err.message || 'Internal Server Error';
   let errorSources = [

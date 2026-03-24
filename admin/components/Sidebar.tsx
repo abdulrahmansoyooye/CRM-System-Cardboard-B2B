@@ -50,9 +50,27 @@ const NAV = [
   },
 ];
 
+import { signOut, useSession } from "next-auth/react";
+import { api } from "@/lib/api";
+
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
+  const { data: session } = useSession();
   const [role, setRole] = useState<"admin" | "editor">("admin");
+
+  const handleLogout = async () => {
+    try {
+      // Notify backend if needed (though JWT is stateless, good for blacklisting or logs)
+      await api("/auth/logout", { method: "POST" });
+    } catch (err) {
+      console.error("Backend logout failed", err);
+    } finally {
+      // Clear frontend session and redirect to login
+      await signOut({ callbackUrl: "/login" });
+    }
+  };
+
+  const userInitial = session?.user?.name?.charAt(0) || session?.user?.email?.charAt(0) || "U";
 
   return (
     <aside className="sidebar-container relative">
@@ -77,7 +95,6 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         </div>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 px-4 space-y-7 overflow-y-auto pb-6">
         {NAV.map((section) => (
           <div key={section.label}>
@@ -109,7 +126,6 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         ))}
       </nav>
 
-      {/* Role Switcher & User */}
       <div className="p-4 border-t border-slate-100 bg-slate-50/50 shrink-0">
         <div className="flex flex-col gap-2">
           <button
@@ -130,13 +146,17 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
 
           <div className="flex items-center gap-3 px-3 py-2.5">
             <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-[10px] font-black shadow-sm shrink-0">
-              SA
+              {userInitial.toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-slate-900 truncate">Super Admin</p>
-              <p className="text-[10px] font-semibold text-slate-400 truncate">admin@cardbox.io</p>
+              <p className="text-xs font-bold text-slate-900 truncate">{session?.user?.name || "User"}</p>
+              <p className="text-[10px] font-semibold text-slate-400 truncate">{session?.user?.email || "No email"}</p>
             </div>
-            <button className="text-slate-300 hover:text-rose-500 transition-colors p-1.5 rounded-lg hover:bg-rose-50">
+            <button 
+              onClick={handleLogout}
+              className="text-slate-300 hover:text-rose-500 transition-colors p-1.5 rounded-lg hover:bg-rose-50"
+              title="Logout"
+            >
               <LogOut className="w-3.5 h-3.5" />
             </button>
           </div>

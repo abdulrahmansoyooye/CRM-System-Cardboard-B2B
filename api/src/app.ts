@@ -3,9 +3,13 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import globalErrorHandler from './middleware/error.middleware';
+import morganMiddleware from './middleware/morgan.middleware';
 import router from './routes';
 
 const app: Application = express();
+
+// Request logging
+app.use(morganMiddleware);
 
 // Secure headers
 app.use(helmet());

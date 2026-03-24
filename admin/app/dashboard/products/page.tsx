@@ -1,9 +1,11 @@
+'use client'
 import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import ConfirmModal from "@/components/ConfirmModal";
 import Skeleton from "@/components/Skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/services/product.service";
+import { Download, Package } from "lucide-react";
 
 type ProductStatus = "Active" | "Draft" | "Discontinued";
 type ProductCategory = "Heavy" | "Printed" | "Custom" | "Export" | "Pharma" | "Retail";

@@ -163,7 +163,7 @@ export default function CareersPage() {
           {/* Culture Image */}
           <div className="relative aspect-square md:aspect-[4/3] lg:aspect-auto h-full min-h-[500px] w-full bg-secondary rounded-sm overflow-hidden border border-border">
             <Image
-              src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?q=80&w=1200&auto=format&fit=crop"
+              src="/images/factory.png"
               alt="Factory Machinery"
               fill
               className="object-cover grayscale"

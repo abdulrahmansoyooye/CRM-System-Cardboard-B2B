@@ -5,7 +5,7 @@ export function CTABanner() {
   return (
     <section className="relative py-24 w-full bg-primary overflow-hidden flex flex-col justify-center items-center text-center px-4">
       {/* Background Graphic / Texture */}
-      <div className="absolute inset-0 z-0 bg-[url('https://images.unsplash.com/photo-1587202372634-32705e3bf49c?auto=format&fit=crop&q=80')] bg-cover bg-center bg-no-repeat opacity-5 mix-blend-overlay grayscale" />
+      <div className="absolute inset-0 z-0 bg-[url('/images/product_cardboard.png')] bg-cover bg-center bg-no-repeat opacity-5 mix-blend-overlay grayscale" />
 
       {/* Orange Accent Lines */}
       <div className="absolute top-0 w-full h-2 bg-accent" />

@@ -2,6 +2,7 @@ import { Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
 import config from './config';
+import logger from './utils/logger';
 
 const PORT = config.port;
 
@@ -14,14 +15,14 @@ async function bootstrap() {
     }
 
     await mongoose.connect(config.database_url as string);
-    console.log('📦 Database connected successfully');
+    logger.info('📦 Database connected successfully');
 
 
     server = app.listen(PORT, () => {
-      console.log(`🚀 Server is running on port ${PORT}`);
+      logger.info(`🚀 Server is running on port ${PORT}`);
     });
   } catch (err) {
-    console.error('❌ Failed to start server:', err);
+    logger.error('❌ Failed to start server:', err);
     process.exit(1);
   }
 }
@@ -30,7 +31,7 @@ bootstrap();
 
 // Handle unhandled rejections and exceptions
 process.on('unhandledRejection', (err) => {
-  console.log(`unhandledRejection is detected , shutting down ...`, err);
+  logger.error(`unhandledRejection is detected , shutting down ...`, err);
   if (server) {
     server.close(() => {
       process.exit(1);
@@ -39,7 +40,7 @@ process.on('unhandledRejection', (err) => {
   process.exit(1);
 });
 
-process.on('uncaughtException', () => {
-  console.log(`uncaughtException is detected , shutting down ...`);
+process.on('uncaughtException', (err) => {
+  logger.error(`uncaughtException is detected , shutting down ...`, err);
   process.exit(1);
 });

@@ -9,8 +9,7 @@ const UPDATES = [
     title: "CARDBOX Acquires New 5-Color Flexo Printer",
     date: "March 12, 2026",
     category: "Infrastructure",
-    image:
-      "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?q=80&w=800&auto=format&fit=crop",
+    image: "/images/factory.png",
     slug: "new-flexo-printer",
   },
   {
@@ -18,8 +17,7 @@ const UPDATES = [
     title: "Sustainability: Shifting to 100% Recycled Kraft Liner",
     date: "February 28, 2026",
     category: "Corporate Update",
-    image:
-      "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=800&auto=format&fit=crop",
+    image: "/images/product_cardboard.png",
     slug: "sustainability-recycled-kraft",
   },
   {
@@ -27,8 +25,7 @@ const UPDATES = [
     title: "International Export Logistics Symposium 2026",
     date: "February 15, 2026",
     category: "Event",
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=800&auto=format&fit=crop",
+    image: "/images/hero.png",
     slug: "export-symposium-2026",
   },
 ];
