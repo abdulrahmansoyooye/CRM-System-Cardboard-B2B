@@ -17,12 +17,12 @@ export const createUser = async (data:any) =>{
 export const loginUser = async (payload: any) => {
     const user = await User.findOne({ email: payload.email }).select('+password');
     if (!user) {
-        throw new AppError('Incorrect email or password', 401);
+        throw new AppError('Email Not Found', 401);
     }
 
     const isMatched = await (user as any).isPasswordMatched(payload.password);
     if (!isMatched) {
-        throw new AppError('Incorrect email or password', 401);
+        throw new AppError('Incorrect Password', 401);
     }
 
     if (!user.isActive) {
