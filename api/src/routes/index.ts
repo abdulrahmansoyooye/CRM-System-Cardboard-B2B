@@ -1,14 +1,30 @@
 import { Router } from 'express';
 import { ProductRoutes } from '../module/product/product.route';
+import { UserRoutes } from '../module/auth/user.routes';
+import { CategoryRoutes } from '../module/category/category.route';
+import { BlogRoutes } from '../module/blog/blog.route';
+import { IndustryRoutes } from '../module/industry/industry.route';
+import { JobRoutes } from '../module/job/job.route';
+import { Job_applicationRoutes } from '../module/job_application/job_application.route';
+import { InquiryRoutes } from '../module/inquiry/inquiry.route';
+import { QuoteRoutes } from '../module/quote/quote.route';
+import { SettingRoutes } from '../module/setting/setting.route';
 
 const router = Router();
 
+// To respect exact paths defined in the domain modules (e.g. GET /blogs, POST /admin/blogs),
+// we mount all modular routes using `/`
 const moduleRoutes = [
-  {
-    path: '/products',
-    route: ProductRoutes,
-  },
-  
+  { path: '/', route: ProductRoutes },
+  { path: '/auth', route: UserRoutes },
+  { path: "/", route: CategoryRoutes },
+  { path: '/', route: BlogRoutes },
+  { path: '/', route: IndustryRoutes },
+  { path: '/', route: JobRoutes },
+  { path: '/', route: Job_applicationRoutes },
+  { path: '/', route: InquiryRoutes },
+  { path: '/', route: QuoteRoutes },
+  { path: '/', route: SettingRoutes }
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

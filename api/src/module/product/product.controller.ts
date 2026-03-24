@@ -23,8 +23,8 @@ const getAll = asyncHandler(async (req, res) => {
   });
 });
 
-const getById = asyncHandler(async (req, res) => {
-  const result = await ProductService.getProductById(req.params.id);
+const getBySlug = asyncHandler(async (req, res) => {
+  const result = await ProductService.getProductBySlug(req.params.slug);
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -56,7 +56,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 export const ProductController = {
   create,
   getAll,
-  getById,
+  getBySlug,
   update,
   deleteProduct,
-};
+};

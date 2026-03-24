@@ -4,6 +4,8 @@ import { Plus, Search, Edit2, Trash2, Eye, Star, Filter, Package, ArrowUpDown, D
 import { useState } from "react";
 import Modal from "@/components/Modal";
 import ConfirmModal from "@/components/ConfirmModal";
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "@/services/product.service";
 
 type ProductStatus = "Active" | "Draft" | "Discontinued";
 type ProductCategory = "Heavy" | "Printed" | "Custom" | "Export" | "Pharma" | "Retail";
@@ -21,7 +23,7 @@ interface Product {
   materials?: string;
 }
 
-const INITIAL_PRODUCTS: Product[] = [
+let INITIAL_PRODUCTS: Product[] = [
   { id: 1, name: "Heavy Duty Master Cartons", category: "Heavy", ply: "7-Ply", moq: "5,000", status: "Active", featured: true, price: "$12.50", description: "Industrial-grade master carton for heavy goods.", materials: "Virgin Kraft board" },
   { id: 2, name: "Custom Printed Boxes", category: "Printed", ply: "5-Ply", moq: "2,000", status: "Active", featured: false, price: "$8.40", description: "Full-color flexographic printing." },
   { id: 3, name: "Die-Cut Corrugated", category: "Custom", ply: "5-Ply", moq: "1,500", status: "Active", featured: false, price: "$15.00" },
@@ -84,6 +86,12 @@ export default function ProductsPage() {
 
   const handleDelete = (id: number) => { setProducts((prev) => prev.filter((p) => p.id !== id)); setViewProduct(null); };
   const toggleFeatured = (id: number) => setProducts((prev) => prev.map((p) => p.id === id ? { ...p, featured: !p.featured } : p));
+
+const {data, isloading,error} =  useQuery({
+    queryKey:["products"],
+    queryFn: getProducts  ,
+  })
+   INITIAL_PRODUCTS = data
 
   const FormContent = () => (
     <div className="space-y-5">
@@ -171,7 +179,7 @@ export default function ProductsPage() {
               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
               <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
             </div>
-            <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm", s.bg, s.color)}>
+            <div className={"w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm" + s.bg + s.color}>
               <s.icon className="w-5 h-5" />
             </div>
           </div>

@@ -1,7 +1,9 @@
+import { getProducts } from "@/services/product.service";
+import { useQuery } from "@tanstack/react-query";
 import { Plus, Search, Edit2, Trash2, Eye, Star, Filter } from "lucide-react";
 import Link from "next/link";
 
-const PRODUCTS = [
+let PRODUCTS = [
   { id: 1, name: "Heavy Duty Master Cartons", category: "Heavy", ply: "7-Ply", moq: "5,000", status: "Active",   featured: true  },
   { id: 2, name: "Custom Printed Boxes",       category: "Printed", ply: "5-Ply", moq: "2,000", status: "Active",   featured: false },
   { id: 3, name: "Die-Cut Corrugated",         category: "Custom",  ply: "5-Ply", moq: "1,500", status: "Active",   featured: false },
@@ -11,6 +13,9 @@ const PRODUCTS = [
 ];
 
 export default function ProductsPage() {
+
+  
+  
   return (
     <div className="space-y-6">
       {/* Header */}

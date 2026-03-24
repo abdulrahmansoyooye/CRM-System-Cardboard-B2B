@@ -7,24 +7,24 @@ import authMiddleware from '../../middleware/auth.middleware';
 const router = express.Router();
 
 router.post(
-  '/',
-  authMiddleware('admin'),
+  '/admin/products',
+  authMiddleware(['admin']),
   validateRequest(ProductValidation.createProductSchema),
   ProductController.create
 );
 
-router.get('/', ProductController.getAll);
+router.get('/products',authMiddleware(['admin']), ProductController.getAll);
 
-router.get('/:id', ProductController.getById);
+router.get('/products/slug',authMiddleware(['admin']), ProductController.getBySlug);
 
 router.patch(
-  '/:id',
-  authMiddleware('admin'),
+  '/admin/products/:id',
+  authMiddleware(['admin']),
   validateRequest(ProductValidation.updateProductSchema),
   ProductController.update
 );
 
-router.delete('/:id', authMiddleware('admin'), ProductController.deleteProduct);
+router.delete('/admin/products/:id', authMiddleware(['admin']), ProductController.deleteProduct);
 
 export const ProductRoutes = router;
 

@@ -3,8 +3,8 @@ import { createUser, deactivateUser, getUserById, getUsers, updateUser } from ".
 import { NextFunction, Request, Response } from "express"
 
 export const create = asyncHandler(async (req:Request, res:Response, next:NextFunction) =>{
-    const user = await createUser(req.body)
-    res.status(201).json({ success: true, message:"User created successfully",data: user });
+    const { user, token } =  await createUser(req.body)
+    res.status(201).json({ success: true, message:"User created successfully", data: user, token });
 })
 
 export const getAll = asyncHandler(async (req:Request, res:Response, next:NextFunction) =>{

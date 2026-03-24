@@ -1,5 +1,6 @@
 
 import { AppError } from "../../core/errors/AppError";
+import { generateToken } from "../../utils/jwt";
 import { User } from "./user.model";
 
 export const createUser = async (data:any) =>{
@@ -7,8 +8,10 @@ export const createUser = async (data:any) =>{
     if(exists){
         throw new AppError('User already exists', 400)
     }
+    
     const user = await User.create(data)
-    return user
+    const token  = generateToken({id: user._id,email:user.email, role:user.role})
+    return {user,token} 
 }
 
 export const getUsers =  async () =>{

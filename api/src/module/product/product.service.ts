@@ -81,8 +81,8 @@ const getAllProducts = async (query: Record<string, unknown>) => {
   };
 };
 
-const getProductById = async (id: string) => {
-  const result = await Product.findById(id).populate('categoryId', 'name');
+const getProductBySlug = async (slug: string) => {
+  const result = await Product.findOne({slug}).populate('categoryId', 'name');
   if (!result) {
     throw new AppError('Product not found', 404);
   }
@@ -116,7 +116,7 @@ const deleteProduct = async (id: string) => {
 export const ProductService = {
   createProduct,
   getAllProducts,
-  getProductById,
+  getProductBySlug,
   updateProduct,
   deleteProduct,
-};
+};
