@@ -1,9 +1,7 @@
-"use client";
-
-import { Plus, Search, Edit2, Trash2, Eye, Star, Filter, Package, ArrowUpDown, Download } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import ConfirmModal from "@/components/ConfirmModal";
+import Skeleton from "@/components/Skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/services/product.service";
 
@@ -12,6 +10,7 @@ type ProductCategory = "Heavy" | "Printed" | "Custom" | "Export" | "Pharma" | "R
 
 interface Product {
   id: number;
+  _id?: string;
   name: string;
   category: ProductCategory;
   ply: string;
@@ -23,16 +22,6 @@ interface Product {
   materials?: string;
 }
 
-let INITIAL_PRODUCTS: Product[] = [
-  { id: 1, name: "Heavy Duty Master Cartons", category: "Heavy", ply: "7-Ply", moq: "5,000", status: "Active", featured: true, price: "$12.50", description: "Industrial-grade master carton for heavy goods.", materials: "Virgin Kraft board" },
-  { id: 2, name: "Custom Printed Boxes", category: "Printed", ply: "5-Ply", moq: "2,000", status: "Active", featured: false, price: "$8.40", description: "Full-color flexographic printing." },
-  { id: 3, name: "Die-Cut Corrugated", category: "Custom", ply: "5-Ply", moq: "1,500", status: "Active", featured: false, price: "$15.00" },
-  { id: 4, name: "Export Packaging Grade A", category: "Export", ply: "7-Ply", moq: "10,000", status: "Active", featured: true, price: "$11.20", description: "ISPM-15 compliant export-grade packaging." },
-  { id: 5, name: "Bulk Pallet Boxes", category: "Heavy", ply: "7-Ply", moq: "3,000", status: "Draft", featured: false, price: "$28.00" },
-  { id: 6, name: "Corrugated Master Cartons", category: "Heavy", ply: "3-Ply", moq: "5,000", status: "Active", featured: false, price: "$5.90" },
-  { id: 7, name: "Pharma-Grade White Box", category: "Pharma", ply: "5-Ply", moq: "1,000", status: "Active", featured: false, price: "$18.00" },
-];
-
 const CATEGORIES: ProductCategory[] = ["Heavy", "Printed", "Custom", "Export", "Pharma", "Retail"];
 const PLY_OPTIONS = ["3-Ply", "5-Ply", "7-Ply", "9-Ply"];
 const statusBadge: Record<ProductStatus, string> = { Active: "badge-success", Draft: "badge-neutral", Discontinued: "badge-error" };
@@ -40,7 +29,12 @@ const statusBadge: Record<ProductStatus, string> = { Active: "badge-success", Dr
 const emptyForm = { name: "", category: "Heavy" as ProductCategory, ply: "5-Ply", moq: "", price: "", status: "Active" as ProductStatus, featured: false, description: "", materials: "" };
 
 export default function ProductsPage() {
-  const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
+  const { data: apiData, isLoading, error } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
+
+  const [products, setProducts] = useState<Product[]>([]);
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("All");
   const [filterStatus, setFilterStatus] = useState("All");
@@ -50,19 +44,35 @@ export default function ProductsPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<number | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<number | string | null>(null);
   const [form, setForm] = useState(emptyForm);
+
+  // Sync state with fetched data
+  useEffect(() => {
+    if (apiData?.success && Array.isArray(apiData.data)) {
+        // Map backend data to local structure if necessary, though ideally they should match
+        const mappedData = apiData.data.map((p: any) => ({
+            id: p._id, // Using _id from mongo as id
+            ...p
+        }));
+        setProducts(mappedData);
+    }
+  }, [apiData]);
 
   const sorted = [...products]
     .filter((p) => {
-      const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.category.toLowerCase().includes(search.toLowerCase());
+      const matchSearch = p.name?.toLowerCase().includes(search.toLowerCase()) || p.category?.toLowerCase().includes(search.toLowerCase());
       const matchCat = filterCat === "All" || p.category === filterCat;
       const matchStatus = filterStatus === "All" || p.status === filterStatus;
       return matchSearch && matchCat && matchStatus;
     })
     .sort((a, b) => {
-      if (sortField === "price") return sortAsc ? parseFloat(a.price.replace("$", "")) - parseFloat(b.price.replace("$", "")) : parseFloat(b.price.replace("$", "")) - parseFloat(a.price.replace("$", ""));
-      return sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+      if (sortField === "price") {
+          const valA = parseFloat(a.price?.toString().replace("$", "") || "0");
+          const valB = parseFloat(b.price?.toString().replace("$", "") || "0");
+          return sortAsc ? valA - valB : valB - valA;
+      }
+      return sortAsc ? a.name?.localeCompare(b.name) : b.name?.localeCompare(a.name);
     });
 
   const cycleSort = (field: typeof sortField) => {
@@ -75,23 +85,17 @@ export default function ProductsPage() {
 
   const handleSave = () => {
     if (editProduct) {
-      setProducts((prev) => prev.map((p) => p.id === editProduct.id ? { ...p, ...form } : p));
+      setProducts((prev) => prev.map((p) => (p.id === editProduct.id || p._id === editProduct._id) ? { ...p, ...form } : p));
       setEditProduct(null);
     } else {
-      const newId = Math.max(...products.map((p) => p.id)) + 1;
+      const newId = Date.now(); // Temporary ID for demo
       setProducts((prev) => [...prev, { id: newId, ...form }]);
       setAddOpen(false);
     }
   };
 
-  const handleDelete = (id: number) => { setProducts((prev) => prev.filter((p) => p.id !== id)); setViewProduct(null); };
-  const toggleFeatured = (id: number) => setProducts((prev) => prev.map((p) => p.id === id ? { ...p, featured: !p.featured } : p));
-
-const {data, isloading,error} =  useQuery({
-    queryKey:["products"],
-    queryFn: getProducts  ,
-  })
-   INITIAL_PRODUCTS = data
+  const handleDelete = (id: number | string) => { setProducts((prev) => prev.filter((p) => p.id !== id && p._id !== id)); setViewProduct(null); };
+  const toggleFeatured = (id: number | string) => setProducts((prev) => prev.map((p) => (p.id === id || p._id === id) ? { ...p, featured: !p.featured } : p));
 
   const FormContent = () => (
     <div className="space-y-5">
@@ -134,7 +138,7 @@ const {data, isloading,error} =  useQuery({
           <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Status</label>
           <div className="flex gap-2">
             {(["Active", "Draft", "Discontinued"] as ProductStatus[]).map((s) => (
-              <button key={s} onClick={() => setForm({ ...form, status: s })} className={`px-4 py-2 rounded-xl text-xs font-black border transition-all ${form.status === s ? "bg-slate-950 text-white border-slate-950" : "border-slate-200 text-slate-500 hover:border-slate-300"}`}>{s}</button>
+              <button key={s} type="button" onClick={() => setForm({ ...form, status: s })} className={`px-4 py-2 rounded-xl text-xs font-black border transition-all ${form.status === s ? "bg-slate-950 text-white border-slate-950" : "border-slate-200 text-slate-500 hover:border-slate-300"}`}>{s}</button>
             ))}
           </div>
         </div>
@@ -150,6 +154,18 @@ const {data, isloading,error} =  useQuery({
       </div>
     </div>
   );
+
+  if (error) {
+    return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+            <div className="bg-rose-50 text-rose-500 p-6 rounded-3xl border border-rose-100 text-center max-w-md">
+                <h2 className="text-xl font-black mb-2">Sync Error</h2>
+                <p className="text-sm font-medium opacity-80">Failed to fetch the product catalog. Please ensure the backend server is running.</p>
+                <button onClick={() => window.location.reload()} className="mt-6 px-6 py-2 bg-rose-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest">Retry Connection</button>
+            </div>
+        </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-enter">
@@ -168,22 +184,26 @@ const {data, isloading,error} =  useQuery({
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: "Active SKUs", value: products.filter(p => p.status === "Active").length, icon: Package, color: "text-brand-600", bg: "bg-brand-50" },
-          { label: "Featured", value: products.filter(p => p.featured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
-          { label: "Drafts", value: products.filter(p => p.status === "Draft").length, icon: Edit2, color: "text-slate-400", bg: "bg-slate-50" },
-          { label: "Average Price", value: "$12.40", icon: ArrowUpDown, color: "text-emerald-600", bg: "bg-emerald-50" },
-        ].map((s) => (
-          <div key={s.label} className="premium-card p-6 flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
-              <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
+        {isLoading ? (
+            Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32" />)
+        ) : (
+          [
+            { label: "Active SKUs", value: products.filter(p => p.status === "Active").length, icon: Package, color: "text-brand-600", bg: "bg-brand-50" },
+            { label: "Featured", value: products.filter(p => p.featured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+            { label: "Drafts", value: products.filter(p => p.status === "Draft").length, icon: Edit2, color: "text-slate-400", bg: "bg-slate-50" },
+            { label: "Average Price", value: "$12.40", icon: ArrowUpDown, color: "text-emerald-600", bg: "bg-emerald-50" },
+          ].map((s) => (
+            <div key={s.label} className="premium-card p-6 flex items-center justify-between">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
+                <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
+              </div>
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${s.bg} ${s.color}`}>
+                <s.icon className="w-5 h-5" />
+              </div>
             </div>
-            <div className={"w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm" + s.bg + s.color}>
-              <s.icon className="w-5 h-5" />
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
       {/* Filters */}
@@ -224,55 +244,65 @@ const {data, isloading,error} =  useQuery({
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
-              {sorted.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => setViewProduct(p)}>
-                  <td className="px-7 py-5">
-                    <div className="flex items-center gap-4">
-                      <div className="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-accent-50 group-hover:text-accent-500 transition-colors shrink-0">
-                        <Package className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-slate-900 group-hover:text-accent-500 transition-colors">{p.name}</span>
-                          {p.featured && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
+              {isLoading ? (
+                  Array(5).fill(0).map((_, i) => (
+                    <tr key={i}>
+                        <td colSpan={5} className="px-7 py-5"><Skeleton className="h-12 w-full" /></td>
+                    </tr>
+                  ))
+              ) : (
+                sorted.map((p) => (
+                  <tr key={p.id || p._id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => setViewProduct(p)}>
+                    <td className="px-7 py-5">
+                      <div className="flex items-center gap-4">
+                        <div className="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-accent-50 group-hover:text-accent-500 transition-colors shrink-0">
+                          <Package className="w-5 h-5" />
                         </div>
-                        <div className="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-0.5">{p.moq} MOQ • SKU-00{p.id}</div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-slate-900 group-hover:text-accent-500 transition-colors">{p.name}</span>
+                            {p.featured && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
+                          </div>
+                          <div className="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-0.5">{p.moq} MOQ • SKU-ID: {p.id || p._id}</div>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-7 py-5">
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100/50">{p.category}</span>
-                      <span className="text-xs font-bold text-slate-400 font-mono">{p.ply}</span>
-                    </div>
-                  </td>
-                  <td className="px-7 py-5">
-                    <span className={`status-badge ${statusBadge[p.status]}`}>{p.status}</span>
-                  </td>
-                  <td className="px-7 py-5">
-                    <span className="text-sm font-black text-slate-900">{p.price}</span>
-                  </td>
-                  <td className="px-7 py-5 text-right" onClick={(e) => e.stopPropagation()}>
-                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={(e) => { e.stopPropagation(); setViewProduct(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Eye className="w-4 h-4" /></button>
-                      <button onClick={(e) => { e.stopPropagation(); openEdit(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Edit2 className="w-4 h-4" /></button>
-                      <button onClick={(e) => { e.stopPropagation(); toggleFeatured(p.id); }} className="p-2.5 rounded-xl hover:bg-amber-50 text-slate-400 hover:text-amber-400 transition-colors"><Star className={`w-4 h-4 ${p.featured ? "fill-amber-400 text-amber-400" : ""}`} /></button>
-                      <button onClick={(e) => { e.stopPropagation(); setDeleteTarget(p.id); }} className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-7 py-5">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100/50">{p.category}</span>
+                        <span className="text-xs font-bold text-slate-400 font-mono">{p.ply}</span>
+                      </div>
+                    </td>
+                    <td className="px-7 py-5">
+                      <span className={`status-badge ${statusBadge[p.status] || 'badge-neutral'}`}>{p.status}</span>
+                    </td>
+                    <td className="px-7 py-5">
+                      <span className="text-sm font-black text-slate-900">{typeof p.price === 'string' && !p.price.startsWith('$') ? `$${p.price}` : p.price}</span>
+                    </td>
+                    <td className="px-7 py-5 text-right" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onClick={(e) => { e.stopPropagation(); setViewProduct(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Eye className="w-4 h-4" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openEdit(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Edit2 className="w-4 h-4" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); toggleFeatured(p.id || p._id!); }} className="p-2.5 rounded-xl hover:bg-amber-50 text-slate-400 hover:text-amber-400 transition-colors"><Star className={`w-4 h-4 ${p.featured ? "fill-amber-400 text-amber-400" : ""}`} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); setDeleteTarget(p.id || p._id!); }} className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
-        <div className="px-7 py-5 bg-slate-50/30 border-t border-slate-100 flex items-center justify-between">
-          <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Showing {sorted.length} of {products.length} products</p>
-          <div className="flex items-center gap-2">
-            <button className="btn-secondary py-2 px-4 shadow-none text-[10px]">Previous</button>
-            <button className="btn-secondary py-2 px-4 shadow-none text-[10px] bg-slate-900 text-white border-slate-900">1</button>
-            <button className="btn-secondary py-2 px-4 shadow-none text-[10px]">Next</button>
-          </div>
-        </div>
+        {!isLoading && (
+            <div className="px-7 py-5 bg-slate-50/30 border-t border-slate-100 flex items-center justify-between">
+            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Showing {sorted.length} of {products.length} products</p>
+            <div className="flex items-center gap-2">
+                <button className="btn-secondary py-2 px-4 shadow-none text-[10px]">Previous</button>
+                <button className="btn-secondary py-2 px-4 shadow-none text-[10px] bg-slate-900 text-white border-slate-900">1</button>
+                <button className="btn-secondary py-2 px-4 shadow-none text-[10px]">Next</button>
+            </div>
+            </div>
+        )}
       </div>
 
       {/* Add Modal */}
@@ -286,10 +316,10 @@ const {data, isloading,error} =  useQuery({
       ><FormContent /></Modal>
 
       {/* View Modal */}
-      <Modal isOpen={!!viewProduct} onClose={() => setViewProduct(null)} title={viewProduct?.name ?? ""} subtitle={`SKU-00${viewProduct?.id} • ${viewProduct?.category} • ${viewProduct?.ply}`} size="lg"
+      <Modal isOpen={!!viewProduct} onClose={() => setViewProduct(null)} title={viewProduct?.name ?? ""} subtitle={`ID: ${viewProduct?.id || viewProduct?._id} • ${viewProduct?.category} • ${viewProduct?.ply}`} size="lg"
         footer={
           <>
-            <button onClick={() => { setDeleteTarget(viewProduct!.id); setViewProduct(null); }} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold text-rose-500 hover:bg-rose-50 transition-all mr-auto"><Trash2 className="w-4 h-4" /> Delete</button>
+            <button onClick={() => { setDeleteTarget(viewProduct!.id || viewProduct!._id!); setViewProduct(null); }} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold text-rose-500 hover:bg-rose-50 transition-all mr-auto"><Trash2 className="w-4 h-4" /> Delete</button>
             <button onClick={() => setViewProduct(null)} className="btn-secondary py-2.5">Close</button>
             <button onClick={() => { openEdit(viewProduct!); setViewProduct(null); }} className="btn-primary py-2.5"><Edit2 className="w-4 h-4" /> Edit</button>
           </>
@@ -298,7 +328,7 @@ const {data, isloading,error} =  useQuery({
         {viewProduct && (
           <div className="space-y-5">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {[{ label: "Category", value: viewProduct.category }, { label: "Ply", value: viewProduct.ply }, { label: "Base Price", value: viewProduct.price }, { label: "Min Order Qty", value: viewProduct.moq }, { label: "Status", value: viewProduct.status }, { label: "Featured", value: viewProduct.featured ? "✅ Yes" : "No" }].map((f) => (
+              {[{ label: "Category", value: viewProduct.category }, { label: "Ply", value: viewProduct.ply }, { label: "Base Price", value: typeof viewProduct.price === 'string' && !viewProduct.price.startsWith('$') ? `$${viewProduct.price}` : viewProduct.price }, { label: "Min Order Qty", value: viewProduct.moq }, { label: "Status", value: viewProduct.status }, { label: "Featured", value: viewProduct.featured ? "✅ Yes" : "No" }].map((f) => (
                 <div key={f.label} className="bg-slate-50 rounded-2xl p-4">
                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{f.label}</p>
                   <p className="text-sm font-bold text-slate-900">{f.value}</p>
@@ -316,3 +346,4 @@ const {data, isloading,error} =  useQuery({
     </div>
   );
 }
+

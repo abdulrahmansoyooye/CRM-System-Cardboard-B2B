@@ -1,15 +1,15 @@
-
 import { Router } from "express";
-import { create, deactivate, getAll, getById, update } from "./user.controller";
-import authMiddleware from '../../middleware/auth.middleware';
+import { authMiddleware } from "../../middleware/auth.middleware";
+import { UserController } from "./user.controller";
 
 const router = Router()
 
-router.post("/login", authMiddleware(["super_admin"]), create)
+router.post("/login", UserController.login)
+router.post("/create", authMiddleware(["super_admin"]), UserController.create)
 
-// router.get("/all",authMiddleware(["super_admin"]), getAll)
-// router.get("/:id/details",authMiddleware(["super_admin","admin"]), getById)
-// router.put("/:id/update",authMiddleware(["super_admin","admin"]), update)
-// router.patch("/:id/deactivate",authMiddleware(["super_admin","admin"]), deactivate)
+router.get("/all", authMiddleware(["super_admin", "admin"]), UserController.getAll)
+router.get("/:id/details", authMiddleware(["super_admin", "admin"]), UserController.getById)
+router.put("/:id/update", authMiddleware(["super_admin", "admin"]), UserController.update)
+router.patch("/:id/deactivate", authMiddleware(["super_admin", "admin"]), UserController.deactivate)
 
 export const UserRoutes = router
