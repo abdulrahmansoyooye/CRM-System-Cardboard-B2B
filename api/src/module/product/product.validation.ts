@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const createProductSchema = z.object({
   body: z.object({
-    name: z.string({ required_error: 'Product name is required' }).min(3),
-    categoryId: z.string({ required_error: 'Category ID is required' }),
+    name: z.string({ message: 'Product name is required' }).min(3),
+    categoryId: z.string({ message: 'Category ID is required' }),
     shortDescription: z.string().optional(),
     fullDescription: z.string().optional(),
     specifications: z.array(z.string()).optional(),

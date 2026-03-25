@@ -12,7 +12,7 @@ export const getAll = asyncHandler(async (req: Request, res: Response, next: Nex
   res.status(200).json({ success: true, data: docs });
 });
 export const getBySlug = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await BlogService.getBlogBySlug(req.params.slug);
+  const doc = await BlogService.getBlogBySlug(req.params.slug as string);
   res.status(200).json({ success: true, data: doc });
 });
 export const update = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

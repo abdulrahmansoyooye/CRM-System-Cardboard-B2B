@@ -1,29 +1,29 @@
 import { AppError } from '../../core/errors/AppError';
-import { Job_application } from './job_application.model';
+import { JobApplication } from './job_application.model';
 
-export const createJob_application = async (data: any) => { return await Job_application.create(data); };
-export const getAllJob_applications = async () => { return await Job_application.find(); };
-export const getJob_applicationById = async (id: string) => {
-  const doc = await Job_application.findById(id);
+export const createJobApplication = async (data: any) => { return await JobApplication.create(data); };
+export const getAllJobApplications = async () => { return await JobApplication.find(); };
+export const getJobApplicationById = async (id: string) => {
+  const doc = await JobApplication.findById(id);
   if (!doc) throw new AppError('Not found', 404);
   return doc;
 };
-export const updateJob_application = async (id: string, data: any) => {
-  const doc = await Job_application.findByIdAndUpdate(id, data, { new: true, runValidators: true });
-  if (!doc) throw new AppError('Not found', 404);
-  return doc;
-};
-
-export const deleteJob_application = async (id: string) => {
-  const doc = await Job_application.findByIdAndDelete(id);
+export const updateJobApplication = async (id: string, data: any) => {
+  const doc = await JobApplication.findByIdAndUpdate(id, data, { new: true, runValidators: true });
   if (!doc) throw new AppError('Not found', 404);
   return doc;
 };
 
-export const Job_applicationService = {
-  createJob_application,
-  getAllJob_applications,
-  getJob_applicationById,
-  updateJob_application,
-  deleteJob_application
+export const deleteJobApplication = async (id: string) => {
+  const doc = await JobApplication.findByIdAndDelete(id);
+  if (!doc) throw new AppError('Not found', 404);
+  return doc;
+};
+
+export const JobApplicationService = {
+  createJobApplication,
+  getAllJobApplications,
+  getJobApplicationById,
+  updateJobApplication,
+  deleteJobApplication
 };

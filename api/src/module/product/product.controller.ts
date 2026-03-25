@@ -24,7 +24,7 @@ const getAll = asyncHandler(async (req, res) => {
 });
 
 const getBySlug = asyncHandler(async (req, res) => {
-  const result = await ProductService.getProductBySlug(req.params.slug);
+  const result = await ProductService.getProductBySlug(req.params.slug as string);
   sendResponse(res, {
     statusCode: 200,
     success: true,

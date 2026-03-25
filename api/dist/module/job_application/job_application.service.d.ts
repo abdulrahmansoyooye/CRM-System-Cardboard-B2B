@@ -1,0 +1,273 @@
+export declare const createJobApplication: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps, {
+    id: string;
+}, {
+    timestamps: true;
+}> & Omit<{
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps & {
+    _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
+}, "id"> & {
+    id: string;
+}>;
+export declare const getAllJobApplications: () => Promise<(import("mongoose").Document<unknown, {}, {
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps, {
+    id: string;
+}, {
+    timestamps: true;
+}> & Omit<{
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps & {
+    _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
+}, "id"> & {
+    id: string;
+})[]>;
+export declare const getJobApplicationById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps, {
+    id: string;
+}, {
+    timestamps: true;
+}> & Omit<{
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps & {
+    _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
+}, "id"> & {
+    id: string;
+}>;
+export declare const updateJobApplication: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps, {
+    id: string;
+}, {
+    timestamps: true;
+}> & Omit<{
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps & {
+    _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
+}, "id"> & {
+    id: string;
+}>;
+export declare const deleteJobApplication: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps, {
+    id: string;
+}, {
+    timestamps: true;
+}> & Omit<{
+    name: string;
+    email: string;
+    status: "new" | "reviewed" | "shortlisted" | "rejected";
+    jobId: import("mongoose").Types.ObjectId;
+    phone?: string | null | undefined;
+    resumeFile?: string | null | undefined;
+    notes?: string | null | undefined;
+} & import("mongoose").DefaultTimestampProps & {
+    _id: import("mongoose").Types.ObjectId;
+} & {
+    __v: number;
+}, "id"> & {
+    id: string;
+}>;
+export declare const JobApplicationService: {
+    createJobApplication: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps, {
+        id: string;
+    }, {
+        timestamps: true;
+    }> & Omit<{
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }>;
+    getAllJobApplications: () => Promise<(import("mongoose").Document<unknown, {}, {
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps, {
+        id: string;
+    }, {
+        timestamps: true;
+    }> & Omit<{
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    })[]>;
+    getJobApplicationById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps, {
+        id: string;
+    }, {
+        timestamps: true;
+    }> & Omit<{
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }>;
+    updateJobApplication: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps, {
+        id: string;
+    }, {
+        timestamps: true;
+    }> & Omit<{
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }>;
+    deleteJobApplication: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps, {
+        id: string;
+    }, {
+        timestamps: true;
+    }> & Omit<{
+        name: string;
+        email: string;
+        status: "new" | "reviewed" | "shortlisted" | "rejected";
+        jobId: import("mongoose").Types.ObjectId;
+        phone?: string | null | undefined;
+        resumeFile?: string | null | undefined;
+        notes?: string | null | undefined;
+    } & import("mongoose").DefaultTimestampProps & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }>;
+};
+//# sourceMappingURL=job_application.service.d.ts.map

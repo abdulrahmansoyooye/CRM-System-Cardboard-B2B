@@ -1,10 +1,10 @@
 import { Router } from 'express';
-import { Job_applicationController } from './job_application.controller';
+import { JobApplicationController } from './job_application.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
 
 const router = Router();
 
 // Public Routes
-router.post('/jobs/apply', Job_applicationController.create);
+router.post('/jobs/apply', JobApplicationController.create);
 
-export const Job_applicationRoutes = router;
+export const JobApplicationRoutes = router;

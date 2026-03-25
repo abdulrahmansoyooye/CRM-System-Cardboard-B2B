@@ -5,7 +5,7 @@ import { CategoryRoutes } from '../module/category/category.route';
 import { BlogRoutes } from '../module/blog/blog.route';
 import { IndustryRoutes } from '../module/industry/industry.route';
 import { JobRoutes } from '../module/job/job.route';
-import { Job_applicationRoutes } from '../module/job_application/job_application.route';
+import { JobApplicationRoutes } from '../module/job_application/job_application.route';
 import { InquiryRoutes } from '../module/inquiry/inquiry.route';
 import { QuoteRoutes } from '../module/quote/quote.route';
 import { SettingRoutes } from '../module/setting/setting.route';
@@ -21,7 +21,7 @@ const moduleRoutes = [
   { path: '/', route: BlogRoutes },
   { path: '/', route: IndustryRoutes },
   { path: '/', route: JobRoutes },
-  { path: '/', route: Job_applicationRoutes },
+  { path: '/', route: JobApplicationRoutes },
   { path: '/', route: InquiryRoutes },
   { path: '/', route: QuoteRoutes },
   { path: '/', route: SettingRoutes }

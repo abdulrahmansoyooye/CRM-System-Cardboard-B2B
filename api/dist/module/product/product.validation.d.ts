@@ -1,0 +1,42 @@
+import { z } from 'zod';
+export declare const ProductValidation: {
+    createProductSchema: z.ZodObject<{
+        body: z.ZodObject<{
+            name: z.ZodString;
+            categoryId: z.ZodString;
+            shortDescription: z.ZodOptional<z.ZodString>;
+            fullDescription: z.ZodOptional<z.ZodString>;
+            specifications: z.ZodOptional<z.ZodArray<z.ZodString>>;
+            materialDetails: z.ZodOptional<z.ZodString>;
+            moq: z.ZodDefault<z.ZodNumber>;
+            deliveryTimeline: z.ZodOptional<z.ZodString>;
+            isFeatured: z.ZodDefault<z.ZodBoolean>;
+            images: z.ZodArray<z.ZodString>;
+            seo: z.ZodOptional<z.ZodObject<{
+                metaTitle: z.ZodOptional<z.ZodString>;
+                metaDescription: z.ZodOptional<z.ZodString>;
+            }, z.core.$strip>>;
+            isActive: z.ZodDefault<z.ZodBoolean>;
+        }, z.core.$strip>;
+    }, z.core.$strip>;
+    updateProductSchema: z.ZodObject<{
+        body: z.ZodObject<{
+            name: z.ZodOptional<z.ZodString>;
+            categoryId: z.ZodOptional<z.ZodString>;
+            shortDescription: z.ZodOptional<z.ZodString>;
+            fullDescription: z.ZodOptional<z.ZodString>;
+            specifications: z.ZodOptional<z.ZodArray<z.ZodString>>;
+            materialDetails: z.ZodOptional<z.ZodString>;
+            moq: z.ZodOptional<z.ZodNumber>;
+            deliveryTimeline: z.ZodOptional<z.ZodString>;
+            isFeatured: z.ZodOptional<z.ZodBoolean>;
+            images: z.ZodOptional<z.ZodArray<z.ZodString>>;
+            seo: z.ZodOptional<z.ZodObject<{
+                metaTitle: z.ZodOptional<z.ZodString>;
+                metaDescription: z.ZodOptional<z.ZodString>;
+            }, z.core.$strip>>;
+            isActive: z.ZodOptional<z.ZodBoolean>;
+        }, z.core.$strip>;
+    }, z.core.$strip>;
+};
+//# sourceMappingURL=product.validation.d.ts.map

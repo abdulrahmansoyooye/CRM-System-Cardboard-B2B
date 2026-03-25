@@ -24,7 +24,7 @@ export const getAll = asyncHandler(async (req: Request, res: Response, next: Nex
 });
 
 export const getBySlug = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const category = await CategoryService.getCategoryBySlug(req.params.slug);
+    const category = await CategoryService.getCategoryBySlug(req.params.slug as string);
     sendResponse(res, {
         statusCode: 200,
         success: true,

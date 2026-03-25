@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 import { AppError } from '../core/errors/AppError';
 
 export interface AuthRequest extends Request {
-  user?: {
+  user: JwtPayload & {
     id?: string;
     role?: string;
     email?: string;
-    [key: string]: any;
   };
 }
 
