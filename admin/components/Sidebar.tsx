@@ -6,10 +6,13 @@ import {
   LayoutDashboard, Package, BookOpen, Briefcase,
   MessageSquare, Image as ImageIcon, Star, Settings,
   BarChart2, ChevronRight, ShieldCheck, UserCircle, X,
-  Users, Building2, Trophy, FileText, LogOut
+  Users, Building2, LogOut
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { signOut, useSession } from "next-auth/react";
+import { api } from "@/lib/api";
 
 const NAV = [
   {
@@ -50,22 +53,17 @@ const NAV = [
   },
 ];
 
-import { signOut, useSession } from "next-auth/react";
-import { api } from "@/lib/api";
-
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const [role, setRole] = useState<"admin" | "editor">("admin");
+  const [role, setRole] = useState<"admin" | "editor" | "owner">("admin");
 
   const handleLogout = async () => {
     try {
-      // Notify backend if needed (though JWT is stateless, good for blacklisting or logs)
       await api("/auth/logout", { method: "POST" });
     } catch (err) {
       console.error("Backend logout failed", err);
     } finally {
-      // Clear frontend session and redirect to login
       await signOut({ callbackUrl: "/login" });
     }
   };
@@ -73,35 +71,47 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const userInitial = session?.user?.name?.charAt(0) || session?.user?.email?.charAt(0) || "U";
 
   return (
-    <aside className="sidebar-container relative">
+    <aside className="sidebar-container relative h-full flex flex-col bg-white border-r border-slate-100 shadow-[20px_0_40px_rgba(0,0,0,0.02)]">
       {/* Close button for Mobile */}
       <button
         onClick={onClose}
-        className="lg:hidden absolute top-10 right-4 p-2 text-slate-400 hover:text-slate-900"
+        className="lg:hidden absolute top-8 right-4 p-2 text-slate-400 hover:text-slate-900 z-50 transition-colors"
       >
-        <X className="w-5 h-5" />
+        <X className="w-6 h-6" />
       </button>
 
       {/* Brand */}
-      <div className="px-7 py-8 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-brand-950 rounded-2xl flex items-center justify-center text-white font-black text-xl shadow-2xl shadow-brand-950/20">
+      <motion.div 
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="px-8 py-10 shrink-0"
+      >
+        <div className="flex items-center gap-4">
+          <motion.div 
+            whileHover={{ rotate: 90 }}
+            className="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-2xl shadow-slate-900/30 border-b-4 border-accent-500"
+          >
             C
-          </div>
+          </motion.div>
           <div>
-            <span className="font-display font-black text-lg tracking-tight block leading-tight">Cardbox</span>
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-500">v2.0 Core</span>
+            <span className="font-display font-black text-xl tracking-tight block leading-tight text-slate-900">Cardbox</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-accent-500/80">CORE v2.0</span>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      <nav className="flex-1 px-4 space-y-7 overflow-y-auto pb-6">
-        {NAV.map((section) => (
-          <div key={section.label}>
-            <p className="px-4 mb-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-slate-300">
+      <nav className="flex-1 px-4 space-y-8 overflow-y-auto pb-10 scrollbar-hide">
+        {NAV.map((section, sIdx) => (
+          <motion.div 
+            key={section.label}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: sIdx * 0.1 }}
+          >
+            <p className="px-5 mb-4 text-[9px] font-black uppercase tracking-[0.3em] text-slate-300">
               {section.label}
             </p>
-            <div className="space-y-0.5">
+            <div className="space-y-1">
               {section.items.map((item) => {
                 const isActive =
                   pathname === item.href ||
@@ -110,55 +120,93 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={clsx(
-                      "nav-item",
-                      isActive ? "nav-item-active" : "nav-item-inactive"
-                    )}
+                    className="relative block"
                   >
-                    <item.icon className={clsx("w-4 h-4 shrink-0", isActive ? "text-white" : "text-slate-400")} />
-                    <span className="flex-1 text-[13px]">{item.label}</span>
-                    {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-50" />}
+                    <motion.div
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      className={clsx(
+                        "flex items-center gap-4 px-5 py-3.5 rounded-2xl font-bold tracking-tight text-[13px] transition-all duration-300 relative group",
+                        isActive 
+                          ? "bg-slate-900 text-white shadow-xl shadow-slate-900/20" 
+                          : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+                      )}
+                    >
+                      {isActive && (
+                        <motion.div 
+                          layoutId="active-indicator"
+                          className="absolute left-0 w-1.5 h-6 bg-accent-500 rounded-full"
+                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        />
+                      )}
+                      
+                      <item.icon className={clsx(
+                        "w-4 h-4 transition-colors duration-300", 
+                        isActive ? "text-accent-500" : "text-slate-400 group-hover:text-slate-900"
+                      )} />
+                      
+                      <span className="flex-1">{item.label}</span>
+                      
+                      {isActive && (
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                        >
+                          <ChevronRight className="w-3.5 h-3.5 opacity-40" />
+                        </motion.div>
+                      )}
+                    </motion.div>
                   </Link>
                 );
               })}
             </div>
-          </div>
+          </motion.div>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-slate-100 bg-slate-50/50 shrink-0">
-        <div className="flex flex-col gap-2">
-          <button
+      <div className="p-6 border-t border-slate-50 bg-slate-50/30 mt-auto">
+        <div className="flex flex-col gap-4">
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             onClick={() => setRole(role === "admin" ? "editor" : "admin")}
-            className="flex items-center justify-between w-full px-4 py-3 bg-white border border-slate-200 rounded-2xl shadow-sm hover:border-accent-500 transition-all group"
+            className="flex items-center justify-between w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:border-accent-500/30 transition-all group"
           >
-            <div className="flex items-center gap-3">
-              <ShieldCheck className={clsx("w-4 h-4", role === "admin" ? "text-accent-500" : "text-slate-400")} />
+            <div className="flex items-center gap-4">
+              <div className={clsx(
+                "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
+                role === "admin" ? "bg-accent-50 text-accent-500" : "bg-slate-100 text-slate-400"
+              )}>
+                <ShieldCheck className="w-4 h-4" />
+              </div>
               <div className="text-left">
-                <p className="text-[9px] font-black uppercase tracking-wider text-slate-400 leading-none mb-1">Current Role</p>
-                <p className="text-xs font-bold text-slate-900 capitalize">{role}</p>
+                <p className="text-[9px] font-black uppercase tracking-wider text-slate-400 leading-none mb-1">Authorization</p>
+                <p className="text-xs font-black text-slate-900 tracking-tight capitalize">{role}</p>
               </div>
             </div>
-            <div className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-accent-50 transition-colors">
-              <UserCircle className="w-3.5 h-3.5 text-slate-400 group-hover:text-accent-500" />
-            </div>
-          </button>
+            <UserCircle className="w-4 h-4 text-slate-300 group-hover:text-accent-500 transition-colors" />
+          </motion.button>
 
-          <div className="flex items-center gap-3 px-3 py-2.5">
-            <div className="w-9 h-9 rounded-xl bg-slate-900 text-white flex items-center justify-center text-[10px] font-black shadow-sm shrink-0">
+          <div className="flex items-center gap-4 px-4 py-3 bg-white/50 rounded-2xl border border-transparent hover:border-slate-100 transition-all">
+            <motion.div 
+              whileHover={{ rotate: 15 }}
+              className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xs font-black shadow-lg shadow-slate-900/10 shrink-0 border-b-2 border-accent-500"
+            >
               {userInitial.toUpperCase()}
-            </div>
+            </motion.div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold text-slate-900 truncate">{session?.user?.name || "User"}</p>
-              <p className="text-[10px] font-semibold text-slate-400 truncate">{session?.user?.email || "No email"}</p>
+              <p className="text-xs font-black text-slate-900 truncate tracking-tight">{session?.user?.name || "Member"}</p>
+              <p className="text-[10px] font-bold text-slate-400 truncate tracking-tight">{session?.user?.email || "No email provided"}</p>
             </div>
-            <button 
+            <motion.button 
+              whileHover={{ scale: 1.2, color: "#f43f5e" }}
+              whileTap={{ scale: 0.9 }}
               onClick={handleLogout}
-              className="text-slate-300 hover:text-rose-500 transition-colors p-1.5 rounded-lg hover:bg-rose-50"
+              className="text-slate-300 transition-all p-2 rounded-xl hover:bg-rose-50"
               title="Logout"
             >
-              <LogOut className="w-3.5 h-3.5" />
-            </button>
+              <LogOut className="w-4 h-4" />
+            </motion.button>
           </div>
         </div>
       </div>

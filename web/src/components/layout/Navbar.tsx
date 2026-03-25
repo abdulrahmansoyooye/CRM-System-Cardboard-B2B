@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, Search, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -42,57 +43,69 @@ export function Navbar() {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
-      <div className="container mx-auto px-4 lg:px-8 h-16 flex items-center justify-between">
+    <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-xl transition-all duration-500">
+      <div className="container mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
         {/* Logo */}
         <Link
           href="/"
-          className="font-bold text-2xl tracking-tighter text-primary flex items-center gap-2 shrink-0"
+          className="font-black text-2xl tracking-tighter text-primary flex items-center gap-3 shrink-0 group"
         >
-          <div className="w-8 h-8 bg-primary rounded-sm flex items-center justify-center">
-            <span className="text-primary-foreground text-sm font-black">
+          <motion.div 
+            whileHover={{ rotate: 180 }}
+            className="w-10 h-10 bg-primary rounded-none flex items-center justify-center border-l-4 border-accent"
+          >
+            <span className="text-primary-foreground text-xs font-black">
               CB
             </span>
-          </div>
-          CARDBOX
+          </motion.div>
+          <span className="group-hover:text-accent transition-colors duration-500">CARDBOX</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-1 text-sm font-medium">
+        <nav className="hidden lg:flex items-center gap-2">
           {NAV_LINKS.map((link) =>
             link.children ? (
               <div
                 key={link.label}
-                className="relative group"
+                className="relative"
                 onMouseEnter={() => setOpenDropdown(link.label)}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
-                <Link
-                  href={link.href}
-                  className="flex items-center gap-1 px-3 py-2 rounded-sm transition-colors hover:text-accent text-foreground/80"
+                <div
+                  className="flex items-center gap-2 px-5 py-2 rounded-none transition-all duration-500 hover:text-accent text-foreground font-black text-[10px] tracking-[0.2em] uppercase cursor-pointer group"
                 >
                   {link.label}
-                  <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
-                </Link>
-                {openDropdown === link.label && (
-                  <div className="absolute top-full left-0 min-w-[220px] bg-background border border-border shadow-xl rounded-sm overflow-hidden z-50 py-1">
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className="block px-4 py-2.5 text-sm font-medium text-foreground/80 hover:bg-secondary hover:text-accent transition-colors"
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-500 ${openDropdown === link.label ? 'rotate-180 text-accent' : ''}`} />
+                </div>
+                
+                <AnimatePresence>
+                  {openDropdown === link.label && (
+                    <motion.div 
+                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      className="absolute top-full left-0 min-w-[280px] bg-background border border-border shadow-2xl rounded-none overflow-hidden z-50 py-3 mt-1"
+                    >
+                      <div className="w-full h-1 bg-accent absolute top-0 left-0" />
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="block px-6 py-3 text-[10px] font-black tracking-widest text-foreground/60 hover:bg-secondary hover:text-accent transition-all duration-300 uppercase border-l-0 hover:border-l-4 border-accent"
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
               <Link
                 key={link.label}
                 href={link.href}
-                className="px-3 py-2 rounded-sm transition-colors hover:text-accent text-foreground/80"
+                className="px-5 py-2 rounded-none transition-all duration-500 hover:text-accent text-foreground font-black text-[10px] tracking-[0.2em] uppercase border-b-2 border-transparent hover:border-accent"
               >
                 {link.label}
               </Link>
@@ -101,68 +114,90 @@ export function Navbar() {
         </nav>
 
         {/* Actions */}
-        <div className="hidden lg:flex items-center gap-3">
-          <Button variant="ghost" size="icon">
-            <Search className="w-5 h-5 text-muted-foreground" />
-          </Button>
+        <div className="hidden lg:flex items-center gap-5">
+          <motion.div whileHover={{ rotate: 90 }}>
+            <Button variant="ghost" size="icon" className="hover:bg-accent/10">
+              <Search className="w-5 h-5 text-muted-foreground hover:text-accent" />
+            </Button>
+          </motion.div>
           <Link href="/contact">
-            <Button className="font-bold tracking-wide bg-accent text-accent-foreground hover:bg-accent/90 rounded-sm px-6">
+            <Button className="font-black tracking-[0.2em] bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all duration-500 rounded-none px-8 text-[10px] h-12 shadow-[8px_8px_0px_rgba(255,183,77,0.1)]">
               REQUEST A QUOTE
             </Button>
           </Link>
         </div>
 
         {/* Mobile Toggle */}
-        <button
-          className="lg:hidden p-2 text-foreground"
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          className="lg:hidden p-3 bg-secondary text-foreground rounded-none border-l-4 border-accent"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           aria-label="Toggle mobile menu"
         >
           {isMobileMenuOpen ? (
-            <X className="w-6 h-6" />
+            <X className="w-6 h-6 text-accent" />
           ) : (
             <Menu className="w-6 h-6" />
           )}
-        </button>
+        </motion.button>
       </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-border bg-background px-4 py-6">
-          <nav className="flex flex-col gap-1 text-sm font-medium">
-            {NAV_LINKS.map((link) => (
-              <div key={link.label}>
-                <Link
-                  href={link.href}
-                  className="block py-2.5 px-2 hover:text-accent transition-colors text-foreground/80 font-semibold"
-                  onClick={() => setIsMobileMenuOpen(false)}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.5, ease: "circInOut" }}
+            className="lg:hidden border-t border-border bg-background overflow-hidden"
+          >
+            <nav className="flex flex-col px-6 py-10 gap-2">
+              {NAV_LINKS.map((link, idx) => (
+                <motion.div 
+                  key={link.label}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.05 }}
                 >
-                  {link.label}
+                  <Link
+                    href={link.href}
+                    className="block py-4 px-2 hover:text-accent transition-colors text-foreground font-black text-xs tracking-widest uppercase border-b border-border/10"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                  {link.children && (
+                    <div className="ml-6 mt-2 space-y-1">
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="block py-3 px-4 text-[10px] font-bold text-muted-foreground hover:text-accent transition-colors uppercase italic border-l-2 border-border/30 hover:border-accent"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {child.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button className="w-full mt-10 bg-accent text-accent-foreground hover:bg-white hover:text-primary font-black tracking-[0.2em] rounded-none py-8 text-xs h-16 transition-all duration-500">
+                    REQUEST A QUOTE
+                  </Button>
                 </Link>
-                {link.children && (
-                  <div className="ml-4 border-l border-border pl-4 mb-2">
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.href}
-                        href={child.href}
-                        className="block py-2 text-muted-foreground hover:text-accent transition-colors"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-            <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button className="w-full mt-4 bg-accent text-accent-foreground hover:bg-accent/90 font-bold rounded-sm">
-                REQUEST A QUOTE
-              </Button>
-            </Link>
-          </nav>
-        </div>
-      )}
+              </motion.div>
+            </nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

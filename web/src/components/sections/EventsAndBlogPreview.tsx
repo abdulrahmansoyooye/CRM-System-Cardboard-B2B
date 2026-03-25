@@ -1,7 +1,10 @@
+"use client";
+
 import { ArrowRight, Calendar, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { motion } from "framer-motion";
 
 const UPDATES = [
   {
@@ -32,73 +35,89 @@ const UPDATES = [
 
 export function EventsAndBlogPreview() {
   return (
-    <section className="py-24 bg-background">
+    <section className="py-32 bg-background overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-          <div className="max-w-xl">
-            <h2 className="text-secondary-foreground font-bold tracking-widest text-xs uppercase mb-4 flex items-center gap-4 text-accent">
-              <span className="w-8 h-1 bg-accent inline-block" />
-              Latest Insights
-            </h2>
-            <h3 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
-              NEWS &{" "}
-              <span className="text-muted-foreground font-light">UPDATES</span>
-            </h3>
-          </div>
-          <Button
-            variant="outline"
-            className="border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold tracking-wider"
+        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+          <motion.div 
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="max-w-xl"
           >
-            VIEW ALL
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Button>
+            <h2 className="text-accent font-black tracking-[0.3em] text-[10px] uppercase mb-6 flex items-center gap-6">
+              <span className="w-12 h-[2px] bg-accent inline-block" />
+              LATEST INSIGHTS
+            </h2>
+            <h3 className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.9] uppercase">
+              NEWS &{" "}
+              <span className="text-muted-foreground font-light italic">UPDATES</span>
+            </h3>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+          >
+            <Button
+              variant="outline"
+              className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-black tracking-widest text-xs h-14 px-8 rounded-none transition-all duration-500"
+            >
+              VIEW ALL
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {UPDATES.map((post) => (
-            <article
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+          {UPDATES.map((post, idx) => (
+            <motion.article
               key={post.id}
-              className="group flex flex-col bg-secondary overflow-hidden border border-border rounded-sm"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: idx * 0.1, duration: 0.6 }}
+              className="group flex flex-col bg-secondary/50 overflow-hidden border border-border rounded-none hover:border-accent transition-colors duration-500"
             >
               <Link
                 href={`/news/${post.slug}`}
-                className="relative h-64 overflow-hidden block"
+                className="relative h-72 overflow-hidden block"
               >
+                <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors z-10 duration-700" />
                 <Image
                   src={post.image}
                   alt={post.title}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
                 />
-                <div className="absolute top-4 left-4 bg-accent text-accent-foreground text-xs font-bold px-3 py-1 uppercase tracking-wider rounded-sm z-10">
+                <div className="absolute top-6 left-6 bg-accent text-accent-foreground text-[10px] font-black px-4 py-1.5 uppercase tracking-[0.2em] rounded-none z-20 shadow-xl">
                   {post.category}
                 </div>
               </Link>
-              <div className="p-6 flex flex-col flex-1">
-                <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4 font-medium uppercase tracking-wider">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4" />
+              <div className="p-10 flex flex-col flex-1">
+                <div className="flex items-center gap-6 text-[10px] text-muted-foreground mb-6 font-black uppercase tracking-[0.15em]">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 text-accent" />
                     {post.date}
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <User className="w-4 h-4" />
-                    Admin
+                  <div className="flex items-center gap-2">
+                    <User className="w-3.5 h-3.5 text-accent" />
+                    ADMIN
                   </div>
                 </div>
-                <h4 className="font-bold text-xl mb-4 group-hover:text-accent transition-colors leading-tight">
+                <h4 className="font-black text-2xl mb-6 group-hover:text-accent transition-colors leading-tight tracking-tighter uppercase">
                   <Link href={`/news/${post.slug}`}>{post.title}</Link>
                 </h4>
-                <div className="mt-auto pt-4 border-t border-border">
+                <div className="mt-auto pt-8 border-t border-border/50">
                   <Link
                     href={`/news/${post.slug}`}
-                    className="inline-flex items-center text-sm font-bold tracking-wide uppercase text-primary group-hover:text-accent transition-colors gap-2"
+                    className="inline-flex items-center text-[10px] font-black tracking-[0.2em] uppercase text-primary group-hover:text-accent transition-all duration-300 gap-3 group/link"
                   >
-                    Read More
-                    <ArrowRight className="w-4 h-4" />
+                    READ MORE
+                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-2 transition-transform" />
                   </Link>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>
