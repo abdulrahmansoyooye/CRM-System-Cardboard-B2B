@@ -1,10 +1,8 @@
-import Link from "next/link";
-import { ArrowRight, Box, Shield, Zap, Lock, ScanLine } from "lucide-react";
-import { div } from "framer-motion/client";
-import { useRouter } from "next/navigation";
+
+import {  Box, Zap, Lock, ScanLine } from "lucide-react";
+
 
 export default function LoginPage() {
-  const router = useRouter();
   return (
     <div className="min-h-screen flex bg-slate-50 relative overflow-hidden">
       {/* Absolute decorative background elements */}
@@ -56,7 +54,7 @@ export default function LoginPage() {
       </div>
 
 
-      <button onClick={router.push("/login")}>login here </button>
+      
     </div>
   );
 }
