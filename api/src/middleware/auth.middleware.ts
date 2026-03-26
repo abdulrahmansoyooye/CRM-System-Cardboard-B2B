@@ -8,7 +8,6 @@ import config from '../config';
 export const authMiddleware = (requiredRoles: string[]) => {
   return asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(' ')[1];
-    console.log(token);
     if (!token) {
       throw new AppError('Token is missing!', 401);
     }

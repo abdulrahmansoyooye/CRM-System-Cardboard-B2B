@@ -5,7 +5,7 @@ import ConfirmModal from "@/components/ConfirmModal";
 import Skeleton from "@/components/Skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/services/product.service";
-import { Download, Package } from "lucide-react";
+import { Download, Package,Plus,Star, Edit2, Search,ArrowUpDown,Eye,Trash2 } from "lucide-react";
 
 type ProductStatus = "Active" | "Draft" | "Discontinued";
 type ProductCategory = "Heavy" | "Printed" | "Custom" | "Export" | "Pharma" | "Retail";

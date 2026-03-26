@@ -29,6 +29,8 @@ async function bootstrap() {
 
 bootstrap();
 
+
+
 // Handle unhandled rejections and exceptions
 process.on('unhandledRejection', (err) => {
   logger.error(`unhandledRejection is detected , shutting down ...`, err);

@@ -4,88 +4,105 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, PackageOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 const PRODUCTS = [
   {
     id: 1,
     name: "Heavy Duty Master Cartons",
-    desc: "Multi-wall structured for industrial exports.",
+    desc: "Multi-wall structured for extreme load-bearing industrial exports.",
     image: "/images/box.png",
+    specs: "7-PLY / 450GSM",
   },
   {
     id: 2,
-    name: "Custom Printed Boxes",
-    desc: "Branded packages with flexo printing technology.",
+    name: "Custom Precision Die-Cuts",
+    desc: "Branded packages with automated flexo printing technology.",
     image: "/images/box.png",
+    specs: "3-PLY / 280GSM",
   },
   {
     id: 3,
-    name: "Die-Cut Corrugated",
-    desc: "Precision shapes for exact product fitting.",
+    name: "Moisture Resistant Boards",
+    desc: "Engineered coatings for long-haul maritime logistics.",
     image: "/images/box.png",
+    specs: "5-PLY / 350GSM",
   },
   {
     id: 4,
-    name: "Export Packaging",
-    desc: "Moisture-resistant boards for shipping logistics.",
+    name: "Export Grade Solutions",
+    desc: "Reinforced edges for automated warehouse handling systems.",
     image: "/images/box.png",
+    specs: "HEAVY-DUTY",
   },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
     },
   },
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 50, scale: 0.95 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
+    scale: 1,
+    transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as any },
   },
 };
 
 export function ProductsOverview() {
   return (
-    <section className="py-32 bg-primary text-primary-foreground overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="py-40 bg-[#0A0F1A] text-white overflow-hidden relative">
+      {/* Decorative side text */}
+      <div className="absolute left-0 top-1/2 -translate-y-1/2 -rotate-90 origin-left opacity-[0.03] pointer-events-none">
+        <span className="text-[120px] font-black tracking-[-0.1em] whitespace-nowrap">SOLUTIONS // 2026</span>
+      </div>
+
+      <div className="container mx-auto px-4 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+        <div className="flex flex-col lg:flex-row justify-between items-end mb-32 gap-12">
           <motion.div 
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="max-w-xl"
+            transition={{ duration: 1 }}
+            className="max-w-2xl"
           >
-            <h2 className="text-accent font-black tracking-[0.3em] text-[10px] uppercase mb-6 flex items-center gap-6">
-              <span className="w-12 h-[2px] bg-accent inline-block" />
-              OUR SOLUTIONS
+            <h2 className="text-accent font-black tracking-[0.4em] text-[11px] uppercase mb-10 flex items-center gap-10">
+              <span className="w-16 h-[1px] bg-accent inline-block" />
+              SYSTEM PORTFOLIO
             </h2>
-            <h3 className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.9] uppercase">
-              ENGINEERED PACKAGING <br />
-              <span className="text-primary-foreground/40 font-light italic">
-                FOR EVERY INDUSTRY
-              </span>
+            <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.85] uppercase">
+              HIGH-STRENGTH <br />
+              <span className="text-white/30 italic font-light">PACKAGING</span> <br />
+              ARCHITECTURES.
             </h3>
           </motion.div>
+          
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col items-end gap-6"
           >
+            <p className="text-white/40 text-sm font-bold max-w-xs text-right leading-relaxed tracking-tight">
+              Our automated production lines deliver structural precision for high-velocity supply chains.
+            </p>
             <Button
               variant="outline"
-              className="border-2 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-black tracking-widest text-xs h-14 px-8 rounded-none transition-all duration-500"
+              className="border-2 border-white/10 hover:border-accent text-white hover:text-accent font-black tracking-[0.3em] text-[10px] h-16 px-10 rounded-none transition-all duration-700 bg-transparent uppercase group"
             >
-              ALL PRODUCTS
-              <ArrowRight className="w-4 h-4 ml-2" />
+              FULL CAPABILITIES
+              <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-3 transition-transform duration-500" />
             </Button>
           </motion.div>
         </div>
@@ -96,47 +113,57 @@ export function ProductsOverview() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-white/5 border border-white/5"
         >
           {PRODUCTS.map((prod) => (
             <motion.div
               key={prod.id}
               variants={itemVariants}
-              className="group relative bg-white/5 border border-white/10 overflow-hidden transition-all duration-500 hover:border-accent flex flex-col h-full rounded-none"
+              className="group relative bg-[#0D121F] overflow-hidden flex flex-col h-full hover:z-10 transition-all duration-700"
             >
-              <div className="relative aspect-square w-full overflow-hidden">
-                <div className="absolute inset-0 bg-primary/60 group-hover:bg-transparent transition-colors z-10 duration-700 max-w-full" />
+              {/* Card Reveal Overlay */}
+              <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-700 pointer-events-none opacity-5 z-20" />
+              
+              <div className="relative aspect-[4/5] w-full overflow-hidden">
                 <Image
                   src={prod.image}
                   alt={prod.name}
                   fill
-                  className="object-cover grayscale group-hover:grayscale-0 transition-transform duration-1000 group-hover:scale-110 max-w-full"
+                  className="object-cover grayscale saturate-50 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 contrast-125"
                 />
+                
+                {/* Specs Badge */}
+                <div className="absolute top-8 left-0 z-30 bg-accent text-[9px] font-black tracking-[0.3em] px-4 py-2 text-accent-foreground border-r-4 border-white shadow-2xl uppercase">
+                  {prod.specs}
+                </div>
 
-                {/* Icon Badge Overlay */}
-                <motion.div 
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  className="absolute top-6 left-6 z-20 w-14 h-14 bg-accent flex items-center justify-center text-accent-foreground shadow-xl"
-                >
-                  <PackageOpen className="w-7 h-7" />
-                </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0D121F] via-transparent to-transparent opacity-80" />
               </div>
 
-              <div className="p-8 flex flex-col flex-1 bg-gradient-to-b from-transparent to-black/20">
-                <h4 className="font-black text-xl mb-3 group-hover:text-accent transition-colors tracking-tighter uppercase leading-tight">
+              <div className="p-10 flex flex-col flex-1 relative z-30">
+                <div className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center mb-8 group-hover:bg-accent transition-colors duration-500">
+                    <PackageOpen className="w-6 h-6 text-accent group-hover:text-white transition-colors duration-500" />
+                </div>
+
+                <h4 className="font-black text-2xl mb-5 group-hover:text-accent transition-colors tracking-tighter uppercase leading-[0.9]">
                   {prod.name}
                 </h4>
-                <p className="text-primary-foreground/60 text-xs font-bold flex-1 mb-8 leading-relaxed tracking-tight">
+                
+                <p className="text-white/40 text-xs font-bold flex-1 mb-10 leading-relaxed tracking-tight group-hover:text-white/60 transition-colors">
                   {prod.desc}
                 </p>
+
                 <Link
                   href={`/products/${prod.id}`}
-                  className="inline-flex items-center text-[10px] font-black tracking-[0.2em] uppercase text-accent hover:text-white transition-all duration-300 gap-3 group/link"
+                  className="inline-flex items-center text-[10px] font-black tracking-[0.3em] uppercase text-accent hover:text-white transition-all duration-500 gap-4 group/link"
                 >
-                  <span className="w-8 h-[2px] bg-accent group-hover/link:w-12 group-hover/link:bg-white transition-all duration-500" />
-                  VIEW DETAILS
+                  <span className="w-10 h-[2px] bg-accent group-hover/link:w-16 group-hover/link:bg-white transition-all duration-700" />
+                  CASE STUDY
                 </Link>
               </div>
+
+              {/* Decorative border animation */}
+              <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-accent/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 delay-100" />
             </motion.div>
           ))}
         </motion.div>
@@ -144,3 +171,4 @@ export function ProductsOverview() {
     </section>
   );
 }
+

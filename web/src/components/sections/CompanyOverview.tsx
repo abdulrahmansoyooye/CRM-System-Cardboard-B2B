@@ -1,124 +1,169 @@
 "use client";
 
-import { Building2, Factory, Globe2, Truck } from "lucide-react";
+import { Building2, Factory, Globe2, Truck, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const FEATURES = [
   {
     icon: Building2,
-    title: "Massive Infrastructure",
-    desc: "Over 500,000 sq.ft of manufacturing space",
+    title: "MASSIVE INFRASTRUCTURE",
+    desc: "Over 500,000 sq.ft of precision manufacturing space.",
   },
   {
     icon: Globe2,
-    title: "Global Footprint",
-    desc: "Exporting to 35+ countries continuously",
+    title: "GLOBAL FOOTPRINT",
+    desc: "Seamless export operations to 35+ countries.",
   },
   {
     icon: Factory,
-    title: "Advanced Corrugation",
-    desc: "5-Ply and 7-Ply machinery",
+    title: "ADVANCED CORRUGATION",
+    desc: "High-speed 5-Ply and 7-Ply automated production.",
   },
   {
     icon: Truck,
-    title: "On-Time Logistics",
-    desc: "Own fleet management for deliveries",
+    title: "LOGISTICS NETWORK",
+    desc: "Managed fleet for mission-critical industrial delivery.",
   },
 ];
 
 export function CompanyOverview() {
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: targetRef,
+    offset: ["start end", "end start"],
+  });
+
+  const imgScale = useTransform(scrollYProgress, [0, 1], [1.1, 1]);
+  const imgY = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
+
   return (
-    <section className="py-32 bg-background overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-          {/* Main Visual */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-            className="relative group"
-          >
-            <div className="aspect-[4/3] w-full overflow-hidden bg-primary/5 rounded-none flex items-center justify-center border-l-8 border-accent">
-              <Image
-                src="/images/company.png"
-                alt="Corrugated Box Manufacturing Plant"
-                fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale hover:grayscale-0"
-              />
-            </div>
+    <section ref={targetRef} className="py-40 bg-[#0D121F] overflow-hidden relative">
+      {/* Background accents */}
+      <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-accent/5 to-transparent pointer-events-none" />
+      <div className="absolute top-40 left-12 text-[150px] font-black text-white/[0.02] tracking-tighter select-none pointer-events-none">
+        LEGACY
+      </div>
 
+      <div className="container mx-auto px-4 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-24 items-start">
+          
+          {/* Main Visual Column */}
+          <div className="lg:col-span-6 relative">
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-              className="absolute -bottom-10 -right-10 bg-accent text-accent-foreground p-10 hidden xl:block max-w-sm rounded-none shadow-[20px_20px_0px_rgba(0,0,0,0.1)]"
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+              className="relative group aspect-[4/5] overflow-hidden border-l border-t border-accent/20"
             >
-              <div className="font-black text-xl mb-4 flex items-center gap-4">
-                <Factory className="w-8 h-8" />
-                <span className="tracking-tighter uppercase">STATE OF THE ART</span>
-              </div>
-              <p className="text-accent-foreground/90 font-bold leading-relaxed text-sm tracking-tight">
-                Our facilities operate with automated machineries delivering
-                high structural precision logic.
-              </p>
+              <div className="absolute inset-0 bg-accent/10 mix-blend-overlay z-10" />
+              <motion.div style={{ scale: imgScale, y: imgY }} className="w-full h-full">
+                <Image
+                  src="/images/company.png"
+                  alt="Corrugated Box Manufacturing Plant"
+                  fill
+                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 saturate-50 contrast-125"
+                />
+              </motion.div>
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D121F] via-transparent to-transparent z-20" />
+              
+              {/* Image Floating Stat */}
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.8 }}
+                className="absolute bottom-12 left-12 z-30 bg-accent p-8 shadow-[30px_30px_0px_rgba(0,0,0,0.3)] border-r-4 border-b-4 border-white/20"
+              >
+                <div className="text-4xl font-black text-accent-foreground mb-1 tracking-tighter">25+</div>
+                <div className="text-[10px] font-black tracking-[0.2em] text-accent-foreground/60 uppercase">
+                  YEARS OF EXCELLENCE
+                </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
 
-          {/* Text Content */}
-          <div className="lg:pl-12 flex flex-col justify-center">
+            {/* Decorative corner element */}
+            <div className="absolute -top-6 -left-6 w-32 h-32 border-t-2 border-l-2 border-accent/50 pointer-events-none" />
+          </div>
+
+          {/* Text Content Column */}
+          <div className="lg:col-span-6 lg:pt-12">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
             >
-              <h2 className="text-accent font-black tracking-[0.3em] text-[10px] uppercase mb-6 flex items-center gap-6">
-                <span className="w-12 h-[2px] bg-accent inline-block" />
-                WHO WE ARE
+              <h2 className="text-accent font-black tracking-[0.4em] text-[11px] uppercase mb-8 flex items-center gap-8">
+                <span className="w-16 h-[1px] bg-accent inline-block" />
+                INDUSTRIAL HERITAGE
               </h2>
-              <h3 className="text-4xl md:text-6xl font-black text-primary tracking-tighter leading-[0.9] mb-8 uppercase">
-                RELIABLE PACKAGING <br />
-                <span className="text-muted-foreground font-light italic">
-                  FOR GLOBAL EXPORTERS
-                </span>
+              <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] mb-10 uppercase">
+                ENGINEERING <br />
+                <span className="text-white/30 italic font-light">RELIABILITY</span> <br />
+                SINCE 1998.
               </h3>
-              <p className="text-muted-foreground text-lg mb-12 leading-relaxed font-bold tracking-tight">
-                For over two decades, CARDBOX has been the cornerstone of
-                industrial packaging. We specialize in engineering corrugated
-                boxes that protect your high-value goods through complex supply
-                chains.
+              <p className="text-white/50 text-xl mb-16 leading-relaxed font-medium tracking-tight max-w-xl">
+                For over two decades, CARDBOX has been the backbone of
+                industrial logistics. We refine the art of corrugation to protect 
+                mission-critical components across global supply chains.
               </p>
             </motion.div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-10 text-primary">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-16">
               {FEATURES.map((feature, idx) => (
                 <motion.div
                   key={feature.title}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="flex gap-6 group"
+                  transition={{ delay: idx * 0.15, duration: 0.6 }}
+                  className="flex flex-col gap-6 group"
                 >
-                  <div className="w-16 h-16 bg-secondary flex items-center justify-center shrink-0 group-hover:bg-primary transition-colors duration-500">
-                    <feature.icon className="w-8 h-8 text-accent group-hover:text-white" />
+                  <div className="w-16 h-16 bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:border-accent transition-all duration-500 relative overflow-hidden">
+                    <feature.icon className="w-7 h-7 text-accent group-hover:text-white relative z-10 transition-colors duration-500" />
+                    <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                   </div>
                   <div>
-                    <h4 className="font-black text-lg mb-1 tracking-tighter uppercase">
+                    <h4 className="font-black text-white text-lg mb-3 tracking-tighter uppercase group-hover:text-accent transition-colors">
                       {feature.title}
                     </h4>
-                    <p className="text-muted-foreground text-xs font-bold leading-relaxed tracking-tight">
+                    <p className="text-white/40 text-xs font-bold leading-relaxed tracking-tight">
                       {feature.desc}
                     </p>
                   </div>
                 </motion.div>
               ))}
             </div>
+
+            {/* Bottom Proof points */}
+            <motion.div 
+               initial={{ opacity: 0 }}
+               whileInView={{ opacity: 1 }}
+               viewport={{ once: true }}
+               transition={{ delay: 0.8 }}
+               className="mt-20 pt-10 border-t border-white/5 flex flex-wrap gap-10"
+            >
+               <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-accent" />
+                  <span className="text-[10px] font-black text-white/60 tracking-widest uppercase">ASTM COMPLIANT</span>
+               </div>
+               <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-accent" />
+                  <span className="text-[10px] font-black text-white/60 tracking-widest uppercase">RECYCLABLE MATERIALS</span>
+               </div>
+               <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-accent" />
+                  <span className="text-[10px] font-black text-white/60 tracking-widest uppercase">BCT TESTED</span>
+               </div>
+            </motion.div>
           </div>
         </div>
       </div>
     </section>
   );
 }
+
