@@ -1,10 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Box, MoveRight, ShieldCheck, Zap } from "lucide-react";
+import { Box, MoveRight, ShieldCheck, Zap } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 
 export function HeroSection() {
   const containerRef = useRef<HTMLElement>(null);
@@ -15,18 +15,32 @@ export function HeroSection() {
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
+  const [center, setCenter] = useState({ x: 960, y: 540 });
+
   const springConfig = { damping: 25, stiffness: 100 };
   const dx = useSpring(mouseX, springConfig);
   const dy = useSpring(mouseY, springConfig);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
+    const updateDimensions = () => {
+      setCenter({ x: window.innerWidth / 2, y: window.innerHeight / 2 });
+    };
+
+    updateDimensions();
+    window.addEventListener("resize", updateDimensions);
+
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX - window.innerWidth / 2);
       mouseY.set(e.clientY - window.innerHeight / 2);
     };
+
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("resize", updateDimensions);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, [mouseX, mouseY]);
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
@@ -36,7 +50,7 @@ export function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[100svh] min-h-[750px] flex items-center justify-center overflow-hidden bg-[#0A0F1A]"
+      className="relative w-full h-svh min-h-[750px] flex items-center justify-center overflow-hidden bg-[#0A0F1A]"
     >
       {/* Premium Background Layering */}
       <motion.div style={{ y, opacity, scale }} className="absolute inset-0 z-0">
@@ -68,10 +82,10 @@ export function HeroSection() {
       {/* Floating Spotlight Effect */}
       <motion.div
         style={{
-          left: useTransform(dx, (v) => v + window.innerWidth / 2),
-          top: useTransform(dy, (v) => v + window.innerHeight / 2),
+          left: useTransform(dx, (v) => v + center.x),
+          top: useTransform(dy, (v) => v + center.y),
         }}
-        className="absolute w-[800px] h-[800px] -translate-x-1/2 -translate-y-1/2 bg-accent/5 blur-[120px] rounded-full pointer-events-none z-0"
+        className="absolute w-200 h-200 -translate-x-1/2 -translate-y-1/2 bg-accent/5 blur-[120px] rounded-full pointer-events-none z-0"
       />
 
       <div className="container relative z-10 px-4 lg:px-12 mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 text-primary-foreground h-full items-center pt-20">
@@ -172,8 +186,8 @@ export function HeroSection() {
         >
           <div className="relative w-full aspect-square max-w-2xl group">
              {/* Decorative circles */}
-             <div className="absolute inset-0 border-[40px] border-white/5 rounded-full animate-[#cardbox-spin_20s_linear_infinite]" />
-             <div className="absolute inset-[15%] border-[1px] border-accent/20 rounded-full animate-[#cardbox-spin_30s_linear_infinite_reverse]" />
+             <div className="absolute inset-0 border-40 border-white/5 rounded-full animate-[#cardbox-spin_20s_linear_infinite]" />
+             <div className="absolute inset-[15%] border border-accent/20 rounded-full animate-[#cardbox-spin_30s_linear_infinite_reverse]" />
              
              {/* Box placeholder or high-end image */}
              <motion.div 

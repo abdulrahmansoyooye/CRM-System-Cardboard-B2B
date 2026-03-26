@@ -29,8 +29,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${robotoMono.variable} antialiased min-h-screen flex flex-col font-sans`}
+        className={`${inter.variable} ${robotoMono.variable} antialiased min-h-screen flex flex-col font-sans relative`}
       >
+        <div className="grain-overlay" />
         <TopBar />
         <Navbar />
         <main className="flex-1">{children}</main>

@@ -1,97 +1,117 @@
 "use client";
 
-import { Cpu, Leaf, ShoppingCart, Truck, Zap } from "lucide-react";
+import { Cpu, Leaf, ShoppingCart, Truck, Zap, Activity, Microscope } from "lucide-react";
 import { motion } from "framer-motion";
 
 const INDUSTRIES = [
   {
     id: "fmcg",
     name: "FMCG",
-    desc: "Fast-moving consumer goods requiring bulk, resilient packaging.",
+    desc: "Fast-moving consumer goods requiring high-velocity bulk resilient packaging.",
     icon: ShoppingCart,
   },
   {
     id: "ecommerce",
-    name: "E-Commerce",
-    desc: "Durable mailer boxes and transit-safe corrugated solutions.",
+    name: "E-COMMERCE",
+    desc: "Durable mailer architectures and transit-safe corrugated solutions.",
     icon: Truck,
   },
   {
     id: "automotive",
-    name: "Automotive",
-    desc: "Heavy-duty packaging for spare parts and machinery transit.",
+    name: "AUTOMOTIVE",
+    desc: "Heavy-duty packaging for precision components and machinery transit.",
     icon: Zap,
   },
   {
     id: "electronics",
-    name: "Electronics",
-    desc: "Anti-static and high-protection enclosures.",
+    name: "ELECTRONICS",
+    desc: "ESD-safe and high-protection enclosures for mission-critical hardware.",
     icon: Cpu,
   },
   {
     id: "pharma",
-    name: "Pharmaceuticals",
-    desc: "Clean, certified corrugated packages for healthcare.",
-    icon: Leaf,
+    name: "PHARMACEUTICALS",
+    desc: "Clean, temperature-ready corrugated packages for global healthcare.",
+    icon: Microscope,
   },
   {
     id: "agriculture",
-    name: "Agriculture",
-    desc: "Ventilated boxes for fresh produce export operations.",
+    name: "AGRICULTURE",
+    desc: "High-ventilation structural boxes for fresh produce export operations.",
     icon: Leaf,
   },
 ];
 
 export function IndustriesServed() {
   return (
-    <section className="py-32 bg-background border-t border-border overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-20">
+    <section className="py-40 bg-[#0A0F1A] relative overflow-hidden">
+      {/* Decorative Grid Background */}
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ 
+          backgroundImage: `radial-gradient(circle, white 1px, transparent 1px)`,
+          backgroundSize: '40px 40px'
+      }} />
+
+      <div className="container mx-auto px-4 lg:px-12 relative z-10">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 1 }}
+            className="max-w-3xl"
           >
-            <h2 className="text-accent font-black tracking-[0.3em] text-[10px] uppercase mb-6 flex items-center justify-center gap-6">
-              <span className="w-12 h-[2px] bg-accent inline-block" />
-              SECTORS WE EMPOWER
-              <span className="w-12 h-[2px] bg-accent inline-block" />
+            <h2 className="text-accent font-black tracking-[0.4em] text-[11px] uppercase mb-10 flex items-center gap-10">
+              <span className="w-16 h-[1px] bg-accent inline-block" />
+              VERTICAL MARKETS
             </h2>
-            <h3 className="text-4xl md:text-6xl font-black text-primary tracking-tighter leading-[0.9] uppercase">
-              INDUSTRIES <span className="text-muted-foreground font-light italic">WE SERVE</span>
+            <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] uppercase">
+              SECTORS <span className="text-white/30 italic font-light">WE EMPOWER.</span>
             </h3>
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="flex items-center gap-4 text-white/40 text-[10px] font-black tracking-widest uppercase mb-4"
+          >
+            <Activity className="w-4 h-4 text-accent animate-pulse" />
+            LIVE MARKET OPERATIONS
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-white/5 border border-white/5">
           {INDUSTRIES.map((ind, idx) => {
             const Icon = ind.icon;
             return (
               <motion.div
                 key={ind.id}
-                initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.05, duration: 0.5 }}
-                whileHover={{ y: -10 }}
-                className="group p-10 border border-border bg-secondary/30 hover:bg-primary transition-all duration-500 rounded-none cursor-pointer flex flex-col h-full relative overflow-hidden"
+                transition={{ delay: idx * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="group p-12 bg-[#0D121F] hover:bg-accent transition-all duration-700 cursor-pointer flex flex-col h-full relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 -translate-y-1/2 translate-x-1/2 rounded-full group-hover:bg-accent/20 transition-all duration-700" />
+                {/* Hover Reveal Background */}
+                <div className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-700 pointer-events-none z-0" />
                 
-                <div className="w-20 h-20 bg-background group-hover:bg-accent flex items-center justify-center mb-10 transition-all duration-500 shadow-xl border border-border rounded-none group-hover:rotate-12">
-                  <Icon className="w-10 h-10 text-primary group-hover:text-primary-foreground transition-colors duration-500" />
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-white/[0.03] border border-white/10 flex items-center justify-center mb-12 shadow-2xl transition-all duration-700 group-hover:bg-[#0A0F1A] group-hover:scale-110 group-hover:-rotate-12">
+                    <Icon className="w-8 h-8 text-accent group-hover:text-white transition-colors duration-500" />
+                  </div>
+                  
+                  <h4 className="font-black text-3xl mb-5 text-white group-hover:text-[#0A0F1A] transition-colors tracking-tighter uppercase leading-[0.9]">
+                    {ind.name}
+                  </h4>
+                  <p className="text-white/40 group-hover:text-[#0A0F1A]/70 text-sm font-bold tracking-tight leading-relaxed transition-colors duration-500 max-w-[240px]">
+                    {ind.desc}
+                  </p>
                 </div>
                 
-                <h4 className="font-black text-3xl mb-4 text-primary group-hover:text-primary-foreground transition-colors tracking-tighter uppercase leading-none">
-                  {ind.name}
-                </h4>
-                <p className="text-muted-foreground group-hover:text-primary-foreground/70 text-sm font-bold tracking-tight leading-relaxed transition-colors duration-500">
-                  {ind.desc}
-                </p>
-                
-                <div className="mt-8 flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0 text-[10px] font-black tracking-widest text-accent group-hover:text-white uppercase">
-                  Explore Case Studies
-                  <div className="w-8 h-[2px] bg-white" />
+                {/* Card Numbering */}
+                <div className="absolute bottom-10 right-10 text-[60px] font-black text-white/[0.02] group-hover:text-[#0A0F1A]/5 transition-colors pointer-events-none tracking-tighter leading-none select-none">
+                  0{idx + 1}
                 </div>
               </motion.div>
             );
@@ -101,3 +121,4 @@ export function IndustriesServed() {
     </section>
   );
 }
+
