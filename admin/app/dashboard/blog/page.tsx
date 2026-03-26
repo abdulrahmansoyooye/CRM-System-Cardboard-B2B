@@ -136,7 +136,7 @@ export default function BlogPage() {
       <div className="space-y-4 pb-20">
         {filtered.map((post) => (
           <div key={post.id} className="premium-card p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 group hover:border-accent-500/20 transition-all">
-            <div className="flex-1 min-w-0" onClick={() => { setSelectedInquiry(null); setViewPost(post); }} style={{ cursor: "pointer" }}>
+            <div className="flex-1 min-w-0" onClick={() => { setViewPost(post); }} style={{ cursor: "pointer" }}>
               <div className="flex items-center gap-3 mb-2 flex-wrap">
                 <span className={clsx(
                     "status-badge",

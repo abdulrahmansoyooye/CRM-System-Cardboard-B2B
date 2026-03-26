@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { ArrowRight, Box, Shield, Zap, Lock, ScanLine } from "lucide-react";
+import { div } from "framer-motion/client";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   return (
     <div className="min-h-screen flex bg-slate-50 relative overflow-hidden">
       {/* Absolute decorative background elements */}
@@ -46,96 +49,14 @@ export default function LoginPage() {
               <div key={m.label} className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col gap-3 shadow-sm hover:shadow-md hover:border-orange-300 transition-all cursor-default group">
                 <m.icon className="w-5 h-5 text-slate-400 group-hover:text-orange-500 transition-colors" />
                 <span className="text-xs font-bold text-slate-700">{m.label}</span>
-              </div>
+              </div>      
             ))}
           </div>
         </div>
       </div>
 
-      {/* Right Panel — Login Form */}
-      <div className="w-full lg:w-7/12 flex items-center justify-center p-8 z-20">
-        <div className="w-full max-w-md">
-          <div className="bg-white/80 backdrop-blur-xl rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-white p-10 xl:p-12 relative overflow-hidden">
-            {/* Glossy top highlight */}
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
 
-            <div className="flex justify-center mb-8 lg:hidden">
-              <div className="w-12 h-12 bg-gradient-to-tr from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/30">
-                <Box className="w-6 h-6 text-white" />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2.5 mb-8">
-              <Shield className="w-5 h-5 text-orange-500" />
-              <span className="text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">Authorized Access Only</span>
-            </div>
-
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-2">Welcome Back</h2>
-            <p className="text-slate-500 mb-10 font-medium text-sm">Sign in with your administrator credentials to proceed.</p>
-
-            <form className="space-y-6">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400 mb-2 pl-1">
-                    Email Address <span className="text-red-400">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    placeholder="admin@cardbox.demo"
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 bg-slate-50 hover:bg-white transition-all shadow-inner placeholder:font-medium placeholder:text-slate-400"
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center justify-between mb-2 px-1">
-                     <label className="block text-[11px] font-black uppercase tracking-widest text-slate-400">
-                      Password <span className="text-red-400">*</span>
-                    </label>
-                    <Link href="/forgot-password" className="text-[11px] font-bold tracking-wide text-orange-500 hover:text-orange-600 transition-colors">
-                      Recover Access
-                    </Link>
-                  </div>
-                  <input
-                    type="password"
-                    placeholder="••••••••••"
-                    className="w-full px-5 py-4 rounded-2xl border border-slate-200 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 bg-slate-50 hover:bg-white transition-all shadow-inner placeholder:font-medium placeholder:text-slate-400"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 py-2 px-1">
-                <div className="relative flex items-center">
-                  <input type="checkbox" id="remember" className="peer w-5 h-5 appearance-none rounded-md border-2 border-slate-200 checked:bg-orange-500 checked:border-orange-500 transition-colors cursor-pointer" />
-                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center text-white scale-0 peer-checked:scale-100 transition-transform">
-                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="3"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-                  </div>
-                </div>
-                <label htmlFor="remember" className="text-sm font-bold text-slate-600 cursor-pointer select-none">
-                  Keep me connected securely
-                </label>
-              </div>
-
-              <Link href="/dashboard" className="block w-full pt-2">
-                <button
-                  type="button"
-                  className="w-full bg-slate-900 hover:bg-slate-800 focus:ring-4 focus:ring-slate-900/10 text-white font-bold py-4 px-6 rounded-2xl transition-all shadow-lg flex items-center justify-center gap-3 group"
-                >
-                  <span className="tracking-wide">Authenticate Session</span>
-                  <ArrowRight className="w-4 h-4 text-white/50 group-hover:text-white group-hover:translate-x-1 transition-all" />
-                </button>
-              </Link>
-            </form>
-
-            <div className="mt-10 pt-8 border-t border-slate-100 text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 rounded-xl">
-                 <Lock className="w-3.5 h-3.5 text-orange-400" />
-                 <p className="text-[11px] font-bold text-orange-600 uppercase tracking-wider">
-                   Demo credentials active: admin@cardbox.demo
-                 </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <button onClick={router.push("/login")}>login here </button>
     </div>
   );
 }
