@@ -5,11 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
 
-interface BlogDetailProps {
-  params: { slug: string };
-}
 
-export default function BlogDetailPage({ params }: BlogDetailProps) {
+export default function BlogDetailPage() {
   // Mock blog data — in production this would be fetched by slug
   const post = {
     title:

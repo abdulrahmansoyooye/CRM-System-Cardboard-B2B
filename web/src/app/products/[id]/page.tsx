@@ -1,4 +1,3 @@
-import { PageHeader } from "@/components/layout/PageHeader";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, ChevronRight, Settings } from "lucide-react";
@@ -12,11 +11,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-interface ProductPageProps {
-  params: { id: string };
-}
 
-export default function ProductDetailPage({ params }: ProductPageProps) {
+export default function ProductDetailPage() {
   // Using generic mock data instead of finding a real product based on params.id
   const name = "Heavy Duty Master Cartons";
   const image = getPlaceholderImage('box');

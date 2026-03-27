@@ -49,11 +49,7 @@ const MEDIA = [
 
 const CATEGORIES = ["All", "Factory", "Machinery", "Products", "Events"];
 
-export default function GalleryPage({
-  searchParams,
-}: {
-  searchParams?: { [key: string]: string | undefined };
-}) {
+export default function GalleryPage() {
   return (
     <div className="bg-background">
       <PageHeader
@@ -87,7 +83,7 @@ export default function GalleryPage({
               className={`relative bg-secondary border border-border group overflow-hidden ${i % 3 === 0 ? "md:col-span-2 md:row-span-2" : ""}`}
             >
               <Image
-                src={getPlaceholderImage(item.type as any)}
+                src={getPlaceholderImage(item.type as "box" | "factory" | "hero")}
                 alt={`Gallery Image ${item.cat}`}
                 fill
                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700 cursor-zoom-in"

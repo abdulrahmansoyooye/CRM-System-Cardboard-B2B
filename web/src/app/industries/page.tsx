@@ -17,7 +17,7 @@ export default function IndustriesPage() {
       <div className="container mx-auto px-4 lg:px-8 py-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
           {/* Image */}
-          <div className="relative aspect-[4/3] w-full bg-secondary border border-border">
+          <div className="relative aspect-4/3 w-full bg-secondary border border-border">
             <Image
               src={getPlaceholderImage('hero')}
               alt="FMCG Warehouse Supply Chain"
