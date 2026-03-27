@@ -2,47 +2,48 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { CTABanner } from "@/components/sections/CTABanner";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { getPlaceholderImage } from "@/lib/utils";
 
 const MEDIA = [
   {
     id: 1,
     cat: "Factory",
-    url: "/images/factory.png",
+    type: "factory",
   },
   {
     id: 2,
     cat: "Machinery",
-    url: "/images/factory.png",
+    type: "hero",
   },
   {
     id: 3,
     cat: "Products",
-    url: "/images/box.png",
+    type: "box",
   },
   {
     id: 4,
     cat: "Factory",
-    url: "/images/factory.png",
+    type: "factory",
   },
   {
     id: 5,
     cat: "Machinery",
-    url: "/images/factory.png",
+    type: "hero",
   },
   {
     id: 6,
     cat: "Products",
-    url: "/images/box.png",
+    type: "box",
   },
   {
     id: 7,
     cat: "Events",
-    url: "/images/hero.png",
+    type: "factory",
   },
   {
     id: 8,
     cat: "Factory",
-    url: "/images/factory.png",
+    type: "factory",
   },
 ];
 
@@ -86,7 +87,7 @@ export default function GalleryPage({
               className={`relative bg-secondary border border-border group overflow-hidden ${i % 3 === 0 ? "md:col-span-2 md:row-span-2" : ""}`}
             >
               <Image
-                src={item.url}
+                src={getPlaceholderImage(item.type as any)}
                 alt={`Gallery Image ${item.cat}`}
                 fill
                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700 cursor-zoom-in"

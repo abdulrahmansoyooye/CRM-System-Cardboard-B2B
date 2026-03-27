@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { getPlaceholderImage } from "@/lib/utils";
 
 const UPDATES = [
   {
@@ -12,7 +13,7 @@ const UPDATES = [
     title: "CARDBOX Acquires New 5-Color Flexo Printer",
     date: "March 12, 2026",
     category: "Infrastructure",
-    image: "/images/factory.png",
+    imageType: 'factory',
     slug: "new-flexo-printer",
   },
   {
@@ -20,7 +21,7 @@ const UPDATES = [
     title: "Sustainability: Shifting to 100% Recycled Kraft Liner",
     date: "February 28, 2026",
     category: "Corporate Update",
-    image: "/images/product_cardboard.png",
+    imageType: 'box',
     slug: "sustainability-recycled-kraft",
   },
   {
@@ -28,7 +29,7 @@ const UPDATES = [
     title: "International Export Logistics Symposium 2026",
     date: "February 15, 2026",
     category: "Event",
-    image: "/images/hero.png",
+    imageType: 'hero',
     slug: "export-symposium-2026",
   },
 ];
@@ -45,7 +46,7 @@ export function EventsAndBlogPreview() {
             className="max-w-xl"
           >
             <h2 className="text-accent font-black tracking-[0.3em] text-[10px] uppercase mb-6 flex items-center gap-6">
-              <span className="w-12 h-[2px] bg-accent inline-block" />
+              <span className="w-12 h-0.5 bg-accent inline-block" />
               LATEST INSIGHTS
             </h2>
             <h3 className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.9] uppercase">
@@ -84,7 +85,7 @@ export function EventsAndBlogPreview() {
               >
                 <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors z-10 duration-700" />
                 <Image
-                  src={post.image}
+                  src={getPlaceholderImage(post.imageType as any)}
                   alt={post.title}
                   fill
                   className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"

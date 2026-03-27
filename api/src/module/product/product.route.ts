@@ -13,9 +13,8 @@ router.post(
   ProductController.create
 );
 
-router.get('/products',authMiddleware(['admin']), ProductController.getAll);
-
-router.get('/products/slug',authMiddleware(['admin']), ProductController.getBySlug);
+router.get('/products', ProductController.getAll);
+router.get('/products/:slug', ProductController.getBySlug);
 
 router.patch(
   '/admin/products/:id',

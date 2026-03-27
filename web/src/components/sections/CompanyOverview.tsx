@@ -4,6 +4,7 @@ import { Building2, Factory, Globe2, Truck, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { getPlaceholderImage } from "@/lib/utils";
 
 const FEATURES = [
   {
@@ -42,7 +43,7 @@ export function CompanyOverview() {
     <section ref={targetRef} className="py-40 bg-[#0D121F] overflow-hidden relative">
       {/* Background accents */}
       <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-accent/5 to-transparent pointer-events-none" />
-      <div className="absolute top-40 left-12 text-[150px] font-black text-white/[0.02] tracking-tighter select-none pointer-events-none">
+      <div className="absolute top-40 left-12 text-[150px] font-black text-white/5 tracking-tighter select-none pointer-events-none">
         LEGACY
       </div>
 
@@ -61,7 +62,7 @@ export function CompanyOverview() {
               <div className="absolute inset-0 bg-accent/10 mix-blend-overlay z-10" />
               <motion.div style={{ scale: imgScale, y: imgY }} className="w-full h-full">
                 <Image
-                  src="/images/company.png"
+                  src={getPlaceholderImage('hero')}
                   alt="Corrugated Box Manufacturing Plant"
                   fill
                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 saturate-50 contrast-125"
@@ -98,7 +99,7 @@ export function CompanyOverview() {
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-accent font-black tracking-[0.4em] text-[11px] uppercase mb-8 flex items-center gap-8">
-                <span className="w-16 h-[1px] bg-accent inline-block" />
+                <span className="w-16 h-0.5 bg-accent inline-block" />
                 INDUSTRIAL HERITAGE
               </h2>
               <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] mb-10 uppercase">
@@ -123,7 +124,7 @@ export function CompanyOverview() {
                   transition={{ delay: idx * 0.15, duration: 0.6 }}
                   className="flex flex-col gap-6 group"
                 >
-                  <div className="w-16 h-16 bg-white/[0.03] border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:border-accent transition-all duration-500 relative overflow-hidden">
+                  <div className="w-16 h-16 bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-accent group-hover:border-accent transition-all duration-500 relative overflow-hidden">
                     <feature.icon className="w-7 h-7 text-accent group-hover:text-white relative z-10 transition-colors duration-500" />
                     <div className="absolute inset-0 bg-accent translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                   </div>

@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CTABanner } from "@/components/sections/CTABanner";
 import Image from "next/image";
+import { getPlaceholderImage } from "@/lib/utils";
 
 const PROCESS_STEPS = [
   {
@@ -9,7 +10,7 @@ const PROCESS_STEPS = [
     description:
       "Sourcing premium virgin and recycled kraft linerboards with strict burst-strength parameters. Every roll undergoes initial GSM and moisture testing before entering the facility.",
     machinery: "Moisture & GSM Analytics Lab",
-    image: "/images/product_cardboard.png",
+    imageType: "box",
   },
   {
     step: "02",
@@ -17,7 +18,7 @@ const PROCESS_STEPS = [
     description:
       "High-speed fluting and gluing of kraft papers. We construct 3-ply, 5-ply, and heavy-duty 7-ply corrugated boards configured exactly to customer weight-bearing requirements.",
     machinery: "BHS Corrugator Line (Speed: 300m/min)",
-    image: "/images/factory.png",
+    imageType: "factory",
   },
   {
     step: "03",
@@ -25,7 +26,7 @@ const PROCESS_STEPS = [
     description:
       "Applying industrial-grade inks directly onto the boards. Using flexographic printing for maximum clarity, branding compliance, and barcode scannability.",
     machinery: "5-Color Flexographic Printer Slotter",
-    image: "/images/hero.png",
+    imageType: "hero",
   },
   {
     step: "04",
@@ -33,7 +34,7 @@ const PROCESS_STEPS = [
     description:
       "Automated die-cutting mechanisms shape the boards to match precise 3D engineering designs, ensuring folding accuracy and stacking strength.",
     machinery: "Rotary & Flatbed Auto-Platen Die-Cutters",
-    image: "/images/factory.png",
+    imageType: "factory",
   },
   {
     step: "05",
@@ -41,7 +42,7 @@ const PROCESS_STEPS = [
     description:
       "Samples from every batch undergo Edge Crush Test (ECT) and Bursting Strength tests ensuring performance under compression and load.",
     machinery: "Digital ECT & RCT Compressometers",
-    image: "/images/product_cardboard.png",
+    imageType: "box",
   },
   {
     step: "06",
@@ -49,7 +50,7 @@ const PROCESS_STEPS = [
     description:
       "Finished boxes are grouped, wrapped in stretch film, and palletized securely for factory delivery directly into your supply chain.",
     machinery: "Automated Strapping & Palletizing Line",
-    image: "/images/hero.png",
+    imageType: "hero",
   },
 ];
 
@@ -72,7 +73,7 @@ export default function ProcessPage() {
               <div className="w-full lg:w-1/2 relative">
                 <div className="aspect-[4/3] relative w-full rounded-sm overflow-hidden bg-secondary border border-border">
                   <Image
-                    src={step.image}
+                    src={getPlaceholderImage(step.imageType as "box" | "factory" | "hero")}
                     alt={step.title}
                     fill
                     className="object-cover grayscale hover:grayscale-0 transition-all duration-700"

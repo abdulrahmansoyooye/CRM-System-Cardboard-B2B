@@ -5,6 +5,7 @@ import { Box, MoveRight, ShieldCheck, Zap } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
+import { getPlaceholderImage } from "@/lib/utils";
 
 export function HeroSection() {
   const containerRef = useRef<HTMLElement>(null);
@@ -50,12 +51,12 @@ export function HeroSection() {
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-svh min-h-[750px] flex items-center justify-center overflow-hidden bg-[#0A0F1A]"
+      className="relative w-full h-svh min-h-187.5 flex items-center justify-center overflow-hidden bg-[#0A0F1A]"
     >
       {/* Premium Background Layering */}
       <motion.div style={{ y, opacity, scale }} className="absolute inset-0 z-0">
         <Image
-          src="/images/hero.png"
+          src={getPlaceholderImage('hero')}
           alt="Industrial Manufacturing Facility"
           fill
           className="object-cover opacity-20 grayscale saturate-0 contrast-150"

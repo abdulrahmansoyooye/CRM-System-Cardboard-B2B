@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getPlaceholderImage } from "@/lib/utils";
 
 const JOBS = [
   {
@@ -163,7 +164,7 @@ export default function CareersPage() {
           {/* Culture Image */}
           <div className="relative aspect-square md:aspect-[4/3] lg:aspect-auto h-full min-h-[500px] w-full bg-secondary rounded-sm overflow-hidden border border-border">
             <Image
-              src="/images/factory.png"
+              src={getPlaceholderImage('factory')}
               alt="Factory Machinery"
               fill
               className="object-cover grayscale"

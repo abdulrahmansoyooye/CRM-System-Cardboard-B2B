@@ -66,7 +66,7 @@ export function ProcessPreview() {
             className="max-w-3xl"
           >
             <h2 className="text-accent font-black tracking-[0.4em] text-[11px] uppercase mb-10 flex items-center gap-10">
-              <span className="w-16 h-[1px] bg-accent inline-block" />
+              <span className="w-16 h-px bg-accent inline-block" />
               SYSTEM OPERATIONS
             </h2>
             <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] uppercase">
@@ -109,7 +109,7 @@ export function ProcessPreview() {
                    <div className="w-2 h-2 bg-white/20 rounded-full group-hover:bg-accent animate-pulse" />
                 </div>
                 
-                <div className="w-16 h-16 bg-white/[0.03] border border-white/10 group-hover:border-accent group-hover:bg-accent flex items-center justify-center mb-10 transition-all duration-500 shadow-2xl relative">
+                <div className="w-16 h-16 bg-white/3 border border-white/10 group-hover:border-accent group-hover:bg-accent flex items-center justify-center mb-10 transition-all duration-500 shadow-2xl relative">
                   <Icon className="w-7 h-7 text-accent group-hover:text-white transition-colors duration-500" />
                   <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b border-right border-white/20" />
                 </div>
@@ -122,7 +122,7 @@ export function ProcessPreview() {
                 </p>
 
                 {/* Vertical connecting line for hover */}
-                <div className="absolute right-0 top-1/4 bottom-1/4 w-[1px] bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-700 origin-top" />
+                <div className="absolute right-0 top-1/4 bottom-1/4 w-px bg-accent scale-y-0 group-hover:scale-y-100 transition-transform duration-700 origin-top" />
               </motion.div>
             );
           })}
@@ -133,7 +133,7 @@ export function ProcessPreview() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 1 }}
-          className="mt-32 flex flex-col md:flex-row items-center justify-between gap-12 p-12 border border-white/5 bg-white/[0.02]"
+          className="mt-32 flex flex-col md:flex-row items-center justify-between gap-12 p-12 border border-white/5 bg-white/2"
         >
           <div className="flex items-center gap-8">
              <div className="text-[40px] font-black text-accent tracking-tighter">0.1s</div>

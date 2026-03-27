@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Edit2, Trash2, Eye, Mail, Phone, Calendar, ArrowUpRight, MessageSquare, Download, MoreHorizontal, User, Building } from "lucide-react";
+import { Plus, Search, Edit2, Trash2, Eye, Mail, Phone, Calendar, ArrowUpRight, MessageSquare, Download, MoreHorizontal, User, Building, CheckCircle2 } from "lucide-react";
 import Modal from "@/components/Modal";
 import ConfirmModal from "@/components/ConfirmModal";
 import { clsx } from "clsx";

@@ -3,6 +3,7 @@ import { CTABanner } from "@/components/sections/CTABanner";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getPlaceholderImage } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -11,47 +12,43 @@ const PRODUCTS = [
     id: "corrugated-boxes",
     name: "Corrugated Master Cartons",
     category: "Heavy",
-    image: "/images/box.png",
+    imageType: "box",
   },
   {
     id: "custom-printed",
     name: "Custom Printed Boxes",
     category: "Printed",
-    image: "/images/box.png",
+    imageType: "box",
   },
   {
     id: "heavy-duty",
     name: "7-Ply Heavy Duty Boxes",
     category: "Heavy",
-    image: "/images/box.png",
+    imageType: "box",
   },
   {
     id: "die-cut",
     name: "Specialized Die Cut Cartons",
     category: "Custom",
-    image: "/images/box.png",
+    imageType: "box",
   },
   {
     id: "export-packaging",
     name: "Export Packaging",
     category: "Export",
-    image: "/images/box.png",
+    imageType: "box",
   },
   {
     id: "pallet-boxes",
     name: "Bulk Pallet Boxes",
     category: "Heavy",
-    image: "/images/box.png",
+    imageType: "box",
   },
 ];
 
 const CATEGORIES = ["All", "Heavy", "Printed", "Custom", "Export"];
 
-export default function ProductsPage({
-  searchParams,
-}: {
-  searchParams?: { [key: string]: string | undefined };
-}) {
+export default function ProductsPage() {
   return (
     <div className="bg-background">
       <PageHeader
@@ -100,7 +97,7 @@ export default function ProductsPage({
                 className="block relative aspect-video overflow-hidden"
               >
                 <Image
-                  src={prod.image}
+                  src={getPlaceholderImage(prod.imageType as "box" | "factory" | "hero")}
                   alt={prod.name}
                   fill
                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"

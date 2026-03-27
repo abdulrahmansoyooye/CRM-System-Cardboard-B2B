@@ -3,6 +3,7 @@
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { getPlaceholderImage } from "@/lib/utils";
 
 export function CTABanner() {
   return (
@@ -13,7 +14,8 @@ export function CTABanner() {
         whileInView={{ opacity: 0.1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1.5 }}
-        className="absolute inset-0 z-0 bg-[url('/images/product_cardboard.png')] bg-cover bg-center bg-no-repeat grayscale mix-blend-overlay" 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat grayscale mix-blend-overlay" 
+        style={{ backgroundImage: `url(${getPlaceholderImage('box')})` }}
       />
 
       {/* Industrial Accents */}
@@ -50,7 +52,7 @@ export function CTABanner() {
           className="text-primary-foreground/60 font-bold text-lg md:text-2xl max-w-2xl mb-16 tracking-tight leading-relaxed"
         >
           Partner with CARDBOX for reliable, heavy-duty industrial corrugated
-          boards designed exactly to your specifications. Let's engineer your
+          boards designed exactly to your specifications. Let&apos;s engineer your
           protection.
         </motion.p>
 
