@@ -2,12 +2,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, getPlaceholderImage } from "@/lib/utils";
 
 interface ProductCardProps {
   title: string;
   description: string;
-  imageSrc: string;
+  imageSrc?: string;
   href: string;
   className?: string;
 }
@@ -28,7 +28,7 @@ export function ProductCard({
     >
       <div className="relative aspect-video overflow-hidden bg-muted">
         <Image
-          src={imageSrc}
+          src={imageSrc || getPlaceholderImage('box')}
           alt={title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"

@@ -4,11 +4,9 @@ import { Button } from "@/components/ui/button";
 import {
   Briefcase,
   Building,
-  ChevronRight,
   GraduationCap,
   Users,
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 import { getPlaceholderImage } from "@/lib/utils";
 
@@ -162,7 +160,7 @@ export default function CareersPage() {
           </div>
 
           {/* Culture Image */}
-          <div className="relative aspect-square md:aspect-[4/3] lg:aspect-auto h-full min-h-[500px] w-full bg-secondary rounded-sm overflow-hidden border border-border">
+          <div className="relative aspect-4/3 lg:aspect-auto h-full min-h-125 w-full bg-secondary rounded-sm overflow-hidden border border-border">
             <Image
               src={getPlaceholderImage('factory')}
               alt="Factory Machinery"

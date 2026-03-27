@@ -3,6 +3,7 @@ import { CTABanner } from "@/components/sections/CTABanner";
 import { IndustriesServed } from "@/components/sections/IndustriesServed";
 import { CheckCircle2, Factory } from "lucide-react";
 import Image from "next/image";
+import { getPlaceholderImage } from "@/lib/utils";
 
 export default function IndustriesPage() {
   return (
@@ -18,7 +19,7 @@ export default function IndustriesPage() {
           {/* Image */}
           <div className="relative aspect-[4/3] w-full bg-secondary border border-border">
             <Image
-              src="/images/hero.png"
+              src={getPlaceholderImage('hero')}
               alt="FMCG Warehouse Supply Chain"
               fill
               className="object-cover grayscale"

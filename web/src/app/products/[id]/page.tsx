@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle2, ChevronRight, Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getPlaceholderImage } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -18,7 +19,7 @@ interface ProductPageProps {
 export default function ProductDetailPage({ params }: ProductPageProps) {
   // Using generic mock data instead of finding a real product based on params.id
   const name = "Heavy Duty Master Cartons";
-  const image = "/images/box.png";
+  const image = getPlaceholderImage('box');
 
   return (
     <div className="bg-background">

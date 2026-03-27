@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getPlaceholderImage } from "@/lib/utils";
 
 interface BlogDetailProps {
   params: { slug: string };
@@ -15,7 +16,7 @@ export default function BlogDetailPage({ params }: BlogDetailProps) {
       "Understanding ECT vs. Burst Strength in Industrial Corrugated Boxes",
     date: "March 5, 2026",
     category: "Technical Guide",
-    image: "/images/product_cardboard.png",
+    image: getPlaceholderImage('box'),
     content: [
       {
         heading: "What Is Edge Crush Test (ECT)?",

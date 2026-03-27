@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ArrowRight, Calendar, Search, Tag } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { getPlaceholderImage } from "@/lib/utils";
 
 const POSTS = [
   {
@@ -15,7 +16,7 @@ const POSTS = [
       "Learn how Edge Crush Test (ECT) and Bursting Strength (BMT) values determine the structural capacity of your packaging under compression and shipping stress.",
     date: "March 5, 2026",
     category: "Technical Guide",
-    image: "/images/product_cardboard.png",
+    imageType: "box",
   },
   {
     slug: "5-ply-vs-7-ply-packaging",
@@ -24,7 +25,7 @@ const POSTS = [
       "Choosing the right ply count affects everything from transit safety to cost-per-unit. This breakdown helps procurement teams make data-driven packaging decisions.",
     date: "February 20, 2026",
     category: "Packaging Insights",
-    image: "/images/box.png",
+    imageType: "box",
   },
   {
     slug: "export-packaging-compliance",
@@ -34,7 +35,7 @@ const POSTS = [
       "ISPM-15, ISTA protocols, and regional labeling — a comprehensive guide for exporters on how to ensure your corrugated packaging is globally compliant.",
     date: "February 8, 2026",
     category: "Export & Compliance",
-    image: "/images/hero.png",
+    imageType: "hero",
   },
   {
     slug: "sustainable-packaging-kraft",
@@ -44,7 +45,7 @@ const POSTS = [
       "How switching to 100% recycled kraft liner reduces your carbon footprint without compromising on structural integrity, burst resistance, or print quality.",
     date: "January 25, 2026",
     category: "Sustainability",
-    image: "/images/product_cardboard.png",
+    imageType: "box",
   },
   {
     slug: "die-cutting-precision",
@@ -53,7 +54,7 @@ const POSTS = [
       "Modern flatbed and rotary die-cutting delivers millimeter-accurate carton shapes, enabling tight product fits, reduced void fill, and improved box-to-product ratios.",
     date: "January 10, 2026",
     category: "Technical Guide",
-    image: "/images/factory.png",
+    imageType: "factory",
   },
   {
     slug: "pharma-packaging-requirements",
@@ -62,7 +63,7 @@ const POSTS = [
       "Corrugated boxes for pharmaceutical use demand specific ECT ratings, anti-humidity coatings, and regulatory markings. Here is what you need to know.",
     date: "December 28, 2025",
     category: "Industry Focus",
-    image: "/images/hero.png",
+    imageType: "hero",
   },
 ];
 
@@ -126,9 +127,9 @@ export default function BlogPage() {
         <div className="mb-12">
           <Link href={`/blog/${POSTS[0].slug}`} className="group block">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border border-border rounded-sm overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="relative aspect-video lg:aspect-auto min-h-[300px] overflow-hidden bg-secondary">
+              <div className="relative aspect-video lg:aspect-auto min-h-75 overflow-hidden bg-secondary">
                 <Image
-                  src={POSTS[0].image}
+                  src={getPlaceholderImage(POSTS[0].imageType as "box" | "factory" | "hero")}
                   alt={POSTS[0].title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -175,7 +176,7 @@ export default function BlogPage() {
                 className="relative block h-52 overflow-hidden shrink-0"
               >
                 <Image
-                  src={post.image}
+                  src={getPlaceholderImage(post.imageType as "box" | "factory" | "hero")}
                   alt={post.title}
                   fill
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
