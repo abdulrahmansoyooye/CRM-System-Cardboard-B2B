@@ -5,12 +5,12 @@ import { authMiddleware } from '../../middleware/auth.middleware';
 const router = Router();
 
 // Public Routes
-router.get('/', TestimonialController.getAll);
-router.get('/:id', TestimonialController.getById);
+router.get('/testimonials', TestimonialController.getAll);
+router.get('/testimonials/:id', TestimonialController.getById);
 
 // Admin Routes
-router.post('/admin', authMiddleware(['admin', 'super_admin']), TestimonialController.create);
-router.put('/admin/:id', authMiddleware(['admin', 'super_admin']), TestimonialController.update);
-router.delete('/admin/:id', authMiddleware(['admin', 'super_admin']), TestimonialController.deleteDoc);
+router.post('/admin/testimonials', authMiddleware(['admin', 'super_admin']), TestimonialController.create);
+router.put('/admin/testimonials/:id', authMiddleware(['admin', 'super_admin']), TestimonialController.update);
+router.delete('/admin/testimonials/:id', authMiddleware(['admin', 'super_admin']), TestimonialController.deleteDoc);
 
 export const TestimonialRoutes = router;

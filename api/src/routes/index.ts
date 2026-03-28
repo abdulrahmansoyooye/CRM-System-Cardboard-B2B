@@ -9,6 +9,7 @@ import { JobApplicationRoutes } from '../module/job_application/job_application.
 import { InquiryRoutes } from '../module/inquiry/inquiry.route';
 import { QuoteRoutes } from '../module/quote/quote.route';
 import { SettingRoutes } from '../module/setting/setting.route';
+import { TestimonialRoutes } from '../module/testimonial/testimonial.route';
 
 const router = Router();
 
@@ -24,7 +25,8 @@ const moduleRoutes = [
   { path: '/', route: JobApplicationRoutes },
   { path: '/', route: InquiryRoutes },
   { path: '/', route: QuoteRoutes },
-  { path: '/', route: SettingRoutes }
+  { path: '/', route: SettingRoutes },
+  { path: '/', route: TestimonialRoutes },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

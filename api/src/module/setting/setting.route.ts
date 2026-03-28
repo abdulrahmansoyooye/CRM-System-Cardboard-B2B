@@ -8,6 +8,7 @@ const router = Router();
 router.get('/settings', SettingController.getAll);
 
 // Admin Routes
-router.put('/admin/settings', authMiddleware(['admin', 'super_admin']), SettingController.update);
+router.post('/admin/settings', authMiddleware(['admin', 'super_admin']), SettingController.create);
+router.put('/admin/settings/:id', authMiddleware(['admin', 'super_admin']), SettingController.update);
 
 export const SettingRoutes = router;
