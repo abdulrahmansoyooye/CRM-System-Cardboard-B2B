@@ -3,16 +3,15 @@ import { useEffect, useState } from "react";
 import Modal from "@/components/Modal";
 import ConfirmModal from "@/components/ConfirmModal";
 import Skeleton from "@/components/Skeleton";
-import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/services/product.service";
-import { Download, Package,Plus,Star, Edit2, Search,ArrowUpDown,Eye,Trash2 } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getProducts, createProduct, updateProduct, deleteProduct } from "@/services/product.service";
+import { Download, Package, Plus, Star, Edit2, Search, ArrowUpDown, Eye, Trash2 } from "lucide-react";
 
 type ProductStatus = "Active" | "Draft" | "Discontinued";
 type ProductCategory = "Heavy" | "Printed" | "Custom" | "Export" | "Pharma" | "Retail";
 
 interface Product {
-  id: number;
-  _id?: string;
+  _id: string;
   name: string;
   category: ProductCategory;
   ply: string;
@@ -28,9 +27,20 @@ const CATEGORIES: ProductCategory[] = ["Heavy", "Printed", "Custom", "Export", "
 const PLY_OPTIONS = ["3-Ply", "5-Ply", "7-Ply", "9-Ply"];
 const statusBadge: Record<ProductStatus, string> = { Active: "badge-success", Draft: "badge-neutral", Discontinued: "badge-error" };
 
-const emptyForm = { name: "", category: "Heavy" as ProductCategory, ply: "5-Ply", moq: "", price: "", status: "Active" as ProductStatus, featured: false, description: "", materials: "" };
+const emptyForm = { 
+  name: "", 
+  category: "Heavy" as ProductCategory, 
+  ply: "5-Ply", 
+  moq: "", 
+  price: "", 
+  status: "Active" as ProductStatus, 
+  featured: false, 
+  description: "", 
+  materials: "" 
+};
 
 export default function ProductsPage() {
+  const queryClient = useQueryClient();
   const { data: apiData, isLoading, error } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
@@ -46,20 +56,59 @@ export default function ProductsPage() {
   const [addOpen, setAddOpen] = useState(false);
   const [editProduct, setEditProduct] = useState<Product | null>(null);
   const [viewProduct, setViewProduct] = useState<Product | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<number | string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [form, setForm] = useState(emptyForm);
 
   // Sync state with fetched data
   useEffect(() => {
     if (apiData?.success && Array.isArray(apiData.data)) {
-        // Map backend data to local structure if necessary, though ideally they should match
-        const mappedData = apiData.data.map((p: any) => ({
-            id: p._id, // Using _id from mongo as id
-            ...p
-        }));
-        setProducts(mappedData);
+        setProducts(apiData.data);
     }
   }, [apiData]);
+
+  const createMutation = useMutation({
+    mutationFn: (data: any) => createProduct(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setAddOpen(false);
+      resetForm();
+      setIsSaving(false);
+    },
+    onError: () => setIsSaving(false),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: any }) => updateProduct(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setEditProduct(null);
+      resetForm();
+      setIsSaving(false);
+    },
+    onError: () => setIsSaving(false),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) => deleteProduct(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      setDeleteTarget(null);
+    },
+  });
+
+  const resetForm = () => {
+    setForm(emptyForm);
+  };
+
+  const handleSave = () => {
+    setIsSaving(true);
+    if (editProduct) {
+      updateMutation.mutate({ id: editProduct._id, data: form });
+    } else {
+      createMutation.mutate(form);
+    }
+  };
 
   const sorted = [...products]
     .filter((p) => {
@@ -82,22 +131,12 @@ export default function ProductsPage() {
     else { setSortField(field); setSortAsc(true); }
   };
 
-  const openAdd = () => { setForm(emptyForm); setAddOpen(true); };
+  const openAdd = () => { resetForm(); setAddOpen(true); };
   const openEdit = (p: Product) => { setEditProduct(p); setForm({ name: p.name, category: p.category, ply: p.ply, moq: p.moq, price: p.price, status: p.status, featured: p.featured, description: p.description ?? "", materials: p.materials ?? "" }); };
 
-  const handleSave = () => {
-    if (editProduct) {
-      setProducts((prev) => prev.map((p) => (p.id === editProduct.id || p._id === editProduct._id) ? { ...p, ...form } : p));
-      setEditProduct(null);
-    } else {
-      const newId = Date.now(); // Temporary ID for demo
-      setProducts((prev) => [...prev, { id: newId, ...form }]);
-      setAddOpen(false);
-    }
+  const toggleFeatured = (p: Product) => {
+    updateMutation.mutate({ id: p._id, data: { featured: !p.featured } });
   };
-
-  const handleDelete = (id: number | string) => { setProducts((prev) => prev.filter((p) => p.id !== id && p._id !== id)); setViewProduct(null); };
-  const toggleFeatured = (id: number | string) => setProducts((prev) => prev.map((p) => (p.id === id || p._id === id) ? { ...p, featured: !p.featured } : p));
 
   const FormContent = () => (
     <div className="space-y-5">
@@ -193,7 +232,7 @@ export default function ProductsPage() {
             { label: "Active SKUs", value: products.filter(p => p.status === "Active").length, icon: Package, color: "text-brand-600", bg: "bg-brand-50" },
             { label: "Featured", value: products.filter(p => p.featured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
             { label: "Drafts", value: products.filter(p => p.status === "Draft").length, icon: Edit2, color: "text-slate-400", bg: "bg-slate-50" },
-            { label: "Average Price", value: "$12.40", icon: ArrowUpDown, color: "text-emerald-600", bg: "bg-emerald-50" },
+            { label: "Last Created", value: products.length > 0 ? products[0].name.split(' ')[0] : "--", icon: ArrowUpDown, color: "text-emerald-600", bg: "bg-emerald-50" },
           ].map((s) => (
             <div key={s.label} className="premium-card p-6 flex items-center justify-between">
               <div>
@@ -214,17 +253,19 @@ export default function ProductsPage() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           <input type="text" placeholder="Search by name, category..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full glass-input pl-12 py-3" />
         </div>
-        <div className="flex gap-3 w-full lg:w-auto flex-wrap">
-          <select value={filterCat} onChange={(e) => setFilterCat(e.target.value)} className="glass-input py-3 flex-1 lg:w-44">
-            <option value="All">All Categories</option>
-            {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
-          </select>
-          <select value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)} className="glass-input py-3 flex-1 lg:w-40">
-            <option value="All">All Status</option>
-            <option>Active</option>
-            <option>Draft</option>
-            <option>Discontinued</option>
-          </select>
+        <div className="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+          {(["All", "Heavy", "Printed", "Custom", "Export", "Pharma", "Retail"] as const).map((c) => (
+             <button
+                key={c}
+                onClick={() => setFilterCat(c)}
+                className={clsx(
+                  "px-5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap",
+                  filterCat === c ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"
+                )}
+             >
+                {c}
+             </button>
+          ))}
         </div>
       </div>
 
@@ -235,12 +276,12 @@ export default function ProductsPage() {
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
                 <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  <button onClick={() => cycleSort("name")} className="flex items-center gap-2 hover:text-slate-700 transition-colors">Product <ArrowUpDown className="w-3 h-3" /></button>
+                  <button onClick={() => cycleSort("name")} className="flex items-center gap-2 hover:text-slate-700 transition-colors">Product <ArrowUpDown className="w-3" /></button>
                 </th>
                 <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Category / Ply</th>
                 <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
                 <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  <button onClick={() => cycleSort("price")} className="flex items-center gap-2 hover:text-slate-700 transition-colors">Price <ArrowUpDown className="w-3 h-3" /></button>
+                  <button onClick={() => cycleSort("price")} className="flex items-center gap-2 hover:text-slate-700 transition-colors">Price <ArrowUpDown className="w-3" /></button>
                 </th>
                 <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Actions</th>
               </tr>
@@ -254,10 +295,10 @@ export default function ProductsPage() {
                   ))
               ) : (
                 sorted.map((p) => (
-                  <tr key={p.id || p._id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => setViewProduct(p)}>
+                  <tr key={p._id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => setViewProduct(p)}>
                     <td className="px-7 py-5">
                       <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-accent-50 group-hover:text-accent-500 transition-colors shrink-0">
+                        <div className="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-accent-50 group-hover:text-accent-500 transition-colors shrink-0 shadow-sm shadow-slate-900/5">
                           <Package className="w-5 h-5" />
                         </div>
                         <div>
@@ -265,28 +306,28 @@ export default function ProductsPage() {
                             <span className="font-bold text-slate-900 group-hover:text-accent-500 transition-colors">{p.name}</span>
                             {p.featured && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
                           </div>
-                          <div className="text-[10px] font-black text-slate-300 uppercase tracking-widest mt-0.5">{p.moq} MOQ • SKU-ID: {p.id || p._id}</div>
+                          <div className="text-[10px] font-mono font-black text-slate-300 uppercase tracking-widest mt-0.5 truncate max-w-[150px]">{p.moq} MOQ • {p._id}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-7 py-5">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100/50">{p.category}</span>
-                        <span className="text-xs font-bold text-slate-400 font-mono">{p.ply}</span>
+                        <span className="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100/50 uppercase tracking-tighter">{p.category}</span>
+                        <span className="text-xs font-bold text-slate-400 font-mono italic">{p.ply}</span>
                       </div>
                     </td>
                     <td className="px-7 py-5">
                       <span className={`status-badge ${statusBadge[p.status] || 'badge-neutral'}`}>{p.status}</span>
                     </td>
                     <td className="px-7 py-5">
-                      <span className="text-sm font-black text-slate-900">{typeof p.price === 'string' && !p.price.startsWith('$') ? `$${p.price}` : p.price}</span>
+                      <span className="text-sm font-black text-slate-900 font-mono">{typeof p.price === 'string' && !p.price.startsWith('$') ? `$${p.price}` : p.price}</span>
                     </td>
                     <td className="px-7 py-5 text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={(e) => { e.stopPropagation(); setViewProduct(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Eye className="w-4 h-4" /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openEdit(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Edit2 className="w-4 h-4" /></button>
-                        <button onClick={(e) => { e.stopPropagation(); toggleFeatured(p.id || p._id!); }} className="p-2.5 rounded-xl hover:bg-amber-50 text-slate-400 hover:text-amber-400 transition-colors"><Star className={`w-4 h-4 ${p.featured ? "fill-amber-400 text-amber-400" : ""}`} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); setDeleteTarget(p.id || p._id!); }} className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-colors"><Trash2 className="w-4 h-4" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); setViewProduct(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Eye className="w-4.5 h-4.5" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); openEdit(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Edit2 className="w-4.5 h-4.5" /></button>
+                        <button onClick={(e) => { e.stopPropagation(); toggleFeatured(p); }} className="p-2.5 rounded-xl hover:bg-amber-50 text-slate-400 hover:text-amber-400 transition-colors"><Star className={`w-4.5 h-4.5 ${p.featured ? "fill-amber-400 text-amber-400" : ""}`} /></button>
+                        <button onClick={(e) => { e.stopPropagation(); setDeleteTarget(p._id); }} className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-colors"><Trash2 className="w-4.5 h-4.5" /></button>
                       </div>
                     </td>
                   </tr>
@@ -295,57 +336,59 @@ export default function ProductsPage() {
             </tbody>
           </table>
         </div>
-        {!isLoading && (
-            <div className="px-7 py-5 bg-slate-50/30 border-t border-slate-100 flex items-center justify-between">
-            <p className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">Showing {sorted.length} of {products.length} products</p>
-            <div className="flex items-center gap-2">
-                <button className="btn-secondary py-2 px-4 shadow-none text-[10px]">Previous</button>
-                <button className="btn-secondary py-2 px-4 shadow-none text-[10px] bg-slate-900 text-white border-slate-900">1</button>
-                <button className="btn-secondary py-2 px-4 shadow-none text-[10px]">Next</button>
-            </div>
-            </div>
-        )}
       </div>
 
-      {/* Add Modal */}
-      <Modal isOpen={addOpen} onClose={() => setAddOpen(false)} title="New Product" subtitle="Add a new SKU to the catalog" size="lg"
-        footer={<><button onClick={() => setAddOpen(false)} className="btn-secondary py-2.5">Cancel</button><button onClick={handleSave} className="btn-primary py-2.5"><Plus className="w-4 h-4" /> Provision SKU</button></>}
-      ><FormContent /></Modal>
+      {/* Modals */}
+      <Modal isOpen={addOpen || !!editProduct} onClose={() => { setAddOpen(false); setEditProduct(null); resetForm(); }} title={addOpen ? "New Product" : "Edit SKU"} subtitle={editProduct?.name} size="lg">
+        <div className="space-y-6">
+           <FormContent />
+           <div className="pt-4">
+              <button disabled={isSaving} onClick={handleSave} className="w-full btn-primary justify-center shadow-accent-500/20 py-4 font-black">
+                {isSaving ? "Syncing Logic..." : editProduct ? "Save Changes" : "Provision SKU"}
+              </button>
+           </div>
+        </div>
+      </Modal>
 
-      {/* Edit Modal */}
-      <Modal isOpen={!!editProduct} onClose={() => setEditProduct(null)} title="Edit Product" subtitle={editProduct?.name} size="lg"
-        footer={<><button onClick={() => setEditProduct(null)} className="btn-secondary py-2.5">Cancel</button><button onClick={handleSave} className="btn-primary py-2.5">Save Changes</button></>}
-      ><FormContent /></Modal>
-
-      {/* View Modal */}
-      <Modal isOpen={!!viewProduct} onClose={() => setViewProduct(null)} title={viewProduct?.name ?? ""} subtitle={`ID: ${viewProduct?.id || viewProduct?._id} • ${viewProduct?.category} • ${viewProduct?.ply}`} size="lg"
-        footer={
-          <>
-            <button onClick={() => { setDeleteTarget(viewProduct!.id || viewProduct!._id!); setViewProduct(null); }} className="flex items-center gap-2 px-4 py-2.5 rounded-2xl text-sm font-bold text-rose-500 hover:bg-rose-50 transition-all mr-auto"><Trash2 className="w-4 h-4" /> Delete</button>
-            <button onClick={() => setViewProduct(null)} className="btn-secondary py-2.5">Close</button>
-            <button onClick={() => { openEdit(viewProduct!); setViewProduct(null); }} className="btn-primary py-2.5"><Edit2 className="w-4 h-4" /> Edit</button>
-          </>
-        }
-      >
+      <Modal isOpen={!!viewProduct} onClose={() => setViewProduct(null)} title={viewProduct?.name ?? ""} subtitle={`ID: ${viewProduct?._id} • ${viewProduct?.category} • ${viewProduct?.ply}`} size="lg">
         {viewProduct && (
-          <div className="space-y-5">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              {[{ label: "Category", value: viewProduct.category }, { label: "Ply", value: viewProduct.ply }, { label: "Base Price", value: typeof viewProduct.price === 'string' && !viewProduct.price.startsWith('$') ? `$${viewProduct.price}` : viewProduct.price }, { label: "Min Order Qty", value: viewProduct.moq }, { label: "Status", value: viewProduct.status }, { label: "Featured", value: viewProduct.featured ? "✅ Yes" : "No" }].map((f) => (
-                <div key={f.label} className="bg-slate-50 rounded-2xl p-4">
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{f.label}</p>
+          <div className="space-y-6 py-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
+              {[{ label: "Category", value: viewProduct.category }, { label: "Ply", value: viewProduct.ply }, { label: "Base Price", value: typeof viewProduct.price === 'string' && !viewProduct.price.startsWith('$') ? `$${viewProduct.price}` : viewProduct.price }, { label: "Min Order Qty", value: viewProduct.moq }, { label: "Status", value: viewProduct.status }, { label: "Featured", value: viewProduct.featured ? "✅ Enabled" : "Disabled" }].map((f) => (
+                <div key={f.label} className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">{f.label}</p>
                   <p className="text-sm font-bold text-slate-900">{f.value}</p>
                 </div>
               ))}
             </div>
-            {viewProduct.description && <div className="bg-slate-50 rounded-2xl p-4"><p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Description</p><p className="text-sm text-slate-700 leading-relaxed">{viewProduct.description}</p></div>}
-            {viewProduct.materials && <div className="bg-slate-50 rounded-2xl p-4"><p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">Materials</p><p className="text-sm text-slate-700">{viewProduct.materials}</p></div>}
+            {viewProduct.description && (
+              <div>
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-3 ml-2">Product Mission</label>
+                <div className="bg-slate-50 p-8 rounded-[40px] border border-slate-100 text-slate-700 font-medium leading-relaxed italic">
+                  "{viewProduct.description}"
+                </div>
+              </div>
+            )}
+            {viewProduct.materials && (
+              <div className="bg-slate-50 p-6 rounded-3xl border border-dashed border-slate-200">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Material Pipeline</p>
+                <p className="text-sm font-bold text-slate-700">{viewProduct.materials}</p>
+              </div>
+            )}
+            <div className="pt-6 flex gap-4 border-t border-slate-50">
+              <button onClick={() => { setDeleteTarget(viewProduct._id); setViewProduct(null); }} className="px-6 py-4 text-xs font-black text-rose-500 uppercase tracking-widest hover:bg-rose-50 rounded-2xl transition-all">Archieve SKU</button>
+              <button onClick={() => { openEdit(viewProduct); setViewProduct(null); }} className="flex-1 btn-primary justify-center">Edit Specification</button>
+            </div>
           </div>
         )}
       </Modal>
 
-      {/* Delete Confirm */}
-      <ConfirmModal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={() => handleDelete(deleteTarget!)} title="Delete Product" message="This will permanently remove the product from the catalog. Are you sure?" confirmLabel="Delete Product" danger />
+      <ConfirmModal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={() => deleteMutation.mutate(deleteTarget!)} title="Delete Product" message="This will permanently remove the product from the catalog. Are you sure?" confirmLabel="Delete Product" danger />
     </div>
   );
 }
 
+// Helper clsx like function
+function clsx(...args: any[]) {
+    return args.filter(Boolean).join(' ');
+}
