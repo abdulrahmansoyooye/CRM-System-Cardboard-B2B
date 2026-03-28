@@ -18,7 +18,6 @@ export async function getProductBySlug(slug: string) {
   const res = await fetch(`${API_BASE_URL}/products/${slug}`, {
     cache: 'no-store',
   });
-
   if (!res.ok) {
     throw new Error('Failed to fetch product');
   }
