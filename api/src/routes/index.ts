@@ -10,11 +10,10 @@ import { InquiryRoutes } from '../module/inquiry/inquiry.route';
 import { QuoteRoutes } from '../module/quote/quote.route';
 import { SettingRoutes } from '../module/setting/setting.route';
 import { TestimonialRoutes } from '../module/testimonial/testimonial.route';
+import { AssetRoutes } from '../module/asset/asset.route';
 
 const router = Router();
 
-// To respect exact paths defined in the domain modules (e.g. GET /blogs, POST /admin/blogs),
-// we mount all modular routes using `/`
 const moduleRoutes = [
   { path: '/', route: ProductRoutes },
   { path: '/auth', route: UserRoutes },
@@ -27,6 +26,7 @@ const moduleRoutes = [
   { path: '/', route: QuoteRoutes },
   { path: '/', route: SettingRoutes },
   { path: '/', route: TestimonialRoutes },
+  { path: '/', route: AssetRoutes },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
