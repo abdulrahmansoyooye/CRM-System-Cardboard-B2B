@@ -126,7 +126,7 @@ export default function SettingsPage() {
 
         {/* Content */}
         <div className="flex-1 min-w-0">
-          {isLoading ? <Skeleton className="h-[500px] w-full" /> : (
+          {isLoading ? <Skeleton className="h-125 w-full" /> : (
             <>
               {activeTab === "branding" && (
                 <div className="premium-card p-8 space-y-7">
@@ -194,7 +194,7 @@ export default function SettingsPage() {
                   </div>
                   <div>
                     <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-3 px-1">Open Graph Image</label>
-                    <div className="w-full h-36 bg-slate-50 border-2 border-dashed border-slate-200 rounded-2xl flex flex-col items-center justify-center text-slate-400 hover:border-accent-400 hover:bg-accent-50/30 cursor-pointer transition-all group">
+                    <div className="h-125 w-full bg-slate-50 flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-[50px] group overflow-hidden relative cursor-pointer hover:border-accent-400 hover:bg-accent-50/30 transition-all">
                       <Upload className="w-6 h-6 mb-2 group-hover:text-accent-500" />
                       <span className="text-xs font-bold group-hover:text-accent-600">Drop OG Image here or click to upload</span>
                       <span className="text-[10px] text-slate-300 mt-1">1200×630px recommended</span>

@@ -187,7 +187,7 @@ export default function BlogPage() {
       <div className="space-y-4 pb-20">
         {isLoading ? Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-32 w-full" />) : filtered.map((art) => (
           <div key={art._id} className="premium-card group p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-6 hover:border-accent-500/20 transition-all border-l-4 border-l-slate-200 has-[.published]:border-l-emerald-500">
-             <div className="flex-1 min-w-0" onClick={() => { setEditArticle(art); setForm({ ...art, content: art.content ?? "", tags: art.tags?.join(", ") ?? "" }); }} style={{ cursor: "pointer" }}>
+             <div className="flex-1 min-w-0" onClick={() => { setEditArticle(art); setForm({ ...art, content: art.content ?? "", tags: art.tags?.join(", ") ?? "", excerpt: art.excerpt ?? "" }); }} style={{ cursor: "pointer" }}>
                 <div className="flex items-center gap-3 mb-2 flex-wrap">
                    <span className={clsx("status-badge capitalize", art.status === "published" ? "badge-success published" : "badge-neutral")}>
                       <div className="w-1 h-1 rounded-full bg-current" />
@@ -199,7 +199,7 @@ export default function BlogPage() {
                 <div className="flex items-center gap-6">
                    <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 capitalize whitespace-nowrap"><Clock className="w-3.5 h-3.5" /> Published {new Date(art.createdAt).toLocaleDateString()}</div>
                    <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 capitalize whitespace-nowrap"><FileText className="w-3.5 h-3.5" /> {art.content?.split(' ').length || 0} Words</div>
-                   <div className="flex items-center gap-2 text-[10px] font-black text-slate-300 uppercase tracking-widest font-mono truncate hidden lg:flex">Slug: {art.slug}</div>
+                   <div className="items-center gap-2 text-[10px] font-black text-slate-300 uppercase tracking-widest font-mono truncate hidden lg:flex">Slug: {art.slug}</div>
                 </div>
              </div>
              <div className="flex items-center gap-2 sm:border-l sm:border-slate-100 sm:pl-8">

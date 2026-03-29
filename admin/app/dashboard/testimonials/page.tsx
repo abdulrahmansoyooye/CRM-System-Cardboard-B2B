@@ -213,7 +213,7 @@ export default function TestimonialsPage() {
                  <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> {new Date(t.createdAt).toLocaleDateString()}</span>
                </div>
                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => { setEditTarget(t); setForm({ ...t, company: t.company || "", rating: t.rating || 5 }); }} className="p-2.5 bg-white border border-slate-100 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition-all shadow-sm"><Edit2 className="w-4 h-4" /></button>
+                  <button onClick={() => { setEditTarget(t); setForm({ clientName: t.clientName, company: t.company || "", feedback: t.feedback, rating: t.rating || 5, isPublished: t.isPublished ?? false }); }} className="p-2.5 bg-white border border-slate-100 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition-all shadow-sm"><Edit2 className="w-4 h-4" /></button>
                   <button onClick={() => togglePublish(t)} className={clsx("p-2.5 bg-white border border-slate-100 rounded-xl transition-all shadow-sm", t.isPublished ? "text-slate-400 hover:bg-amber-50 hover:text-amber-500" : "text-slate-400 hover:bg-emerald-50 hover:text-emerald-500")}>
                     {t.isPublished ? <XCircle className="w-4 h-4" /> : <Globe className="w-4 h-4" />}
                   </button>

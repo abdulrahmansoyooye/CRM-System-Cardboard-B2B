@@ -179,12 +179,12 @@ export default function ApplicationsPage() {
                       </div>
                       <div>
                         <span className="font-bold text-slate-900 block">{app.name}</span>
-                        <span className="text-[10px] text-slate-400 font-mono font-bold tracking-tight uppercase truncate max-w-[100px] block">{app._id}</span>
+                        <span className="text-[10px] text-slate-400 font-mono font-bold tracking-tight uppercase truncate max-w-25 block">{app._id}</span>
                       </div>
                    </div>
                 </td>
                 <td className="px-7 py-5">
-                   <span className="text-xs font-bold text-slate-600 block max-w-[200px] truncate">{app.jobId?.title || "General Application"}</span>
+                   <span className="text-xs font-bold text-slate-600 block max-w-50 truncate">{app.jobId?.title || "General Application"}</span>
                    <span className="text-[10px] text-slate-300 font-bold uppercase tracking-widest">Applied {new Date(app.createdAt).toLocaleDateString()}</span>
                 </td>
                 <td className="px-7 py-5">
@@ -285,7 +285,7 @@ export default function ApplicationsPage() {
                       <button onClick={() => updateStatus(viewApp._id, "Hired")} className="w-full btn-primary justify-center shadow-emerald-500/10 py-4 mb-3">
                         Onboard Candidate
                       </button>
-                      <button onClick={() => setDeleteTarget(viewApp._id)} className="w-full py-3.5 text-xs font-black text-rose-50 uppercase tracking-widest hover:bg-rose-50 text-rose-500 rounded-2xl transition-all">
+                      <button onClick={() => setDeleteTarget(viewApp._id)} className="w-full py-3.5 text-xs font-black uppercase tracking-widest hover:bg-rose-50 text-rose-500 rounded-2xl transition-all">
                         Delete Profile
                       </button>
                    </div>

@@ -195,7 +195,7 @@ export default function JobsPage() {
       <div className="space-y-4 pb-20">
         {isLoading ? Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-32 w-full" />) : filtered.map((job) => (
           <div key={job._id} className="premium-card group p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 hover:border-accent-500/20 transition-all">
-            <div className="flex-1 min-w-0" onClick={() => { setEditJob(job); setForm({ ...job, description: job.description || "", department: job.department || "Operations", location: job.location || "Sector 4 Plant", type: job.type || "Full-Time", salary: job.salary || "", experience: job.experience || "2-4 years" }); }} style={{ cursor: "pointer" }}>
+            <div className="flex-1 min-w-0" onClick={() => { setEditJob(job); setForm({ title: job.title, description: job.description || "", department: job.department || "Operations", location: job.location || "Sector 4 Plant", type: job.type || "Full-Time", salary: job.salary || "", experience: job.experience || "2-4 years", status: job.status }); }} style={{ cursor: "pointer" }}>
                <div className="flex items-center gap-3 mb-2 flex-wrap">
                   <span className={clsx(
                     "status-badge",
@@ -224,7 +224,7 @@ export default function JobsPage() {
 
             <div className="flex items-center gap-2 lg:border-l lg:border-slate-100 lg:pl-8">
               <button 
-                onClick={() => { setEditJob(job); setForm({ ...job, description: job.description || "", department: job.department || "Operations", location: job.location || "Sector 4 Plant", type: job.type || "Full-Time", salary: job.salary || "", experience: job.experience || "2-4 years" }); }}
+                onClick={() => { setEditJob(job); setForm({ title: job.title, description: job.description || "", department: job.department || "Operations", location: job.location || "Sector 4 Plant", type: job.type || "Full-Time", salary: job.salary || "", experience: job.experience || "2-4 years", status: job.status }); }}
                 className="p-3 bg-white border border-slate-100 rounded-xl text-slate-400 hover:bg-slate-900 hover:text-white transition-all shadow-sm"
               >
                  <Edit2 className="w-4.5 h-4.5" />

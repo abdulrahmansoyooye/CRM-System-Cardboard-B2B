@@ -188,7 +188,7 @@ export default function GalleryPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6 pb-20">
           {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-80 w-full" />) : filtered.map((img) => (
             <div key={img._id} className="premium-card group overflow-hidden cursor-pointer" onClick={() => { setSelectedAsset(img); setIsPreviewOpen(true); }}>
-              <div className="aspect-[4/3] bg-slate-100 relative overflow-hidden group/img">
+              <div className="aspect-4/3 bg-slate-100 relative overflow-hidden group/img">
                 <div className="absolute inset-0 flex items-center justify-center text-slate-300 transform scale-150 transition-transform group-hover/img:scale-100 opacity-20 group-hover/img:opacity-100">
                   <ImageIcon className="w-12 h-12" />
                 </div>
@@ -246,7 +246,7 @@ export default function GalleryPage() {
                     </div>
                     <div>
                       <span className="font-bold text-slate-900 block text-sm">{img.name}</span>
-                      <span className="text-[10px] text-slate-400 font-mono font-bold tracking-tight uppercase truncate max-w-[150px] block">{img.type} | {img.size}</span>
+                      <span className="text-[10px] text-slate-400 font-mono font-bold tracking-tight uppercase truncate max-w-37.5 block">{img.type} | {img.size}</span>
                     </div>
                   </td>
                   <td className="px-8 py-6">
@@ -284,7 +284,7 @@ export default function GalleryPage() {
       {/* Modals */}
       <Modal isOpen={isUploadOpen} onClose={() => setIsUploadOpen(false)} title="Registry Protocol" subtitle="Capture and log industrial visual assets" size="md">
         <div className="space-y-6 py-6">
-          <div className="border-4 border-dashed border-slate-100 rounded-[32px] p-12 text-center hover:border-accent-500/20 hover:bg-accent-50/10 transition-all cursor-pointer group">
+          <div className="border-4 border-dashed border-slate-100 rounded-4xl p-12 text-center hover:border-accent-500/20 hover:bg-accent-50/10 transition-all cursor-pointer group">
             <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-accent-50 group-hover:scale-110 transition-all">
               <Upload className="w-8 h-8 text-slate-400 group-hover:text-accent-500" />
             </div>
@@ -312,7 +312,7 @@ export default function GalleryPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
             <div className="aspect-square bg-slate-100 rounded-3xl flex items-center justify-center border border-slate-100 overflow-hidden relative group/prev active:scale-[0.98] transition-transform">
                 <ImageIcon className="w-24 h-24 text-slate-200 group-hover/prev:scale-125 transition-transform duration-700" />
-                <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-slate-950/40 to-transparent">
+                <div className="absolute inset-x-0 bottom-0 p-6 bg-linear-to-t from-slate-950/40 to-transparent">
                   <span className="text-[9px] font-black text-white/50 uppercase tracking-[0.3em]">Source ID: {selectedAsset._id}</span>
                 </div>
             </div>

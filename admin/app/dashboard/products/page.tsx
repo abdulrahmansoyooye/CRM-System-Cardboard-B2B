@@ -306,7 +306,7 @@ export default function ProductsPage() {
                             <span className="font-bold text-slate-900 group-hover:text-accent-500 transition-colors">{p.name}</span>
                             {p.featured && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
                           </div>
-                          <div className="text-[10px] font-mono font-black text-slate-300 uppercase tracking-widest mt-0.5 truncate max-w-[150px]">{p.moq} MOQ • {p._id}</div>
+                          <div className="text-[10px] font-mono font-black text-slate-300 uppercase tracking-widest mt-0.5 truncate max-w-37.5">{p.moq} MOQ • {p._id}</div>
                         </div>
                       </div>
                     </td>
