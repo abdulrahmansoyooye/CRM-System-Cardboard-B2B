@@ -14,14 +14,13 @@ const NAV_LINKS = [
     href: "/products",
     children: [
       {
-        label: "Corrugated Master Cartons",
+        label: "Corrugated Boxes",
         href: "/products/corrugated-boxes",
       },
-      { label: "Custom Printed Boxes", href: "/products/custom-printed" },
-      { label: "7-Ply Heavy Duty", href: "/products/heavy-duty" },
-      { label: "Die-Cut Cartons", href: "/products/die-cut" },
+      { label: "Custom Printed", href: "/products/custom-printed" },
+      { label: "Heavy Duty", href: "/products/heavy-duty" },
+      { label: "Die-Cut Boxes", href: "/products/die-cut" },
       { label: "Export Packaging", href: "/products/export-packaging" },
-      { label: "Bulk Pallet Boxes", href: "/products/pallet-boxes" },
     ],
   },
   { label: "Industries", href: "/industries" },
@@ -30,11 +29,14 @@ const NAV_LINKS = [
     href: "#",
     children: [
       { label: "Manufacturing Process", href: "/process" },
+      { label: "Infrastructure", href: "/infrastructure" },
+      { label: "Quality Assurance", href: "/quality" },
+      { label: "Events & Updates", href: "/updates" },
       { label: "Gallery", href: "/gallery" },
-      { label: "Blog", href: "/blog" },
-      { label: "Careers", href: "/careers" },
     ],
   },
+  { label: "Blog", href: "/blog" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -120,7 +122,7 @@ export function Navbar() {
               <Search className="w-5 h-5 text-muted-foreground hover:text-accent" />
             </Button>
           </motion.div>
-          <Link href="/contact">
+          <Link href="/request-quote">
             <Button className="font-black tracking-[0.2em] bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all duration-500 rounded-none px-8 text-[10px] h-12 shadow-[8px_8px_0px_rgba(255,183,77,0.1)]">
               REQUEST A QUOTE
             </Button>
@@ -188,7 +190,7 @@ export function Navbar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link href="/request-quote" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button className="w-full mt-10 bg-accent text-accent-foreground hover:bg-white hover:text-primary font-black tracking-[0.2em] rounded-none py-8 text-xs h-16 transition-all duration-500">
                     REQUEST A QUOTE
                   </Button>

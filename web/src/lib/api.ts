@@ -38,3 +38,32 @@ export async function getIndustries() {
   const data = await res.json();
   return data.data;
 }
+export async function submitInquiry(data) {
+  const res = await fetch(`${API_BASE_URL}/inquiry`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to submit inquiry');
+  return res.json();
+}
+
+export async function submitQuote(data: any) {
+  const res = await fetch(`${API_BASE_URL}/quote`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to submit quote');
+  return res.json();
+}
+
+export async function submitApplication(data: any) {
+  const res = await fetch(`${API_BASE_URL}/jobs/apply`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error('Failed to submit application');
+  return res.json();
+}

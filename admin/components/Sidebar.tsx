@@ -17,21 +17,31 @@ import { api } from "@/lib/api";
 const NAV = [
   {
     label: "Analyze",
+    roles: ["admin", "sales"],
     items: [
       { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
       { icon: BarChart2, label: "Analytics", href: "/dashboard/analytics" },
     ],
   },
   {
-    label: "Management",
+    label: "Inventory",
+    roles: ["admin", "editor"],
     items: [
       { icon: Package, label: "Products", href: "/dashboard/products" },
-      { icon: BookOpen, label: "Blog", href: "/dashboard/blog" },
+      { icon: Building2, label: "Industries", href: "/dashboard/industries" },
+    ],
+  },
+  {
+    label: "Leads",
+    roles: ["admin", "sales"],
+    items: [
       { icon: MessageSquare, label: "Inquiries", href: "/dashboard/inquiries" },
+      { icon: BarChart2, label: "Quotes", href: "/dashboard/quotes" },
     ],
   },
   {
     label: "HR",
+    roles: ["admin", "hr"],
     items: [
       { icon: Briefcase, label: "Jobs", href: "/dashboard/jobs" },
       { icon: Users, label: "Applications", href: "/dashboard/applications" },
@@ -39,14 +49,16 @@ const NAV = [
   },
   {
     label: "Content",
+    roles: ["admin", "editor"],
     items: [
+      { icon: BookOpen, label: "Blog", href: "/dashboard/blog" },
       { icon: Star, label: "Testimonials", href: "/dashboard/testimonials" },
       { icon: ImageIcon, label: "Gallery", href: "/dashboard/gallery" },
-      { icon: Building2, label: "Industries", href: "/dashboard/industries" },
     ],
   },
   {
     label: "System",
+    roles: ["admin"],
     items: [
       { icon: Settings, label: "Settings", href: "/dashboard/settings" },
     ],
@@ -55,8 +67,8 @@ const NAV = [
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
-  const { data: session } = useSession();
-  const [role, setRole] = useState<"admin" | "editor" | "owner">("admin");
+  const { data: session } = useSession() as any;
+  const userRole = session?.user?.role || "editor";
 
   const handleLogout = async () => {
     try {
@@ -69,6 +81,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   };
 
   const userInitial = session?.user?.name?.charAt(0) || session?.user?.email?.charAt(0) || "U";
+  const filteredNav = NAV.filter(section => section.roles.includes(userRole));
 
   return (
     <aside className="sidebar-container relative h-full flex flex-col bg-white border-r border-slate-100 shadow-[20px_0_40px_rgba(0,0,0,0.02)]">
@@ -101,7 +114,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       </motion.div>
 
       <nav className="flex-1 px-4 space-y-8 overflow-y-auto pb-10 scrollbar-hide">
-        {NAV.map((section, sIdx) => (
+        {filteredNav.map((section, sIdx) => (
           <motion.div 
             key={section.label}
             initial={{ opacity: 0, y: 10 }}
@@ -166,27 +179,6 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
 
       <div className="p-6 border-t border-slate-50 bg-slate-50/30 mt-auto">
         <div className="flex flex-col gap-4">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setRole(role === "admin" ? "editor" : "admin")}
-            className="flex items-center justify-between w-full px-5 py-4 bg-white border border-slate-100 rounded-2xl shadow-sm hover:border-accent-500/30 transition-all group"
-          >
-            <div className="flex items-center gap-4">
-              <div className={clsx(
-                "w-8 h-8 rounded-xl flex items-center justify-center transition-colors",
-                role === "admin" ? "bg-accent-50 text-accent-500" : "bg-slate-100 text-slate-400"
-              )}>
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <p className="text-[9px] font-black uppercase tracking-wider text-slate-400 leading-none mb-1">Authorization</p>
-                <p className="text-xs font-black text-slate-900 tracking-tight capitalize">{role}</p>
-              </div>
-            </div>
-            <UserCircle className="w-4 h-4 text-slate-300 group-hover:text-accent-500 transition-colors" />
-          </motion.button>
-
           <div className="flex items-center gap-4 px-4 py-3 bg-white/50 rounded-2xl border border-transparent hover:border-slate-100 transition-all">
             <motion.div 
               whileHover={{ rotate: 15 }}
@@ -197,6 +189,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
             <div className="flex-1 min-w-0">
               <p className="text-xs font-black text-slate-900 truncate tracking-tight">{session?.user?.name || "Member"}</p>
               <p className="text-[10px] font-bold text-slate-400 truncate tracking-tight">{session?.user?.email || "No email provided"}</p>
+              <p className="text-[9px] font-black text-accent-500 uppercase tracking-widest leading-none mt-1">{userRole}</p>
             </div>
             <motion.button 
               whileHover={{ scale: 1.2, color: "#f43f5e" }}

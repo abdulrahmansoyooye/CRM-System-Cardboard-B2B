@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { getPlaceholderImage } from "@/lib/utils";
+import { StatCounter } from "@/components/StatCounter";
 
 const FEATURES = [
   {
@@ -146,19 +147,31 @@ export function CompanyOverview() {
                whileInView={{ opacity: 1 }}
                viewport={{ once: true }}
                transition={{ delay: 0.8 }}
-               className="mt-20 pt-10 border-t border-white/5 flex flex-wrap gap-10"
+               className="mt-20 pt-10 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-8"
             >
-               <div className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-accent" />
-                  <span className="text-[10px] font-black text-white/60 tracking-widest uppercase">ASTM COMPLIANT</span>
+               <div>
+                  <div className="text-3xl font-black text-white tracking-tighter mb-2">
+                    <StatCounter value={25} suffix="+" />
+                  </div>
+                  <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">YEARS OF EXPERIENCE</div>
                </div>
-               <div className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-accent" />
-                  <span className="text-[10px] font-black text-white/60 tracking-widest uppercase">RECYCLABLE MATERIALS</span>
+               <div>
+                  <div className="text-3xl font-black text-white tracking-tighter mb-2">
+                    <StatCounter value={450} suffix="T" />
+                  </div>
+                  <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">PRODUCTION CAPACITY</div>
                </div>
-               <div className="flex items-center gap-3">
-                  <CheckCircle2 className="w-5 h-5 text-accent" />
-                  <span className="text-[10px] font-black text-white/60 tracking-widest uppercase">BCT TESTED</span>
+               <div>
+                  <div className="text-3xl font-black text-white tracking-tighter mb-2">
+                    <StatCounter value={500} suffix="K+" />
+                  </div>
+                  <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">FACTORY AREA (SQ.FT)</div>
+               </div>
+               <div>
+                  <div className="text-3xl font-black text-white tracking-tighter mb-2">
+                    <StatCounter value={35} suffix="+" />
+                  </div>
+                  <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">EXPORT COUNTRIES</div>
                </div>
             </motion.div>
           </div>
