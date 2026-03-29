@@ -38,7 +38,7 @@ export async function getIndustries() {
   const data = await res.json();
   return data.data;
 }
-export async function submitInquiry(data) {
+export async function submitInquiry(data: unknown) {
   const res = await fetch(`${API_BASE_URL}/inquiry`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -48,7 +48,7 @@ export async function submitInquiry(data) {
   return res.json();
 }
 
-export async function submitQuote(data: any) {
+export async function submitQuote(data: unknown) {
   const res = await fetch(`${API_BASE_URL}/quote`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -58,7 +58,7 @@ export async function submitQuote(data: any) {
   return res.json();
 }
 
-export async function submitApplication(data: any) {
+export async function submitApplication(data: unknown) {
   const res = await fetch(`${API_BASE_URL}/jobs/apply`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
