@@ -6,11 +6,11 @@ const testimonial_controller_1 = require("./testimonial.controller");
 const auth_middleware_1 = require("../../middleware/auth.middleware");
 const router = (0, express_1.Router)();
 // Public Routes
-router.get('/', testimonial_controller_1.TestimonialController.getAll);
-router.get('/:id', testimonial_controller_1.TestimonialController.getById);
+router.get('/testimonials', testimonial_controller_1.TestimonialController.getAll);
+router.get('/testimonials/:id', testimonial_controller_1.TestimonialController.getById);
 // Admin Routes
-router.post('/admin', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), testimonial_controller_1.TestimonialController.create);
-router.put('/admin/:id', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), testimonial_controller_1.TestimonialController.update);
-router.delete('/admin/:id', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), testimonial_controller_1.TestimonialController.deleteDoc);
+router.post('/admin/testimonials', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), testimonial_controller_1.TestimonialController.create);
+router.put('/admin/testimonials/:id', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), testimonial_controller_1.TestimonialController.update);
+router.delete('/admin/testimonials/:id', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), testimonial_controller_1.TestimonialController.deleteDoc);
 exports.TestimonialRoutes = router;
 //# sourceMappingURL=testimonial.route.js.map

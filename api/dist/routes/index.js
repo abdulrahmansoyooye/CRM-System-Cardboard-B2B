@@ -11,9 +11,9 @@ const job_application_route_1 = require("../module/job_application/job_applicati
 const inquiry_route_1 = require("../module/inquiry/inquiry.route");
 const quote_route_1 = require("../module/quote/quote.route");
 const setting_route_1 = require("../module/setting/setting.route");
+const testimonial_route_1 = require("../module/testimonial/testimonial.route");
+const asset_route_1 = require("../module/asset/asset.route");
 const router = (0, express_1.Router)();
-// To respect exact paths defined in the domain modules (e.g. GET /blogs, POST /admin/blogs),
-// we mount all modular routes using `/`
 const moduleRoutes = [
     { path: '/', route: product_route_1.ProductRoutes },
     { path: '/auth', route: user_routes_1.UserRoutes },
@@ -24,7 +24,9 @@ const moduleRoutes = [
     { path: '/', route: job_application_route_1.JobApplicationRoutes },
     { path: '/', route: inquiry_route_1.InquiryRoutes },
     { path: '/', route: quote_route_1.QuoteRoutes },
-    { path: '/', route: setting_route_1.SettingRoutes }
+    { path: '/', route: setting_route_1.SettingRoutes },
+    { path: '/', route: testimonial_route_1.TestimonialRoutes },
+    { path: '/', route: asset_route_1.AssetRoutes },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 exports.default = router;

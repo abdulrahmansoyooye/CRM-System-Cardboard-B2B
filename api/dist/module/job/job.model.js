@@ -7,6 +7,8 @@ exports.jobSchema = new mongoose_1.Schema({
     department: { type: String },
     experience: { type: String },
     location: { type: String },
+    type: { type: String, enum: ['Full-Time', 'Part-Time', 'Shift Basis', 'Contract'], default: 'Full-Time' },
+    salary: { type: String },
     description: { type: String },
     status: { type: String, enum: ['open', 'closed'], default: 'open' }
 }, { timestamps: true });

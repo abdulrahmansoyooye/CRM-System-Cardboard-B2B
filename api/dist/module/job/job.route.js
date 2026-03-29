@@ -7,8 +7,10 @@ const auth_middleware_1 = require("../../middleware/auth.middleware");
 const router = (0, express_1.Router)();
 // Public Routes
 router.get('/jobs', job_controller_1.JobController.getAll);
+router.get('/jobs/:id', job_controller_1.JobController.getById);
 // Admin Routes
 router.post('/admin/jobs', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), job_controller_1.JobController.create);
 router.put('/admin/jobs/:id', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), job_controller_1.JobController.update);
+router.delete('/admin/jobs/:id', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), job_controller_1.JobController.deleteDoc);
 exports.JobRoutes = router;
 //# sourceMappingURL=job.route.js.map

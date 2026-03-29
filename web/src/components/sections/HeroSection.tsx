@@ -136,7 +136,7 @@ export function HeroSection() {
               size="lg"
               className="bg-accent text-accent-foreground hover:bg-white hover:text-[#0A0F1A] h-20 px-12 text-xs tracking-[0.3em] font-black group transition-all duration-700 rounded-none shadow-[15px_15px_0px_rgba(255,183,77,0.15)] relative overflow-hidden"
             >
-              <span className="relative z-10">REQUEST TECHNICAL AUDIT</span>
+              <span className="relative z-10">REQUEST QUOTE</span>
               <MoveRight className="w-6 h-6 ml-3 group-hover:translate-x-4 transition-transform duration-700 relative z-10" />
               <motion.div 
                 className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-700"
@@ -145,9 +145,9 @@ export function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="h-20 px-12 bg-transparent border-2 border-white/10 text-white hover:border-accent hover:text-accent text-xs tracking-[0.3em] font-black rounded-none group transition-all duration-700 flex items-center gap-4"
+              className="h-20 px-12 bg-transparent border-2 border-white/10 text-white hover:border-accent text-xs tracking-[0.3em] font-black rounded-none group transition-all duration-700 flex items-center gap-4"
             >
-              <Zap className="w-5 h-5 text-accent" />
+              <Zap className="w-5 h-5 text-accent hover:text-whit" />
               EXPLORE SOLUTIONS
             </Button>
           </motion.div>

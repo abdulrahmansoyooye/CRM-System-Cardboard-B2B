@@ -12,7 +12,6 @@ const config_1 = __importDefault(require("../config"));
 const authMiddleware = (requiredRoles) => {
     return (0, asyncHandler_1.default)(async (req, res, next) => {
         const token = req.headers.authorization?.split(' ')[1];
-        console.log(token);
         if (!token) {
             throw new AppError_1.AppError('Token is missing!', 401);
         }

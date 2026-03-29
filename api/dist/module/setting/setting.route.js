@@ -8,6 +8,7 @@ const router = (0, express_1.Router)();
 // Public Routes
 router.get('/settings', setting_controller_1.SettingController.getAll);
 // Admin Routes
-router.put('/admin/settings', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), setting_controller_1.SettingController.update);
+router.post('/admin/settings', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), setting_controller_1.SettingController.create);
+router.put('/admin/settings/:id', (0, auth_middleware_1.authMiddleware)(['admin', 'super_admin']), setting_controller_1.SettingController.update);
 exports.SettingRoutes = router;
 //# sourceMappingURL=setting.route.js.map
