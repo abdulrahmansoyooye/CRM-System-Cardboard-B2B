@@ -1,8 +1,7 @@
+import { Box, Zap, Lock, ScanLine, ShieldCheck, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
-import {  Box, Zap, Lock, ScanLine } from "lucide-react";
-
-
-export default function LoginPage() {
+export default function AdminHomePage() {
   return (
     <div className="min-h-screen flex bg-slate-50 relative overflow-hidden">
       {/* Absolute decorative background elements */}
@@ -51,10 +50,40 @@ export default function LoginPage() {
             ))}
           </div>
         </div>
+      </div>      {/* Right Panel - Login CTA */}
+      <div className="flex-1 flex flex-col items-center justify-center p-8 lg:p-24 relative z-10 w-full animate-in fade-in slide-in-from-bottom-8 duration-700">
+        <div className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-3xl p-8 lg:p-12 shadow-2xl border border-slate-200/50 text-center flex flex-col items-center relative overflow-hidden">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-orange-500 to-red-500"></div>
+          
+          <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mb-8 border border-orange-100 shadow-inner">
+            <ShieldCheck className="w-10 h-10 text-orange-500" />
+          </div>
+          
+          <h2 className="text-3xl font-black text-slate-900 mb-4 tracking-tight">
+            Secure Gateway
+          </h2>
+          
+          <p className="text-slate-500 font-medium mb-10 leading-relaxed text-md">
+            Enter the central administrative portal to monitor and manage industrial operations.
+          </p>
+          
+          <Link 
+            href="/login" 
+            className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-slate-900 to-slate-800 text-white py-4 px-8 rounded-2xl font-bold text-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group ring-4 ring-transparent hover:ring-slate-100 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out"></div>
+            <span className="relative z-10">Proceed to Login</span>
+            <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          
+          <div className="mt-8 w-full flex items-center gap-2 justify-center">
+            <Lock className="w-3 h-3 text-slate-400" />
+            <p className="text-xs font-semibold text-slate-400">
+              End-to-End Encrypted Session
+            </p>
+          </div>
+        </div>
       </div>
-
-
-      
     </div>
   );
 }
