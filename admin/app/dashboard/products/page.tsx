@@ -393,7 +393,4 @@ export default function ProductsPage() {
   );
 }
 
-// Helper clsx like function
-function clsx(...args: any[]) {
-    return args.filter(Boolean).join(' ');
-}
+import { cn } from "@/lib/utils";
