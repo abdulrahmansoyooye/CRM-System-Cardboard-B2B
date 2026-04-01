@@ -32,8 +32,8 @@ export const loginUser = async (payload: any) => {
     const token = generateToken({ id: user._id, email: user.email, role: user.role });
     
     // Remote password from the user object for the response
-    const userObj = user.toObject();
-    delete (userObj as any).password;
+    const userObj = user.toObject() as Record<string, unknown>;
+    delete userObj.password;
 
     return { user: userObj, token };
 }

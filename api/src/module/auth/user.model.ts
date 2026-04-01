@@ -22,9 +22,9 @@ const userSchema = new Schema<TUser>(
   {
     timestamps: true,
     toJSON: {
-      transform: function (doc, ret) {
-        delete (ret as any).password;
-        delete (ret as any).__v;
+      transform: function (doc, ret: Record<string, unknown>) {
+        delete ret.password;
+        delete ret.__v;
         return ret;
       },
     },

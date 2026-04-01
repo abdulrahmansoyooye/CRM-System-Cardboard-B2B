@@ -263,7 +263,7 @@ export default function ProductsPage() {
              <button
                 key={c}
                 onClick={() => setFilterCat(c)}
-                className={clsx(
+                className={cn(
                   "px-5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap",
                   filterCat === c ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"
                 )}
