@@ -6,7 +6,7 @@ const router = Router()
 
 router.post("/login", UserController.login)
 router.post("/logout", UserController.logout)
-router.post("/create", authMiddleware(["super_admin"]), UserController.create)
+router.post("/create", authMiddleware(["super_admin", "admin"]), UserController.create)
 
 router.get("/all", authMiddleware(["super_admin", "admin"]), UserController.getAll)
 router.get("/:id/details", authMiddleware(["super_admin", "admin"]), UserController.getById)

@@ -3,9 +3,7 @@ import Credentials from "next-auth/providers/credentials";
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://crm-system-cardboard-b2b.onrender.com";
 
-class CustomAuthError extends CredentialsSignin {
-  code = "custom";
-}
+
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
@@ -31,7 +29,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             data = JSON.parse(text);
           } catch (e) {
             console.error("Auth error: API returned non-JSON response:", text.substring(0, 50));
-            throw new CustomAuthError("Invalid API configuration");
+            throw new Error("Invalid API configuration");
           }
 
           if (res.ok && data.success) {
@@ -43,11 +41,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               accessToken: data.token,
             };
           }
-          throw new CustomAuthError(data.message || "Invalid credentials");
+          throw new Error(data.message || "Invalid credentials");
         } catch (error: any) {
           if (error instanceof CredentialsSignin) throw error;
           console.error("Auth connection error", error.message);
-          throw new CustomAuthError("Connection failed");
+          throw new Error("Connection failed");
         }
       },
     }),

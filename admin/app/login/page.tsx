@@ -40,6 +40,7 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
+        console.log(result);
         setError("Invalid credentials or unauthorized access.");
       } else {
         router.push("/dashboard");
