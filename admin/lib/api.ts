@@ -4,7 +4,7 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost
 
 export const api = async (url: string, options?: RequestInit) => {
   const session = await getSession();
-  const token = (session as any)?.accessToken;
+  const token = session?.accessToken;
   const res = await fetch(`${API_BASE_URL}/api/v1${url}`, {
     ...options,
     headers: {

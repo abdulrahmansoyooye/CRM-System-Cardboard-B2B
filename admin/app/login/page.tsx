@@ -5,35 +5,48 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Box, Lock, Mail, Loader2, ArrowRight, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const loginSchema = z.object({
+  email: z.string().min(1, "Email is required").email("Please enter a valid corporate email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: "", password: "" },
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
     setError("");
 
     try {
       const result = await signIn("credentials", {
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         redirect: false,
       });
+
       if (result?.error) {
-        setError("Invalid credentials. Please verify your access key.");
+        setError("Invalid credentials or unauthorized access.");
       } else {
         router.push("/dashboard");
         router.refresh();
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -71,7 +84,7 @@ export default function LoginPage() {
           transition={{ delay: 0.1, duration: 0.6 }}
           className="bg-white rounded-4xl p-10 shadow-[0_30px_60px_rgba(0,0,0,0.04)] border border-slate-100 relative z-10"
         >
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <div className="space-y-6">
               {/* Email Input */}
               <div className="space-y-3">
@@ -79,15 +92,20 @@ export default function LoginPage() {
                   Corporate Email
                 </label>
                 <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 transition-colors group-focus-within:text-accent-500" />
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 transition-colors group-focus-within:text-accent-500" />
                   <input
                     type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    {...register("email")}
                     placeholder="name@cardbox.com"
-                    className="w-full h-16 bg-slate-50/50 border-2 border-slate-100 rounded-2xl pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-accent-500/30 focus:bg-white transition-all outline-none"
+                    className={`w-full h-16 bg-slate-50/50 border-2 rounded-2xl pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:bg-white transition-all outline-none ${
+                      errors.email ? "border-rose-400 focus:border-rose-500" : "border-slate-100 focus:border-accent-500/30"
+                    }`}
                   />
+                  {errors.email && (
+                    <p className="text-xs font-bold text-rose-500 mt-2 ml-1">
+                      {errors.email.message}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -102,15 +120,20 @@ export default function LoginPage() {
                   </button>
                 </div>
                 <div className="relative group">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-300 transition-colors group-focus-within:text-accent-500" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 transition-colors group-focus-within:text-accent-500" />
                   <input
                     type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    {...register("password")}
                     placeholder="••••••••"
-                    className="w-full h-16 bg-slate-50/50 border-2 border-slate-100 rounded-2xl pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:border-accent-500/30 focus:bg-white transition-all outline-none"
+                    className={`w-full h-16 bg-slate-50/50 border-2 rounded-2xl pl-12 pr-4 text-sm font-bold text-slate-900 placeholder:text-slate-300 focus:outline-none focus:bg-white transition-all outline-none ${
+                      errors.password ? "border-rose-400 focus:border-rose-500" : "border-slate-100 focus:border-accent-500/30"
+                    }`}
                   />
+                  {errors.password && (
+                    <p className="text-xs font-bold text-rose-500 mt-2 ml-1">
+                      {errors.password.message}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -138,11 +161,11 @@ export default function LoginPage() {
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              disabled={loading}
+              disabled={isSubmitting}
               className="group relative w-full h-16 bg-slate-950 hover:bg-slate-900 text-white rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] transition-all disabled:opacity-70 disabled:cursor-not-allowed shadow-2xl shadow-slate-950/20 overflow-hidden"
             >
               <div className="relative z-10 flex items-center justify-center gap-4">
-                {loading ? (
+                {isSubmitting ? (
                   <Loader2 className="w-5 h-5 animate-spin text-accent-500" />
                 ) : (
                   <>

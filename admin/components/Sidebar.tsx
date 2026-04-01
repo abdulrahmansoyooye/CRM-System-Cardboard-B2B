@@ -67,7 +67,7 @@ const NAV = [
 
 export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
-  const { data: session } = useSession() as any;
+  const { data: session } = useSession();
   const userRole = session?.user?.role || "editor";
 
   const handleLogout = async () => {

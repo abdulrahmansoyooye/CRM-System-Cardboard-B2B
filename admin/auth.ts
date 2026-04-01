@@ -40,17 +40,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isLoggedIn = !!auth?.user;
+      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
+      if (isOnDashboard) {
+        if (isLoggedIn) return true;
+        return false; // Redirect unauthenticated users to login page
+      } else if (isLoggedIn && nextUrl.pathname === '/login') {
+        return Response.redirect(new URL('/dashboard', nextUrl));
+      }
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
-        token.accessToken = (user as any).accessToken;
-        token.role = (user as any).role;
+        token.accessToken = user.accessToken;
+        token.role = user.role;
+        token.id = user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        (session as any).accessToken = token.accessToken;
-        (session as any).user.role = token.role;
+        session.accessToken = token.accessToken;
+        session.user.role = token.role as string;
+        session.user.id = token.id as string;
       }
       return session;
     },

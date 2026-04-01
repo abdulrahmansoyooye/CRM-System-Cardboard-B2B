@@ -1,11 +1,12 @@
 'use client'
-import { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Modal from "@/components/Modal";
 import ConfirmModal from "@/components/ConfirmModal";
 import Skeleton from "@/components/Skeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProducts, createProduct, updateProduct, deleteProduct } from "@/services/product.service";
 import { Download, Package, Plus, Star, Edit2, Search, ArrowUpDown, Eye, Trash2 } from "lucide-react";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 type ProductStatus = "Active" | "Draft" | "Discontinued";
 type ProductCategory = "Heavy" | "Printed" | "Custom" | "Export" | "Pharma" | "Retail";
@@ -110,21 +111,25 @@ export default function ProductsPage() {
     }
   };
 
-  const sorted = [...products]
-    .filter((p) => {
-      const matchSearch = p.name?.toLowerCase().includes(search.toLowerCase()) || p.category?.toLowerCase().includes(search.toLowerCase());
-      const matchCat = filterCat === "All" || p.category === filterCat;
-      const matchStatus = filterStatus === "All" || p.status === filterStatus;
-      return matchSearch && matchCat && matchStatus;
-    })
-    .sort((a, b) => {
-      if (sortField === "price") {
-          const valA = parseFloat(a.price?.toString().replace("$", "") || "0");
-          const valB = parseFloat(b.price?.toString().replace("$", "") || "0");
-          return sortAsc ? valA - valB : valB - valA;
-      }
-      return sortAsc ? a.name?.localeCompare(b.name) : b.name?.localeCompare(a.name);
-    });
+  const debouncedSearch = useDebounce(search, 400);
+
+  const sorted = React.useMemo(() => {
+    return [...products]
+      .filter((p) => {
+        const matchSearch = p.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) || p.category?.toLowerCase().includes(debouncedSearch.toLowerCase());
+        const matchCat = filterCat === "All" || p.category === filterCat;
+        const matchStatus = filterStatus === "All" || p.status === filterStatus;
+        return matchSearch && matchCat && matchStatus;
+      })
+      .sort((a, b) => {
+        if (sortField === "price") {
+            const valA = parseFloat(a.price?.toString().replace("$", "") || "0");
+            const valB = parseFloat(b.price?.toString().replace("$", "") || "0");
+            return sortAsc ? valA - valB : valB - valA;
+        }
+        return sortAsc ? a.name?.localeCompare(b.name) : b.name?.localeCompare(a.name);
+      });
+  }, [products, debouncedSearch, filterCat, filterStatus, sortField, sortAsc]);
 
   const cycleSort = (field: typeof sortField) => {
     if (sortField === field) setSortAsc((x) => !x);
