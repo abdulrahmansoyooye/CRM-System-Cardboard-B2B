@@ -10,7 +10,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const loginSchema = z.object({
-  email: z.string().min(1, "Email is required").email("Please enter a valid corporate email"),
+  email: z.email("Please enter a valid corporate email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 

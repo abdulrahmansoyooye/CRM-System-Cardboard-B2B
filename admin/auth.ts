@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://cardboard-admindashboard.vercel.app/";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -13,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!credentials?.email || !credentials?.password) return null;
 
         try {
-          const res = await fetch("http://localhost:4000/api/v1/auth/login", {
+          const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
             method: "POST",
             body: JSON.stringify(credentials),
             headers: { "Content-Type": "application/json" },
