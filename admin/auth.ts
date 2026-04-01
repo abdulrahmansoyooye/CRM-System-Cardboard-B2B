@@ -1,6 +1,12 @@
-import NextAuth from "next-auth";
+import NextAuth, { CredentialsSignin } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://cardboard-admindashboard.vercel.app/";
+
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://crm-system-cardboard-b2b.onrender.com";
+
+class CustomAuthError extends CredentialsSignin {
+  code = "custom";
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -19,22 +25,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             headers: { "Content-Type": "application/json" },
           });
 
-          const data = await res.json();
+          const text = await res.text();
+          let data;
+          try {
+            data = JSON.parse(text);
+          } catch (e) {
+            console.error("Auth error: API returned non-JSON response:", text.substring(0, 50));
+            throw new CustomAuthError("Invalid API configuration");
+          }
 
           if (res.ok && data.success) {
-            // Return user object including the backend token
             return {
               id: data.data._id,
               name: data.data.name,
               email: data.data.email,
               role: data.data.role,
-              accessToken: data.token, // Store the JWT from backend
+              accessToken: data.token,
             };
           }
-          return null;
-        } catch (error) {
-          console.error("Auth error", error);
-          return null;
+          throw new CustomAuthError(data.message || "Invalid credentials");
+        } catch (error: any) {
+          if (error instanceof CredentialsSignin) throw error;
+          console.error("Auth connection error", error.message);
+          throw new CustomAuthError("Connection failed");
         }
       },
     }),

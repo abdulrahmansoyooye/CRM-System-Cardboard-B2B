@@ -1,6 +1,6 @@
 import { getSession } from "next-auth/react";
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://cardboard-admindashboard.vercel.app/";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://crm-system-cardboard-b2b.onrender.com";
 
 export const api = async (url: string, options?: RequestInit) => {
   const session = await getSession();
