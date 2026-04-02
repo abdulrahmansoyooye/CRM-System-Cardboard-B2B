@@ -1,217 +1,143 @@
 'use client'
-import React, { useEffect, useState, useMemo } from "react";
-import Modal from "@/components/Modal";
-import ConfirmModal from "@/components/ConfirmModal";
+import React, { useEffect, useState } from "react";
 import Skeleton from "@/components/Skeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getProducts, createProduct, updateProduct, deleteProduct } from "@/services/product.service";
+import { getCategories } from "@/services/category.service";
 import { Download, Package, Plus, Star, Edit2, Search, ArrowUpDown, Eye, Trash2 } from "lucide-react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
-
-type ProductStatus = "Active" | "Draft" | "Discontinued";
-type ProductCategory = "Heavy" | "Printed" | "Custom" | "Export" | "Pharma" | "Retail";
+import { useModal } from "@/lib/store/useModalStore";
+import { cn } from "@/lib/utils";
 
 interface Product {
   _id: string;
   name: string;
-  category: ProductCategory;
-  ply: string;
-  moq: string;
-  status: ProductStatus;
-  featured: boolean;
-  price: string;
-  description?: string;
-  materials?: string;
+  categoryId: any;
+  moq: number;
+  deliveryTimeline: string;
+  isFeatured: boolean;
+  isActive: boolean;
+  shortDescription?: string;
+  fullDescription?: string;
+  materialDetails?: string;
+  specifications?: string[];
+  images?: string[];
 }
 
-const CATEGORIES: ProductCategory[] = ["Heavy", "Printed", "Custom", "Export", "Pharma", "Retail"];
-const PLY_OPTIONS = ["3-Ply", "5-Ply", "7-Ply", "9-Ply"];
-const statusBadge: Record<ProductStatus, string> = { Active: "badge-success", Draft: "badge-neutral", Discontinued: "badge-error" };
-
-const emptyForm = { 
-  name: "", 
-  category: "Heavy" as ProductCategory, 
-  ply: "5-Ply", 
-  moq: "", 
-  price: "", 
-  status: "Active" as ProductStatus, 
-  featured: false, 
-  description: "", 
-  materials: "" 
-};
+interface Category {
+  _id: string;
+  name: string;
+}
 
 export default function ProductsPage() {
   const queryClient = useQueryClient();
-  const { data: apiData, isLoading, error } = useQuery({
+  const { openModal, closeModal } = useModal();
+  
+  const { data: apiData, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
   });
 
-  const [products, setProducts] = useState<Product[]>([]);
+  const { data: catData } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
+
   const [search, setSearch] = useState("");
   const [filterCat, setFilterCat] = useState("All");
-  const [filterStatus, setFilterStatus] = useState("All");
-  const [sortField, setSortField] = useState<"name" | "price" | "moq">("name");
+  const [sortField, setSortField] = useState<"name" | "moq">("name");
   const [sortAsc, setSortAsc] = useState(true);
 
-  const [addOpen, setAddOpen] = useState(false);
-  const [editProduct, setEditProduct] = useState<Product | null>(null);
-  const [viewProduct, setViewProduct] = useState<Product | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-  const [form, setForm] = useState(emptyForm);
-
-  // Sync state with fetched data
-  useEffect(() => {
-    if (apiData?.success && Array.isArray(apiData.data)) {
-        setProducts(apiData.data);
-    }
-  }, [apiData]);
+  const products: Product[] = Array.isArray(apiData?.data) ? apiData.data : [];
+  const categories: Category[] = Array.isArray(catData?.data) ? catData.data : [];
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => createProduct(data),
+    mutationFn: createProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      setAddOpen(false);
-      resetForm();
-      setIsSaving(false);
+      closeModal();
     },
-    onError: () => setIsSaving(false),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => updateProduct(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      setEditProduct(null);
-      resetForm();
-      setIsSaving(false);
+      closeModal();
     },
-    onError: () => setIsSaving(false),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteProduct(id),
+    mutationFn: deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
-      setDeleteTarget(null);
+      closeModal();
     },
   });
 
-  const resetForm = () => {
-    setForm(emptyForm);
-  };
-
-  const handleSave = () => {
-    setIsSaving(true);
-    if (editProduct) {
-      updateMutation.mutate({ id: editProduct._id, data: form });
-    } else {
-      createMutation.mutate(form);
-    }
-  };
-
   const debouncedSearch = useDebounce(search, 400);
 
-  const sorted = React.useMemo(() => {
-    return [...products]
+  const sortedProducts = useMemo(() => {
+    return products
       .filter((p) => {
-        const matchSearch = p.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) || p.category?.toLowerCase().includes(debouncedSearch.toLowerCase());
-        const matchCat = filterCat === "All" || p.category === filterCat;
-        const matchStatus = filterStatus === "All" || p.status === filterStatus;
-        return matchSearch && matchCat && matchStatus;
+        const matchSearch = p.name?.toLowerCase().includes(debouncedSearch.toLowerCase());
+        const matchCat = filterCat === "All" || p.categoryId?._id === filterCat || p.categoryId === filterCat;
+        return matchSearch && matchCat;
       })
       .sort((a, b) => {
-        if (sortField === "price") {
-            const valA = parseFloat(a.price?.toString().replace("$", "") || "0");
-            const valB = parseFloat(b.price?.toString().replace("$", "") || "0");
-            return sortAsc ? valA - valB : valB - valA;
-        }
-        return sortAsc ? a.name?.localeCompare(b.name) : b.name?.localeCompare(a.name);
+        const valA = a[sortField] || "";
+        const valB = b[sortField] || "";
+        return sortAsc 
+          ? String(valA).localeCompare(String(valB)) 
+          : String(valB).localeCompare(String(valA));
       });
-  }, [products, debouncedSearch, filterCat, filterStatus, sortField, sortAsc]);
+  }, [products, debouncedSearch, filterCat, sortField, sortAsc]);
 
-  const cycleSort = (field: typeof sortField) => {
-    if (sortField === field) setSortAsc((x) => !x);
-    else { setSortField(field); setSortAsc(true); }
+  const handleCreate = (formData: any) => {
+    createMutation.mutate(formData);
   };
 
-  const openAdd = () => { resetForm(); setAddOpen(true); };
-  const openEdit = (p: Product) => { setEditProduct(p); setForm({ name: p.name, category: p.category, ply: p.ply, moq: p.moq, price: p.price, status: p.status, featured: p.featured, description: p.description ?? "", materials: p.materials ?? "" }); };
-
-  const toggleFeatured = (p: Product) => {
-    updateMutation.mutate({ id: p._id, data: { featured: !p.featured } });
+  const handleUpdate = (id: string, formData: any) => {
+    updateMutation.mutate({ id, data: formData });
   };
 
-  const FormContent = () => (
-    <div className="space-y-5">
-      <div>
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Product Name</label>
-        <input className="glass-input w-full" placeholder="e.g. 7-Ply Triple Fluted Export Box" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Category</label>
-          <select className="glass-input w-full" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value as ProductCategory })}>
-            {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Ply Composition</label>
-          <select className="glass-input w-full" value={form.ply} onChange={(e) => setForm({ ...form, ply: e.target.value })}>
-            {PLY_OPTIONS.map((p) => <option key={p}>{p}</option>)}
-          </select>
-        </div>
-        <div>
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Base Price (Unit)</label>
-          <input className="glass-input w-full" placeholder="$0.00" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />
-        </div>
-        <div>
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Min. Order Qty</label>
-          <input className="glass-input w-full" placeholder="e.g. 5,000" value={form.moq} onChange={(e) => setForm({ ...form, moq: e.target.value })} />
-        </div>
-      </div>
-      <div>
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Description</label>
-        <textarea rows={3} className="glass-input w-full resize-none" placeholder="Describe the product specifications..." value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-      </div>
-      <div>
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Materials</label>
-        <input className="glass-input w-full" placeholder="e.g. Virgin Kraft, Recycled OCC" value={form.materials} onChange={(e) => setForm({ ...form, materials: e.target.value })} />
-      </div>
-      <div className="flex flex-col gap-4">
-        <div>
-          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Status</label>
-          <div className="flex gap-2">
-            {(["Active", "Draft", "Discontinued"] as ProductStatus[]).map((s) => (
-              <button key={s} type="button" onClick={() => setForm({ ...form, status: s })} className={`px-4 py-2 rounded-xl text-xs font-black border transition-all ${form.status === s ? "bg-slate-950 text-white border-slate-950" : "border-slate-200 text-slate-500 hover:border-slate-300"}`}>{s}</button>
-            ))}
-          </div>
-        </div>
-        <label className="flex items-center gap-3 cursor-pointer">
-          <div
-            onClick={() => setForm({ ...form, featured: !form.featured })}
-            className={`w-12 h-6 rounded-full transition-all ${form.featured ? "bg-accent-500" : "bg-slate-200"} relative`}
-          >
-            <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-all ${form.featured ? "left-7" : "left-1"}`} />
-          </div>
-          <span className="text-sm font-bold text-slate-700">Mark as Featured Product</span>
-        </label>
-      </div>
-    </div>
-  );
+  const openFormModal = (product?: Product) => {
+    openModal({
+      title: product ? "Edit Product" : "Create Product",
+      subtitle: product ? `Editing ${product.name}` : "Add a new SKU to the catalog",
+      size: "lg",
+      view: (
+        <ProductForm 
+          initialData={product} 
+          categories={categories} 
+          onSubmit={(data) => product ? handleUpdate(product._id, data) : handleCreate(data)}
+          isSubmitting={createMutation.isPending || updateMutation.isPending}
+        />
+      )
+    });
+  };
 
-  if (error) {
-    return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
-            <div className="bg-rose-50 text-rose-500 p-6 rounded-3xl border border-rose-100 text-center max-w-md">
-                <h2 className="text-xl font-black mb-2">Sync Error</h2>
-                <p className="text-sm font-medium opacity-80">Failed to fetch the product catalog. Please ensure the backend server is running.</p>
-                <button onClick={() => window.location.reload()} className="mt-6 px-6 py-2 bg-rose-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest">Retry Connection</button>
-            </div>
+  const openDeleteModal = (id: string) => {
+    openModal({
+      title: "Confirm Deletion",
+      subtitle: "This action cannot be undone",
+      size: "sm",
+      view: (
+        <div className="space-y-6">
+          <p className="text-slate-600">Are you sure you want to permanently delete this product from the mission pipeline?</p>
+          <div className="flex gap-3">
+            <button onClick={closeModal} className="flex-1 px-6 py-3 rounded-2xl border border-slate-200 font-bold text-slate-600 hover:bg-slate-50 transition-all">Cancel</button>
+            <button 
+              onClick={() => deleteMutation.mutate(id)} 
+              className="flex-1 px-6 py-3 rounded-2xl bg-rose-500 text-white font-bold hover:bg-rose-600 transition-all shadow-lg shadow-rose-500/20"
+            >
+              {deleteMutation.isPending ? "Deleting..." : "Delete SKU"}
+            </button>
+          </div>
         </div>
-    );
-  }
+      )
+    });
+  };
 
   return (
     <div className="space-y-8 animate-enter">
@@ -223,8 +149,8 @@ export default function ProductsPage() {
           <p className="text-sm text-slate-400 font-medium mt-1">Industrial-grade corrugated solutions and custom packaging SKUs</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="btn-secondary py-2.5 shadow-none"><Download className="w-4 h-4" /><span className="text-xs hidden sm:inline uppercase tracking-widest font-black">Export CSV</span></button>
-          <button onClick={openAdd} className="btn-primary"><Plus className="w-4 h-4" /> New Product</button>
+          <button className="btn-secondary py-2.5 shadow-none"><Download className="w-4 h-4" /><span className="text-xs hidden sm:inline uppercase tracking-widest font-black">Export Catalog</span></button>
+          <button onClick={() => openFormModal()} className="btn-primary"><Plus className="w-4 h-4" /> New Product</button>
         </div>
       </div>
 
@@ -234,10 +160,10 @@ export default function ProductsPage() {
             Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32" />)
         ) : (
           [
-            { label: "Active SKUs", value: products.filter(p => p.status === "Active").length, icon: Package, color: "text-brand-600", bg: "bg-brand-50" },
-            { label: "Featured", value: products.filter(p => p.featured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
-            { label: "Drafts", value: products.filter(p => p.status === "Draft").length, icon: Edit2, color: "text-slate-400", bg: "bg-slate-50" },
-            { label: "Last Created", value: products.length > 0 ? products[0].name.split(' ')[0] : "--", icon: ArrowUpDown, color: "text-emerald-600", bg: "bg-emerald-50" },
+            { label: "Active SKUs", value: products.filter(p => p.isActive).length, icon: Package, color: "text-brand-600", bg: "bg-brand-50" },
+            { label: "Featured", value: products.filter(p => p.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+            { label: "In-Progress", value: products.filter(p => !p.isActive).length, icon: Edit2, color: "text-slate-400", bg: "bg-slate-50" },
+            { label: "Total SKUs", value: products.length, icon: ArrowUpDown, color: "text-emerald-600", bg: "bg-emerald-50" },
           ].map((s) => (
             <div key={s.label} className="premium-card p-6 flex items-center justify-between">
               <div>
@@ -256,19 +182,25 @@ export default function ProductsPage() {
       <div className="premium-card p-5 flex flex-col lg:flex-row gap-4 items-center bg-slate-50/40">
         <div className="relative flex-1 w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input type="text" placeholder="Search by name, category..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full glass-input pl-12 py-3" />
+          <input type="text" placeholder="Search by SKU name..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full glass-input pl-12 py-3" />
         </div>
-        <div className="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
-          {(["All", "Heavy", "Printed", "Custom", "Export", "Pharma", "Retail"] as const).map((c) => (
+        <div className="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto max-w-full">
+          <button 
+            onClick={() => setFilterCat("All")}
+            className={cn("px-5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap", filterCat === "All" ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900")}
+          >
+            All Categories
+          </button>
+          {categories.map((c) => (
              <button
-                key={c}
-                onClick={() => setFilterCat(c)}
+                key={c._id}
+                onClick={() => setFilterCat(c._id)}
                 className={cn(
                   "px-5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap",
-                  filterCat === c ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"
+                  filterCat === c._id ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"
                 )}
              >
-                {c}
+                {c.name}
              </button>
           ))}
         </div>
@@ -280,14 +212,10 @@ export default function ProductsPage() {
           <table className="w-full text-left">
             <thead>
               <tr className="border-b border-slate-100 bg-slate-50/50">
-                <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  <button onClick={() => cycleSort("name")} className="flex items-center gap-2 hover:text-slate-700 transition-colors">Product <ArrowUpDown className="w-3" /></button>
-                </th>
-                <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Category / Ply</th>
+                <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Product Name</th>
+                <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Category</th>
+                <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">MOQ</th>
                 <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Status</th>
-                <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                  <button onClick={() => cycleSort("price")} className="flex items-center gap-2 hover:text-slate-700 transition-colors">Price <ArrowUpDown className="w-3" /></button>
-                </th>
                 <th className="px-7 py-5 text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] text-right">Actions</th>
               </tr>
             </thead>
@@ -299,40 +227,39 @@ export default function ProductsPage() {
                     </tr>
                   ))
               ) : (
-                sorted.map((p) => (
-                  <tr key={p._id} className="hover:bg-slate-50/50 transition-colors group cursor-pointer" onClick={() => setViewProduct(p)}>
+                sortedProducts.map((p) => (
+                  <tr key={p._id} className="hover:bg-slate-50/50 transition-colors group">
                     <td className="px-7 py-5">
                       <div className="flex items-center gap-4">
-                        <div className="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-accent-50 group-hover:text-accent-500 transition-colors shrink-0 shadow-sm shadow-slate-900/5">
+                        <div className="w-11 h-11 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-accent-50 group-hover:text-accent-500 transition-colors shrink-0 shadow-sm">
                           <Package className="w-5 h-5" />
                         </div>
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-900 group-hover:text-accent-500 transition-colors">{p.name}</span>
-                            {p.featured && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
+                            <span className="font-bold text-slate-900">{p.name}</span>
+                            {p.isFeatured && <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />}
                           </div>
-                          <div className="text-[10px] font-mono font-black text-slate-300 uppercase tracking-widest mt-0.5 truncate max-w-37.5">{p.moq} MOQ • {p._id}</div>
+                          <div className="text-[10px] font-mono font-black text-slate-300 uppercase tracking-widest mt-0.5 truncate max-w-xs">{p._id}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-7 py-5">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100/50 uppercase tracking-tighter">{p.category}</span>
-                        <span className="text-xs font-bold text-slate-400 font-mono italic">{p.ply}</span>
-                      </div>
+                      <span className="px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100/50 uppercase">
+                        {(p.categoryId as any)?.name || 'Uncategorized'}
+                      </span>
                     </td>
                     <td className="px-7 py-5">
-                      <span className={`status-badge ${statusBadge[p.status] || 'badge-neutral'}`}>{p.status}</span>
+                      <span className="text-sm font-black text-slate-900 font-mono">{p.moq} Units</span>
                     </td>
                     <td className="px-7 py-5">
-                      <span className="text-sm font-black text-slate-900 font-mono">{typeof p.price === 'string' && !p.price.startsWith('$') ? `$${p.price}` : p.price}</span>
+                      <span className={cn("status-badge", p.isActive ? "badge-success" : "badge-neutral")}>
+                        {p.isActive ? "Active" : "Draft"}
+                      </span>
                     </td>
-                    <td className="px-7 py-5 text-right" onClick={(e) => e.stopPropagation()}>
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button onClick={(e) => { e.stopPropagation(); setViewProduct(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Eye className="w-4.5 h-4.5" /></button>
-                        <button onClick={(e) => { e.stopPropagation(); openEdit(p); }} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 transition-colors"><Edit2 className="w-4.5 h-4.5" /></button>
-                        <button onClick={(e) => { e.stopPropagation(); toggleFeatured(p); }} className="p-2.5 rounded-xl hover:bg-amber-50 text-slate-400 hover:text-amber-400 transition-colors"><Star className={`w-4.5 h-4.5 ${p.featured ? "fill-amber-400 text-amber-400" : ""}`} /></button>
-                        <button onClick={(e) => { e.stopPropagation(); setDeleteTarget(p._id); }} className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-colors"><Trash2 className="w-4.5 h-4.5" /></button>
+                    <td className="px-7 py-5 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <button onClick={() => openFormModal(p)} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-brand-500 transition-all"><Edit2 className="w-4 h-4" /></button>
+                        <button onClick={() => openDeleteModal(p._id)} className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-all"><Trash2 className="w-4 h-4" /></button>
                       </div>
                     </td>
                   </tr>
@@ -342,55 +269,127 @@ export default function ProductsPage() {
           </table>
         </div>
       </div>
-
-      {/* Modals */}
-      <Modal isOpen={addOpen || !!editProduct} onClose={() => { setAddOpen(false); setEditProduct(null); resetForm(); }} title={addOpen ? "New Product" : "Edit SKU"} subtitle={editProduct?.name} size="lg">
-        <div className="space-y-6">
-           <FormContent />
-           <div className="pt-4">
-              <button disabled={isSaving} onClick={handleSave} className="w-full btn-primary justify-center shadow-accent-500/20 py-4 font-black">
-                {isSaving ? "Syncing Logic..." : editProduct ? "Save Changes" : "Provision SKU"}
-              </button>
-           </div>
-        </div>
-      </Modal>
-
-      <Modal isOpen={!!viewProduct} onClose={() => setViewProduct(null)} title={viewProduct?.name ?? ""} subtitle={`ID: ${viewProduct?._id} • ${viewProduct?.category} • ${viewProduct?.ply}`} size="lg">
-        {viewProduct && (
-          <div className="space-y-6 py-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
-              {[{ label: "Category", value: viewProduct.category }, { label: "Ply", value: viewProduct.ply }, { label: "Base Price", value: typeof viewProduct.price === 'string' && !viewProduct.price.startsWith('$') ? `$${viewProduct.price}` : viewProduct.price }, { label: "Min Order Qty", value: viewProduct.moq }, { label: "Status", value: viewProduct.status }, { label: "Featured", value: viewProduct.featured ? "✅ Enabled" : "Disabled" }].map((f) => (
-                <div key={f.label} className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">{f.label}</p>
-                  <p className="text-sm font-bold text-slate-900">{f.value}</p>
-                </div>
-              ))}
-            </div>
-            {viewProduct.description && (
-              <div>
-                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-3 ml-2">Product Mission</label>
-                <div className="bg-slate-50 p-8 rounded-[40px] border border-slate-100 text-slate-700 font-medium leading-relaxed italic">
-                  "{viewProduct.description}"
-                </div>
-              </div>
-            )}
-            {viewProduct.materials && (
-              <div className="bg-slate-50 p-6 rounded-3xl border border-dashed border-slate-200">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">Material Pipeline</p>
-                <p className="text-sm font-bold text-slate-700">{viewProduct.materials}</p>
-              </div>
-            )}
-            <div className="pt-6 flex gap-4 border-t border-slate-50">
-              <button onClick={() => { setDeleteTarget(viewProduct._id); setViewProduct(null); }} className="px-6 py-4 text-xs font-black text-rose-500 uppercase tracking-widest hover:bg-rose-50 rounded-2xl transition-all">Archieve SKU</button>
-              <button onClick={() => { openEdit(viewProduct); setViewProduct(null); }} className="flex-1 btn-primary justify-center">Edit Specification</button>
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      <ConfirmModal isOpen={!!deleteTarget} onClose={() => setDeleteTarget(null)} onConfirm={() => deleteMutation.mutate(deleteTarget!)} title="Delete Product" message="This will permanently remove the product from the catalog. Are you sure?" confirmLabel="Delete Product" danger />
     </div>
   );
 }
 
-import { cn } from "@/lib/utils";
+function ProductForm({ initialData, categories, onSubmit, isSubmitting }: { initialData?: Product, categories: Category[], onSubmit: (data: any) => void, isSubmitting: boolean }) {
+  const [formData, setFormData] = useState({
+    name: initialData?.name || "",
+    categoryId: (initialData?.categoryId as any)?._id || initialData?.categoryId || "",
+    moq: initialData?.moq || 1,
+    deliveryTimeline: initialData?.deliveryTimeline || "",
+    isFeatured: initialData?.isFeatured || false,
+    isActive: initialData?.isActive ?? true,
+    shortDescription: initialData?.shortDescription || "",
+    fullDescription: initialData?.fullDescription || "",
+    materialDetails: initialData?.materialDetails || "",
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Product Name</label>
+          <input 
+            required
+            className="w-full glass-input" 
+            placeholder="e.g. 7-Ply Triple Fluted Box" 
+            value={formData.name} 
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Category</label>
+          <select 
+            required
+            className="w-full glass-input" 
+            value={formData.categoryId} 
+            onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+          >
+            <option value="">Select Category</option>
+            {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
+          </select>
+        </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Min. Order Qty</label>
+          <input 
+            type="number"
+            required
+            className="w-full glass-input" 
+            value={formData.moq} 
+            onChange={(e) => setFormData({ ...formData, moq: parseInt(e.target.value) })} 
+          />
+        </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Delivery Timeline</label>
+          <input 
+            required
+            className="w-full glass-input" 
+            placeholder="e.g. 7-10 Business Days" 
+            value={formData.deliveryTimeline} 
+            onChange={(e) => setFormData({ ...formData, deliveryTimeline: e.target.value })} 
+          />
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Short Description</label>
+        <input 
+          className="w-full glass-input" 
+          placeholder="Brief overview of the SKU..." 
+          value={formData.shortDescription} 
+          onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })} 
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Material Details</label>
+        <textarea 
+          rows={3}
+          className="w-full glass-input resize-none" 
+          placeholder="Specify material composition..." 
+          value={formData.materialDetails} 
+          onChange={(e) => setFormData({ ...formData, materialDetails: e.target.value })} 
+        />
+      </div>
+
+      <div className="flex gap-6 pt-2">
+        <label className="flex items-center gap-3 cursor-pointer group">
+          <div 
+            onClick={() => setFormData({ ...formData, isFeatured: !formData.isFeatured })}
+            className={cn("w-10 h-5 rounded-full transition-all relative border border-slate-200", formData.isFeatured ? "bg-amber-400 border-amber-500" : "bg-slate-100")}
+          >
+            <div className={cn("absolute top-0.5 w-3.5 h-3.5 bg-white rounded-full shadow-sm transition-all", formData.isFeatured ? "left-5.5" : "left-1")} />
+          </div>
+          <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Featured Product</span>
+        </label>
+
+        <label className="flex items-center gap-3 cursor-pointer group">
+          <div 
+            onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
+            className={cn("w-10 h-5 rounded-full transition-all relative border border-slate-200", formData.isActive ? "bg-emerald-500 border-emerald-600" : "bg-slate-100")}
+          >
+            <div className={cn("absolute top-0.5 w-3.5 h-3.5 bg-white rounded-full shadow-sm transition-all", formData.isActive ? "left-5.5" : "left-1")} />
+          </div>
+          <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Active Status</span>
+        </label>
+      </div>
+
+      <button 
+        type="submit" 
+        disabled={isSubmitting}
+        className="w-full btn-primary justify-center py-4 font-black mt-4 shadow-xl shadow-brand-500/20"
+      >
+        {isSubmitting ? "Syncing to Blockchain..." : initialData ? "Update SKU Specification" : "Provision New SKU"}
+      </button>
+    </form>
+  );
+}
+
+import { useMemo } from "react";

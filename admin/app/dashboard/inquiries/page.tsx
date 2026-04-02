@@ -1,15 +1,14 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Plus, Search, Edit2, Trash2, Eye, Mail, Phone, Calendar, ArrowUpRight, MessageSquare, Download, MoreHorizontal, User, Building, CheckCircle2 } from "lucide-react";
-import Modal from "@/components/Modal";
-import ConfirmModal from "@/components/ConfirmModal";
+'use client'
+import React, { useEffect, useState, useMemo } from "react";
 import Skeleton from "@/components/Skeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getInquiries, createInquiry, updateInquiry, deleteInquiry } from "@/services/inquiry.service";
-import { clsx } from "clsx";
+import { Plus, Search, Trash2, Eye, Mail, Phone, Calendar, ArrowUpRight, MessageSquare, Download, User, Building, CheckCircle2, Clock } from "lucide-react";
+import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useModal } from "@/lib/store/useModalStore";
+import { cn } from "@/lib/utils";
 
-type InquiryStatus = "New" | "Contacted" | "Quoted" | "Closed";
+type InquiryStatus = "new" | "contacted" | "quoted" | "closed";
 
 interface Inquiry {
   _id: string;
@@ -24,126 +23,117 @@ interface Inquiry {
   message?: string;
 }
 
-const statusStyles: Record<InquiryStatus, { bg: string, color: string }> = {
-  New: { bg: "bg-brand-50", color: "text-brand-600" },
-  Contacted: { bg: "bg-blue-50", color: "text-blue-600" },
-  Quoted: { bg: "bg-amber-50", color: "text-amber-600" },
-  Closed: { bg: "bg-emerald-50", color: "text-emerald-600" },
+const statusConfig: Record<InquiryStatus, { label: string, color: string, bg: string }> = {
+  new: { label: "Incoming", color: "text-brand-600", bg: "bg-brand-50" },
+  contacted: { label: "In Contact", color: "text-blue-600", bg: "bg-blue-50" },
+  quoted: { label: "Proposal Sent", color: "text-amber-600", bg: "bg-amber-50" },
+  closed: { label: "Project Won", color: "text-emerald-600", bg: "bg-emerald-50" },
 };
 
 export default function InquiriesPage() {
   const queryClient = useQueryClient();
-  const { data: apiData, isLoading, error } = useQuery({ queryKey: ["inquiries"], queryFn: getInquiries });
-
-  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"All" | InquiryStatus>("All");
+  const { openModal, closeModal } = useModal();
   
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isViewOpen, setIsViewOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedInquiry, setSelectedInquiry] = useState<Inquiry | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-
-  const [form, setForm] = useState({ 
-    name: "", 
-    company: "", 
-    email: "", 
-    phone: "", 
-    productInterested: "Heavy Duty Master Cartons", 
-    status: "New" as InquiryStatus, 
-    notes: "" 
+  const { data: apiData, isLoading } = useQuery({
+    queryKey: ["inquiries"],
+    queryFn: getInquiries,
   });
 
-  useEffect(() => {
-    if (apiData?.success && Array.isArray(apiData.data)) {
-      setInquiries(apiData.data.map((i: any) => ({
-        ...i,
-        status: i.status === "new" ? "New" : 
-                i.status === "contacted" ? "Contacted" : 
-                i.status === "quoted" ? "Quoted" : "Closed"
-      })));
-    }
-  }, [apiData]);
+  const [search, setSearch] = useState("");
+  const [filterStatus, setFilterStatus] = useState<"All" | InquiryStatus>("All");
+
+  const inquiries: Inquiry[] = Array.isArray(apiData?.data) ? apiData.data : [];
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => createInquiry(data),
+    mutationFn: createInquiry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inquiries"] });
-      setIsAddOpen(false);
-      resetForm();
-      setIsSaving(false);
+      closeModal();
     },
-    onError: () => setIsSaving(false),
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => updateInquiry(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inquiries"] });
-      setIsSaving(false);
+      // Keep view open if we're just updating status
     },
-    onError: () => setIsSaving(false),
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteInquiry(id),
+    mutationFn: deleteInquiry,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["inquiries"] });
-      setIsDeleteOpen(false);
-      setIsViewOpen(false);
-      setSelectedInquiry(null);
+      closeModal();
     },
   });
 
-  const resetForm = () => {
-    setForm({ 
-      name: "", 
-      company: "", 
-      email: "", 
-      phone: "", 
-      productInterested: "Heavy Duty Master Cartons", 
-      status: "New", 
-      notes: "" 
+  const debouncedSearch = useDebounce(search, 400);
+
+  const filteredInquiries = useMemo(() => {
+    return inquiries.filter((inq) => {
+      const matchSearch = inq.name?.toLowerCase().includes(debouncedSearch.toLowerCase()) || 
+                          inq.company?.toLowerCase().includes(debouncedSearch.toLowerCase());
+      const matchStatus = filterStatus === "All" || inq.status === filterStatus;
+      return matchSearch && matchStatus;
+    });
+  }, [inquiries, debouncedSearch, filterStatus]);
+
+  const openFormModal = () => {
+    openModal({
+      title: "New Pipeline Lead",
+      subtitle: "Capture incoming industrial inquiry manually",
+      size: "md",
+      view: (
+        <InquiryForm 
+          onSubmit={(data) => createMutation.mutate(data)}
+          isSubmitting={createMutation.isPending}
+        />
+      )
     });
   };
 
-  const handleSave = () => {
-    setIsSaving(true);
-    const payload = { ...form, status: form.status.toLowerCase() };
-    createMutation.mutate(payload);
+  const openViewModal = (inquiry: Inquiry) => {
+    openModal({
+      title: "Lead Intelligence",
+      subtitle: `System ID: ${inquiry._id}`,
+      size: "lg",
+      view: (
+        <InquiryDetailView 
+          inquiry={inquiry} 
+          onUpdateStatus={(status) => updateMutation.mutate({ id: inquiry._id, data: { status } })}
+          onDelete={() => openDeleteModal(inquiry._id, inquiry.company || inquiry.name)}
+        />
+      )
+    });
   };
 
-  const handleStatusChange = (status: InquiryStatus) => {
-    if (selectedInquiry) {
-      updateMutation.mutate({ id: selectedInquiry._id, data: { status: status.toLowerCase() } });
-      setSelectedInquiry({ ...selectedInquiry, status });
-    }
+  const openDeleteModal = (id: string, name: string) => {
+    openModal({
+      title: "Purge Lead Data",
+      subtitle: `Decommissioning inquiry: ${name}`,
+      size: "sm",
+      view: (
+        <div className="space-y-6 text-center py-4">
+          <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
+            <Trash2 className="w-8 h-8" />
+          </div>
+          <p className="text-slate-600 font-medium tracking-tight px-4 font-display">
+            Are you sure you want to permanently delete this lead? This will erase all mission logs and deal history from the pipeline.
+          </p>
+          <div className="flex gap-3 pt-2">
+            <button onClick={closeModal} className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 font-black text-[10px] uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">Abort</button>
+            <button 
+              onClick={() => deleteMutation.mutate(id)} 
+              className="flex-1 px-6 py-4 rounded-2xl bg-rose-500 text-white font-black text-[10px] uppercase tracking-widest hover:bg-rose-600 transition-all shadow-xl shadow-rose-500/20"
+            >
+              {deleteMutation.isPending ? "Purging..." : "Confirm Delete"}
+            </button>
+          </div>
+        </div>
+      )
+    });
   };
-
-  const filtered = inquiries.filter(i => {
-    const matchSearch = i.company?.toLowerCase().includes(search.toLowerCase()) || 
-                       i.name.toLowerCase().includes(search.toLowerCase());
-    const matchFilter = filter === "All" || i.status === filter;
-    return matchSearch && matchFilter;
-  });
-
-  const stats = [
-    { label: "Incoming", value: inquiries.filter(i => i.status === "New").length, icon: MessageSquare, color: "text-brand-600", bg: "bg-brand-50" },
-    { label: "Contacted", value: inquiries.filter(i => i.status === "Contacted").length, icon: Phone, color: "text-blue-600", bg: "bg-blue-50" },
-    { label: "Quoted", value: inquiries.filter(i => i.status === "Quoted").length, icon: Mail, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Conversion", value: "83%", icon: ArrowUpRight, color: "text-emerald-600", bg: "bg-emerald-50" },
-  ];
-
-  if (error) return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <div className="bg-rose-50 text-rose-500 p-6 rounded-3xl border border-rose-100 text-center max-w-md">
-        <h2 className="text-xl font-black mb-2">Sync Error</h2>
-        <p className="text-sm font-medium opacity-80">Failed to fetch inquiries. Please ensure the backend server is running.</p>
-        <button onClick={() => window.location.reload()} className="mt-6 px-6 py-2 bg-rose-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest">Retry Connection</button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="space-y-8 animate-enter">
@@ -152,247 +142,224 @@ export default function InquiriesPage() {
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-500 mb-2">CRM Pipeline</p>
           <h1 className="text-4xl font-display font-black text-slate-900 tracking-tight">Client Inquiries</h1>
-          <p className="text-sm text-slate-400 font-medium mt-1">{inquiries.length} total leads in sales funnel</p>
+          <p className="text-sm text-slate-400 font-medium mt-1">Real-time leads and industrial project opportunities</p>
         </div>
         <div className="flex items-center gap-3">
-          <button className="btn-secondary py-2.5">
-            <Download className="w-4 h-4" /> <span className="text-xs font-bold uppercase tracking-wider">Export CSV</span>
-          </button>
-          <button onClick={() => { resetForm(); setIsAddOpen(true); }} className="btn-primary">
-            <Plus className="w-4 h-4" /> New Inquiry
-          </button>
+          <button className="btn-secondary py-3 px-6"><Download className="w-4 h-4" /> <span className="text-xs uppercase font-black tracking-widest">Export CSV</span></button>
+          <button onClick={openFormModal} className="btn-primary py-3 px-8 shadow-xl shadow-brand-500/20"><Plus className="w-4 h-4" /> New Inquiry</button>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32" />) : stats.map((s) => (
-          <div key={s.label} className="premium-card p-6 flex items-center justify-between">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
-              <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
+        {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32" />) : (
+          [
+            { label: "New Leads", value: inquiries.filter(i => i.status === "new").length, icon: MessageSquare, color: "text-brand-600", bg: "bg-brand-50" },
+            { label: "Conversion", value: "85.2%", icon: ArrowUpRight, color: "text-emerald-600", bg: "bg-emerald-50" },
+            { label: "Proposals", value: inquiries.filter(i => i.status === "quoted").length, icon: Calendar, color: "text-amber-600", bg: "bg-amber-50" },
+            { label: "Avg. Response", value: "4.2h", icon: Clock, color: "text-sky-600", bg: "bg-sky-50" },
+          ].map((s) => (
+            <div key={s.label} className="premium-card p-6 flex items-center justify-between group">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
+                <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
+              </div>
+              <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform duration-500 group-hover:rotate-12", s.bg, s.color)}>
+                <s.icon className="w-5 h-5" />
+              </div>
             </div>
-            <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm", s.bg, s.color)}>
-              <s.icon className="w-5 h-5" />
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center">
-        <div className="flex bg-white p-1 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
-          {(["All", "New", "Contacted", "Quoted", "Closed"] as const).map((t) => (
-            <button
-              key={t}
-              onClick={() => setFilter(t)}
-              className={clsx(
-                "px-5 py-2 text-xs font-bold rounded-xl transition-all whitespace-nowrap",
-                filter === t ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900"
-              )}
-            >
-              {t}
+      {/* Filters & Search */}
+      <div className="flex flex-col lg:flex-row gap-4 items-center">
+        <div className="relative flex-1 w-full max-w-md">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input type="text" placeholder="Search leads by name or company..." className="w-full glass-input pl-14 py-4" value={search} onChange={(e) => setSearch(e.target.value)} />
+        </div>
+        <div className="flex bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto max-w-full">
+          {(["All", "new", "contacted", "quoted", "closed"] as const).map((s) => (
+            <button key={s} onClick={() => setFilterStatus(s)} className={cn("px-6 py-2.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap uppercase tracking-widest", filterStatus === s ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900")}>
+              {s === "All" ? "All Tracks" : s}
             </button>
           ))}
         </div>
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-          <input 
-            type="text" 
-            placeholder="Search company or contact..." 
-            className="w-full glass-input pl-12 py-3"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
       </div>
 
-      {/* List */}
-      <div className="space-y-4 pb-20">
-        {isLoading ? Array(3).fill(0).map((_, i) => <Skeleton key={i} className="h-28 w-full" />) : filtered.map((inquiry) => (
-          <div key={inquiry._id} className="premium-card p-6 flex flex-col lg:flex-row lg:items-center justify-between gap-6 group hover:border-accent-500/20 transition-all">
-            <div className="flex-1 min-w-0 flex items-start gap-5">
-              <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black text-xl shrink-0 group-hover:scale-110 transition-transform">
-                {inquiry.company ? inquiry.company[0] : inquiry.name[0]}
+      {/* Leads List */}
+      <div className="space-y-4">
+        {isLoading ? Array(5).fill(0).map((_, i) => <Skeleton key={i} className="h-32 w-full" />) : (
+          filteredInquiries.map((inq) => (
+            <div key={inq._id} onClick={() => openViewModal(inq)} className="premium-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer group hover:border-brand-500 transition-all duration-300">
+              <div className="flex items-start gap-6">
+                 <div className="w-16 h-16 bg-slate-950 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-slate-950/20 shrink-0 group-hover:scale-105 transition-transform">
+                   <Building className="w-7 h-7 opacity-80" />
+                 </div>
+                 <div className="min-w-0">
+                    <div className="flex items-center gap-3 mb-1.5">
+                      <h3 className="text-xl font-display font-black text-slate-900 truncate">{inq.company || inq.name}</h3>
+                      <span className={cn("status-badge px-3 py-1", statusConfig[inq.status].bg, statusConfig[inq.status].color)}>
+                        {statusConfig[inq.status].label}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-y-2 gap-x-6">
+                       <div className="flex items-center gap-2 text-xs font-bold text-slate-400">
+                         <User className="w-4 h-4 text-slate-300" />
+                         {inq.name}
+                       </div>
+                       <div className="flex items-center gap-2 text-xs font-bold text-blue-500 bg-blue-50 px-3 py-1 rounded-lg">
+                         <ArrowUpRight className="w-4 h-4" />
+                         {inq.productInterested || "General Scope"}
+                       </div>
+                    </div>
+                 </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-1">
-                  <h3 className="text-xl font-display font-black text-slate-900 tracking-tight">{inquiry.company || inquiry.name}</h3>
-                  <div className={clsx("status-badge", statusStyles[inquiry.status].bg, statusStyles[inquiry.status].color)}>
-                    <div className="w-1 h-1 rounded-full bg-current" />
-                    {inquiry.status}
+              <div className="flex items-center gap-6">
+                  <div className="hidden lg:flex flex-col items-end">
+                     <span className="text-[10px] font-black uppercase text-slate-300 tracking-widest">Received</span>
+                     <span className="text-sm font-bold text-slate-700">{new Date(inq.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                   </div>
-                </div>
-                <div className="flex items-center gap-4 text-xs font-bold text-slate-400">
-                  <span className="flex items-center gap-1.5"><User className="w-3.5 h-3.5" /> {inquiry.name}</span>
-                  <span className="flex items-center gap-1.5"><Calendar className="w-3.5 h-3.5" /> {new Date(inquiry.createdAt).toLocaleDateString()}</span>
-                  <span className="flex items-center gap-1.5 text-blue-600 bg-blue-50 px-2 py-0.5 rounded-md"><ArrowUpRight className="w-3.5 h-3.5" /> {inquiry.productInterested || "Generic Inquiry"}</span>
-                </div>
+                  <div className="flex gap-2">
+                     <button className="p-3 rounded-xl bg-slate-50 text-slate-400 group-hover:bg-slate-900 group-hover:text-white transition-all"><Eye className="w-5 h-5" /></button>
+                     <button onClick={(e) => { e.stopPropagation(); openDeleteModal(inq._id, inq.company || inq.name); }} className="p-3 rounded-xl bg-slate-50 text-slate-400 group-hover:bg-rose-500 group-hover:text-white transition-all"><Trash2 className="w-5 h-5" /></button>
+                  </div>
               </div>
             </div>
-            
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <div className="flex bg-white p-1 rounded-xl border border-slate-100">
-                <button 
-                  onClick={() => { setSelectedInquiry(inquiry); setIsViewOpen(true); }}
-                  className="p-2.5 text-slate-400 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-all"
-                >
-                  <Eye className="w-4.5 h-4.5" />
-                </button>
-                <a href={`mailto:${inquiry.email}`} className="p-2.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all">
-                  <Mail className="w-4.5 h-4.5" />
-                </a>
-                <button 
-                  onClick={() => { setSelectedInquiry(inquiry); setIsDeleteOpen(true); }}
-                  className="p-2.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all"
-                >
-                  <Trash2 className="w-4.5 h-4.5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Modal: View Details */}
-      <Modal isOpen={isViewOpen} onClose={() => setIsViewOpen(false)} title="Inquiry Details" size="lg">
-        {selectedInquiry && (
-          <div className="space-y-8 py-4">
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="flex-1 space-y-6">
-                <div>
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-2">Company Information</label>
-                  <div className="bg-slate-50 p-6 rounded-3xl border border-slate-100">
-                    <h3 className="text-2xl font-display font-black text-slate-900 mb-1">{selectedInquiry.company || "Not Specified"}</h3>
-                    <p className="text-slate-500 font-medium flex items-center gap-2 mb-4"><Building className="w-4 h-4 opacity-30" /> Industrial Partner</p>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 mb-1">Point of Contact</p>
-                        <p className="font-bold text-slate-900">{selectedInquiry.name}</p>
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-300 mb-1">Received Date</p>
-                        <p className="font-bold text-slate-900">{new Date(selectedInquiry.createdAt).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-slate-900 text-white p-6 rounded-3xl">
-                     <p className="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1">Contact Email</p>
-                     <p className="text-sm font-bold tracking-tight">{selectedInquiry.email}</p>
-                  </div>
-                  <div className="bg-accent-50 text-accent-700 p-6 rounded-3xl border border-accent-100">
-                     <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Interest</p>
-                     <p className="text-sm font-black truncate">{selectedInquiry.productInterested || "Generic"}</p>
-                  </div>
-                </div>
-
-                {selectedInquiry.message && (
-                  <div>
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-2">Original Message</label>
-                    <div className="bg-white p-6 rounded-3xl border border-slate-100 text-slate-700 font-medium leading-relaxed italic">
-                      "{selectedInquiry.message}"
-                    </div>
-                  </div>
-                )}
-
-                {selectedInquiry.notes && (
-                  <div>
-                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-2">Internal Notes</label>
-                    <div className="bg-amber-50/50 p-6 rounded-3xl border border-amber-100 text-slate-700 font-medium leading-relaxed italic">
-                      "{selectedInquiry.notes}"
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div className="w-full md:w-64 space-y-6">
-                <div>
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 block mb-2">Inquiry Status</label>
-                  <div className="space-y-2">
-                    {(["New", "Contacted", "Quoted", "Closed"] as InquiryStatus[]).map((s) => (
-                      <button
-                        key={s}
-                        onClick={() => handleStatusChange(s)}
-                        className={clsx(
-                          "w-full px-5 py-3 rounded-2xl text-xs font-black transition-all flex items-center justify-between group",
-                          selectedInquiry.status === s ? "bg-slate-900 text-white shadow-lg" : "bg-white border border-slate-100 text-slate-400 hover:border-slate-300"
-                        )}
-                      >
-                        {s}
-                        {selectedInquiry.status === s && <CheckCircle2 className="w-4 h-4" />}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-slate-100">
-                  <a href={`mailto:${selectedInquiry.email}`} className="w-full btn-primary justify-center shadow-lg shadow-brand-950/20 py-3.5 mb-3">
-                    Reply to Lead
-                  </a>
-                  <button onClick={() => { setIsDeleteOpen(true); setIsViewOpen(false); }} className="w-full text-center py-2 text-xs font-bold text-rose-500 hover:underline">
-                    Delete Inquiry
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          ))
         )}
-      </Modal>
+      </div>
+    </div>
+  );
+}
 
-      {/* Modal: Add Inquiry */}
-      <Modal isOpen={isAddOpen} onClose={() => setIsAddOpen(false)} title="New Pipeline Lead" subtitle="Capture incoming industrial request" size="md">
-        <div className="space-y-5 py-4">
-           <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Company Name</label>
-              <input value={form.company} onChange={(e) => setForm({...form, company: e.target.value})} className="w-full glass-input" placeholder="e.g. Apex Manufacturing" />
-           </div>
-           <div className="grid grid-cols-2 gap-4">
-             <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Contact Person</label>
-                <input value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} className="w-full glass-input" placeholder="e.g. David Wilson" />
-             </div>
-             <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Interest</label>
-                <select value={form.productInterested} onChange={(e) => setForm({...form, productInterested: e.target.value})} className="w-full glass-input">
-                  <option>Heavy Duty Master Cartons</option>
-                  <option>Export Packaging Grade A</option>
-                  <option>Custom Printed Boxes</option>
-                </select>
-             </div>
-           </div>
-           <div className="grid grid-cols-2 gap-4">
-             <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Email</label>
-                <input value={form.email} onChange={(e) => setForm({...form, email: e.target.value})} className="w-full glass-input" placeholder="name@company.com" />
-             </div>
-             <div>
-                <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Phone</label>
-                <input value={form.phone} onChange={(e) => setForm({...form, phone: e.target.value})} className="w-full glass-input" placeholder="+971..." />
-             </div>
-           </div>
-           <div>
-              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block mb-2 px-1">Notes</label>
-              <textarea value={form.notes} onChange={(e) => setForm({...form, notes: e.target.value})} rows={3} className="w-full glass-input resize-none" placeholder="Requirements, timelines, or specifications..." />
-           </div>
-           <div className="pt-4">
-              <button disabled={isSaving} onClick={handleSave} className="w-full btn-primary justify-center shadow-accent-500/20 py-4">
-                {isSaving ? "Creating..." : "Add to Pipeline"}
-              </button>
-           </div>
+function InquiryForm({ onSubmit, isSubmitting }: { onSubmit: (data: any) => void, isSubmitting: boolean }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    company: "",
+    email: "",
+    phone: "",
+    productInterested: "",
+    message: "",
+  });
+
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSubmit(formData); }} className="space-y-6">
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Lead Name</label>
+          <input required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full glass-input" placeholder="e.g. John Doe" />
         </div>
-      </Modal>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Organization</label>
+          <input value={formData.company} onChange={(e) => setFormData({...formData, company: e.target.value})} className="w-full glass-input" placeholder="e.g. Acme Corp" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Email Interface</label>
+          <input required type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full glass-input" placeholder="john@acme.com" />
+        </div>
+        <div className="space-y-2">
+          <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Comms Signal</label>
+          <input value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} className="w-full glass-input" placeholder="+123..." />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Interest Vectors</label>
+        <input value={formData.productInterested} onChange={(e) => setFormData({...formData, productInterested: e.target.value})} className="w-full glass-input" placeholder="e.g. Heavy Duty Triple Wall Corrugated" />
+      </div>
+      <div className="space-y-2">
+        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Mission Message</label>
+        <textarea rows={4} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} className="w-full glass-input resize-none" placeholder="Primary inquiry payload..." />
+      </div>
+      <button disabled={isSubmitting} type="submit" className="w-full btn-primary justify-center py-5 font-black uppercase tracking-widest text-sm shadow-2xl shadow-brand-500/40">
+        {isSubmitting ? "Provisioning..." : "Inject into Pipeline"}
+      </button>
+    </form>
+  );
+}
 
-      <ConfirmModal 
-        isOpen={isDeleteOpen}
-        onClose={() => setIsDeleteOpen(false)}
-        onConfirm={() => { deleteMutation.mutate(selectedInquiry!._id); }}
-        title="Remove from Pipeline"
-        message={`Are you sure you want to delete this lead? This will remove all associated logs and deal history.`}
-        danger
-      />
+function InquiryDetailView({ inquiry, onUpdateStatus, onDelete }: { inquiry: Inquiry, onUpdateStatus: (status: InquiryStatus) => void, onDelete: () => void }) {
+  return (
+    <div className="space-y-8 py-2">
+      <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex-1 space-y-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+             <div className="premium-card p-6 border-slate-100 bg-slate-50/50">
+               <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4 block underline decoration-brand-500 decoration-2 underline-offset-4">Identity Matrix</span>
+               <div className="space-y-4">
+                 <div className="flex items-center gap-3">
+                   <User className="w-5 h-5 text-slate-300" />
+                   <span className="text-sm font-bold text-slate-900">{inquiry.name}</span>
+                 </div>
+                 <div className="flex items-center gap-3">
+                   <Mail className="w-5 h-5 text-slate-300" />
+                   <a href={`mailto:${inquiry.email}`} className="text-sm font-black text-brand-600 hover:underline">{inquiry.email}</a>
+                 </div>
+                 <div className="flex items-center gap-3">
+                   <Phone className="w-5 h-5 text-slate-300" />
+                   <span className="text-sm font-bold text-slate-700">{inquiry.phone || "--"}</span>
+                 </div>
+               </div>
+             </div>
+             <div className="premium-card p-6 border-slate-100 bg-slate-50/50">
+               <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4 block underline decoration-brand-500 decoration-2 underline-offset-4">Mission Context</span>
+               <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Building className="w-5 h-5 text-slate-300" />
+                    <span className="text-sm font-bold text-slate-900">{inquiry.company || "Direct Individual"}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <ArrowUpRight className="w-5 h-5 text-slate-300" />
+                    <span className="text-sm font-black text-blue-600">{inquiry.productInterested || "Generic Inquiry"}</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-5 h-5 text-slate-300" />
+                    <span className="text-sm font-bold text-slate-600">Captured {new Date(inquiry.createdAt).toLocaleDateString()}</span>
+                  </div>
+               </div>
+             </div>
+          </div>
+
+          <div className="space-y-4">
+            <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest block">Original Signal</span>
+            <div className="bg-slate-900 text-slate-300 p-8 rounded-[32px] font-medium leading-relaxed italic text-sm border-l-4 border-brand-500 shadow-2xl">
+              "{inquiry.message || "No message payload received."}"
+            </div>
+          </div>
+        </div>
+
+        <div className="w-full lg:w-80 space-y-6">
+          <div className="premium-card p-6 bg-slate-50/50 border-slate-100">
+             <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-4 block">Deployment Status</span>
+             <div className="space-y-3">
+                {(["new", "contacted", "quoted", "closed"] as InquiryStatus[]).map((s) => (
+                  <button 
+                    key={s} 
+                    onClick={() => onUpdateStatus(s)}
+                    className={cn(
+                      "w-full px-5 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-between group",
+                      inquiry.status === s ? "bg-slate-950 text-white shadow-xl shadow-slate-950/20" : "bg-white border border-slate-100 text-slate-400 hover:border-brand-500 hover:text-brand-600"
+                    )}
+                  >
+                    {statusConfig[s].label}
+                    {inquiry.status === s && <CheckCircle2 className="w-4 h-4 text-emerald-400" />}
+                  </button>
+                ))}
+             </div>
+          </div>
+
+          <div className="flex flex-col gap-3">
+             <a href={`mailto:${inquiry.email}`} className="btn-primary justify-center py-4 shadow-xl shadow-brand-500/20 font-black uppercase text-[10px] tracking-widest">
+               Transmit Response
+             </a>
+             <button onClick={onDelete} className="w-full py-4 text-[10px] font-black uppercase tracking-widest text-rose-500 hover:bg-rose-50 rounded-2xl transition-all">
+               Purge Intelligence
+             </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

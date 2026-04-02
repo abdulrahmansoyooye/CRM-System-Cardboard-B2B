@@ -4,6 +4,8 @@ import Sidebar from "@/components/Sidebar";
 import Topbar from "@/components/Topbar";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import GlobalModal from "@/components/GlobalModal";
+
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -47,6 +49,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           </div>
         </main>
       </div>
+      <GlobalModal />
     </div>
   );
 }

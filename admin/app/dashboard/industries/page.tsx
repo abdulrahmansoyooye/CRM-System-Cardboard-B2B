@@ -1,149 +1,113 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { Plus, Search, Edit2, Trash2, Link as LinkIcon, Image as ImageIcon, Building2, CheckCircle2, AlertCircle } from "lucide-react";
-import Modal from "@/components/Modal";
-import ConfirmModal from "@/components/ConfirmModal";
+'use client'
+import React, { useEffect, useState, useMemo } from "react";
 import Skeleton from "@/components/Skeleton";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getIndustries, createIndustry, updateIndustry, deleteIndustry } from "@/services/industry.service";
-import { clsx } from "clsx";
-
-type IndustryStatus = "Active" | "Draft" | "Archived";
+import { Plus, Search, Edit2, Trash2, Building2, CheckCircle2, AlertCircle, Eye } from "lucide-react";
+import { useDebounce } from "@/lib/hooks/useDebounce";
+import { useModal } from "@/lib/store/useModalStore";
+import { cn } from "@/lib/utils";
 
 interface Industry {
   _id: string;
   name: string;
-  slug?: string;
+  slug: string;
   overview?: string;
-  description?: string;
-  isActive?: boolean;
-  status?: IndustryStatus;
+  relatedProducts?: any[];
+  images?: string[];
+  isActive: boolean;
   updatedAt: string;
-  productsCount?: number;
 }
 
 export default function IndustriesPage() {
   const queryClient = useQueryClient();
-  const { data: apiData, isLoading, error } = useQuery({ queryKey: ["industries"], queryFn: getIndustries });
+  const { openModal, closeModal } = useModal();
+  
+  const { data: apiData, isLoading } = useQuery({
+    queryKey: ["industries"],
+    queryFn: getIndustries,
+  });
 
-  const [industries, setIndustries] = useState<Industry[]>([]);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<IndustryStatus | "All">("All");
+  const [filterActive, setFilterActive] = useState<"All" | "Active" | "Inactive">("All");
 
-  const [isAddOpen, setIsAddOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [isViewOpen, setIsViewOpen] = useState(false);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [selectedIndustry, setSelectedIndustry] = useState<Industry | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
-
-  const [form, setForm] = useState({ name: "", description: "", status: "Active" as IndustryStatus });
-
-  useEffect(() => {
-    if (apiData?.success && Array.isArray(apiData.data)) {
-      setIndustries(apiData.data.map((i: any) => ({
-        ...i,
-        status: i.isActive !== false ? "Active" : "Archived",
-        description: i.overview || i.description || "",
-        productsCount: i.relatedProducts?.length ?? 0,
-      })));
-    }
-  }, [apiData]);
+  const industries: Industry[] = Array.isArray(apiData?.data) ? apiData.data : [];
 
   const createMutation = useMutation({
-    mutationFn: (data: any) => createIndustry(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["industries"] }); setIsAddOpen(false); resetForm(); setIsSaving(false); },
-    onError: () => setIsSaving(false),
+    mutationFn: createIndustry,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["industries"] });
+      closeModal();
+    },
   });
 
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => updateIndustry(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["industries"] }); setIsEditOpen(false); resetForm(); setIsSaving(false); },
-    onError: () => setIsSaving(false),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["industries"] });
+      closeModal();
+    },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id: string) => deleteIndustry(id),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ["industries"] }); setIsDeleteOpen(false); setSelectedIndustry(null); },
+    mutationFn: deleteIndustry,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["industries"] });
+      closeModal();
+    },
   });
 
-  const filtered = industries.filter(i => {
-    const matchesSearch = i.name.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === "All" || i.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const debouncedSearch = useDebounce(search, 400);
 
-  const handleCreate = () => {
-    setIsSaving(true);
-    const slug = form.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    createMutation.mutate({ name: form.name, slug, overview: form.description, isActive: form.status === "Active" });
+  const filteredIndustries = useMemo(() => {
+    return industries.filter((i) => {
+      const matchSearch = i.name?.toLowerCase().includes(debouncedSearch.toLowerCase());
+      const matchStatus = filterActive === "All" || (filterActive === "Active" ? i.isActive : !i.isActive);
+      return matchSearch && matchStatus;
+    });
+  }, [industries, debouncedSearch, filterActive]);
+
+  const openFormModal = (industry?: Industry) => {
+    openModal({
+      title: industry ? "Edit Industrial Sector" : "Provision New Sector",
+      subtitle: industry ? `Updating ${industry.name}` : "Define a new target market for industrial solutions",
+      size: "md",
+      view: (
+        <IndustryForm 
+          initialData={industry} 
+          onSubmit={(data) => industry ? updateMutation.mutate({ id: industry._id, data }) : createMutation.mutate(data)}
+          isSubmitting={createMutation.isPending || updateMutation.isPending}
+        />
+      )
+    });
   };
 
-  const handleUpdate = () => {
-    if (!selectedIndustry) return;
-    setIsSaving(true);
-    updateMutation.mutate({ id: selectedIndustry._id, data: { name: form.name, overview: form.description, isActive: form.status === "Active" } });
+  const openDeleteModal = (id: string, name: string) => {
+    openModal({
+      title: "Archive Sector",
+      subtitle: `System decommissioning: ${name}`,
+      size: "sm",
+      view: (
+        <div className="space-y-6 text-center py-4">
+          <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
+            <Trash2 className="w-8 h-8" />
+          </div>
+          <p className="text-slate-600 font-medium tracking-tight px-4">
+            Are you sure you want to permanently remove this industrial sector? This will unmap all associated mission protocols.
+          </p>
+          <div className="flex gap-3 pt-2">
+            <button onClick={closeModal} className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 font-black text-[10px] uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">Abort</button>
+            <button 
+              onClick={() => deleteMutation.mutate(id)} 
+              className="flex-1 px-6 py-4 rounded-2xl bg-rose-500 text-white font-black text-[10px] uppercase tracking-widest hover:bg-rose-600 transition-all shadow-xl shadow-rose-500/20"
+            >
+              {deleteMutation.isPending ? "Syncing..." : "Confirm Deletion"}
+            </button>
+          </div>
+        </div>
+      )
+    });
   };
-
-  const handleDelete = () => {
-    if (!selectedIndustry) return;
-    deleteMutation.mutate(selectedIndustry._id);
-  };
-
-  const resetForm = () => { setForm({ name: "", description: "", status: "Active" }); setSelectedIndustry(null); };
-
-  const openEdit = (i: Industry) => {
-    setSelectedIndustry(i);
-    setForm({ name: i.name, description: i.description || "", status: i.status || "Active" });
-    setIsEditOpen(true);
-  };
-
-  const openView = (i: Industry) => { setSelectedIndustry(i); setIsViewOpen(true); };
-  const openDelete = (i: Industry) => { setSelectedIndustry(i); setIsDeleteOpen(true); };
-
-  const stats = [
-    { label: "Total Sectors", value: industries.length, icon: Building2, color: "text-brand-600", bg: "bg-brand-50" },
-    { label: "Active", value: industries.filter(i => i.status === "Active").length, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
-    { label: "Drafts", value: industries.filter(i => i.status === "Draft").length, icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-50" },
-    { label: "Total Reach", value: "85%", icon: LinkIcon, color: "text-sky-600", bg: "bg-sky-50" },
-  ];
-
-  if (error) return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <div className="bg-rose-50 text-rose-500 p-6 rounded-3xl border border-rose-100 text-center max-w-md">
-        <h2 className="text-xl font-black mb-2">Sync Error</h2>
-        <p className="text-sm font-medium opacity-80">Failed to fetch industries. Please ensure the backend server is running.</p>
-        <button onClick={() => window.location.reload()} className="mt-6 px-6 py-2 bg-rose-500 text-white rounded-xl text-xs font-bold uppercase tracking-widest">Retry Connection</button>
-      </div>
-    </div>
-  );
-
-  const FormContent = () => (
-    <div className="space-y-5 py-4">
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Sector Name</label>
-        <input className="w-full glass-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Maritime Logistics" />
-      </div>
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Description</label>
-        <textarea rows={4} className="w-full glass-input resize-none" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Primary use cases and packaging standards..." />
-      </div>
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Status</label>
-        <select className="w-full glass-input" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as IndustryStatus })}>
-          <option value="Active">Active</option>
-          <option value="Draft">Draft</option>
-          <option value="Archived">Archived</option>
-        </select>
-      </div>
-      <div className="pt-4 flex gap-3">
-        <button disabled={isSaving} onClick={isAddOpen ? handleCreate : handleUpdate} className="flex-1 btn-primary justify-center disabled:opacity-60">
-          {isSaving ? "Saving..." : isAddOpen ? "Create Sector" : "Save Changes"}
-        </button>
-      </div>
-    </div>
-  );
 
   return (
     <div className="space-y-8 animate-enter">
@@ -152,25 +116,31 @@ export default function IndustriesPage() {
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-500 mb-2">Market Management</p>
           <h1 className="text-4xl font-display font-black text-slate-900 tracking-tight">Industries Served</h1>
-          <p className="text-sm text-slate-400 font-medium mt-1">Manage industry sectors and their packaging requirements</p>
+          <p className="text-sm text-slate-400 font-medium mt-1">Manage industrial sectors and their specific packaging logic</p>
         </div>
-        <button onClick={() => { resetForm(); setIsAddOpen(true); }} className="btn-primary">
-          <Plus className="w-4 h-4" /> Add New Sector
+        <button onClick={() => openFormModal()} className="btn-primary py-4 px-8 shadow-xl shadow-brand-500/20">
+          <Plus className="w-4 h-4" /> Add Sector
         </button>
       </div>
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32" />) : (
-          stats.map((s) => (
-            <div key={s.label} className="premium-card p-6 flex items-center justify-between">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
-                <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
-              </div>
-              <div className={clsx("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0", s.bg, s.color)}>
-                <s.icon className="w-5 h-5" />
-              </div>
+          [
+            { label: "Total Sectors", value: industries.length, icon: Building2, color: "text-brand-600", bg: "bg-brand-50" },
+            { label: "Active Pipelines", value: industries.filter(i => i.isActive).length, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
+            { label: "Draft Ops", value: industries.filter(i => !i.isActive).length, icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-50" },
+            { label: "Integration Rate", value: "98.2%", icon: Plus, color: "text-sky-600", bg: "bg-sky-50" },
+          ].map((s) => (
+            <div key={s.label} className="premium-card p-7 group hover:translate-y-[-4px] transition-all duration-300">
+               <div className="flex items-center justify-between mb-4">
+                  <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm", s.bg, s.color)}>
+                    <s.icon className="w-5 h-5" />
+                  </div>
+                  <div className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Live</div>
+               </div>
+               <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
+               <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
             </div>
           ))
         )}
@@ -178,108 +148,109 @@ export default function IndustriesPage() {
 
       {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-4 items-center">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300" />
-          <input type="text" placeholder="Search industries..." className="w-full glass-input pl-12 py-3" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <div className="relative flex-1 max-w-md w-full">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <input type="text" placeholder="Search industrial sectors..." className="w-full glass-input pl-14 py-4" value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <div className="flex bg-white p-1 rounded-2xl border border-slate-200">
-          {(["All", "Active", "Draft", "Archived"] as const).map((s) => (
-            <button key={s} onClick={() => setStatusFilter(s)} className={clsx("px-5 py-2 text-xs font-bold rounded-xl transition-all", statusFilter === s ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900")}>{s}</button>
+        <div className="flex bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+          {(["All", "Active", "Inactive"] as const).map((s) => (
+            <button key={s} onClick={() => setFilterActive(s)} className={cn("px-6 py-2.5 text-xs font-bold rounded-xl transition-all whitespace-nowrap", filterActive === s ? "bg-slate-900 text-white shadow-lg" : "text-slate-500 hover:text-slate-900")}>{s}</button>
           ))}
         </div>
       </div>
 
-      {/* Table */}
-      <div className="premium-card overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-slate-50/50 border-b border-slate-100">
-              <th className="px-7 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Industry Name</th>
-              <th className="px-7 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Description</th>
-              <th className="px-7 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Products</th>
-              <th className="px-7 py-5 text-left text-[10px] font-black text-slate-400 uppercase tracking-widest">Status</th>
-              <th className="px-7 py-5 text-right text-[10px] font-black text-slate-400 uppercase tracking-widest">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {isLoading ? Array(4).fill(0).map((_, i) => (
-              <tr key={i}><td colSpan={5} className="px-7 py-5"><Skeleton className="h-12 w-full" /></td></tr>
-            )) : filtered.map((ind) => (
-              <tr key={ind._id} className="group hover:bg-slate-50/50 transition-colors">
-                <td className="px-7 py-5">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shrink-0 text-sm font-black">{ind.name[0]}</div>
-                    <div>
-                      <span className="font-bold text-slate-900 block">{ind.name}</span>
-                      <span className="text-[10px] text-slate-400 font-medium tracking-tight">Updated {new Date(ind.updatedAt).toLocaleDateString()}</span>
-                    </div>
+      {/* Grid Layout for Industries */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {isLoading ? Array(6).fill(0).map((_, i) => <Skeleton key={i} className="h-64" />) : (
+          filteredIndustries.map((ind) => (
+            <div key={ind._id} className="premium-card p-1 overflow-hidden group cursor-pointer border-transparent hover:border-brand-500 group">
+              <div className="p-7 space-y-6">
+                <div className="flex items-start justify-between">
+                  <div className="w-14 h-14 bg-slate-950 rounded-2xl flex items-center justify-center text-white shadow-xl shadow-slate-950/20 group-hover:scale-110 transition-transform duration-500">
+                    <span className="text-xl font-black">{ind.name[0]}</span>
                   </div>
-                </td>
-                <td className="px-7 py-5"><p className="text-slate-500 line-clamp-1 max-w-xs">{ind.description}</p></td>
-                <td className="px-7 py-5">
-                  <div className="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-lg w-fit">{ind.productsCount ?? 0} SKUs</div>
-                </td>
-                <td className="px-7 py-5">
-                  <div className={clsx("status-badge", ind.status === "Active" ? "badge-success" : ind.status === "Draft" ? "badge-warning" : "badge-neutral")}>
-                    <div className="w-1 h-1 rounded-full bg-current" />{ind.status}
+                  <div className={cn("status-badge", ind.isActive ? "badge-success" : "badge-neutral")}>
+                    {ind.isActive ? "Active Pipeline" : "Deactivated"}
                   </div>
-                </td>
-                <td className="px-7 py-5">
-                  <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={() => openView(ind)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all"><ImageIcon className="w-4 h-4" /></button>
-                    <button onClick={() => openEdit(ind)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-100 hover:text-slate-900 transition-all"><Edit2 className="w-4 h-4" /></button>
-                    <button onClick={() => openDelete(ind)} className="p-2 rounded-xl text-slate-400 hover:bg-rose-50 hover:text-rose-600 transition-all"><Trash2 className="w-4 h-4" /></button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        {!isLoading && filtered.length === 0 && (
-          <div className="px-7 py-16 text-center text-slate-400">
-            <Building2 className="w-10 h-10 mx-auto mb-3 opacity-20" />
-            <p className="font-bold">No industries found</p>
-          </div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-display font-black text-slate-900 mb-2 truncate">{ind.name}</h3>
+                  <p className="text-sm text-slate-500 line-clamp-2 leading-relaxed font-medium">
+                    {ind.overview || "No overview documentation available for this mission sector."}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between pt-6 border-t border-slate-50">
+                   <div className="flex flex-col">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">Associated SKUs</span>
+                      <span className="text-sm font-bold text-slate-700">{ind.relatedProducts?.length || 0} Products</span>
+                   </div>
+                   <div className="flex gap-2">
+                     <button onClick={() => openFormModal(ind)} className="p-3 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-900 hover:text-white transition-all"><Edit2 className="w-4 h-4" /></button>
+                     <button onClick={() => openDeleteModal(ind._id, ind.name)} className="p-3 rounded-xl bg-slate-50 text-slate-400 hover:bg-rose-500 hover:text-white transition-all"><Trash2 className="w-4 h-4" /></button>
+                   </div>
+                </div>
+              </div>
+            </div>
+          ))
         )}
       </div>
-
-      {/* Add / Edit Modal */}
-      <Modal isOpen={isAddOpen || isEditOpen} onClose={() => { setIsAddOpen(false); setIsEditOpen(false); }} title={isAddOpen ? "Add New Sector" : "Edit Industrial Sector"} subtitle="Define industry requirements and scope" size="md">
-        <FormContent />
-      </Modal>
-
-      {/* View Modal */}
-      <Modal isOpen={isViewOpen} onClose={() => setIsViewOpen(false)} title="Sector Overview" size="md">
-        {selectedIndustry && (
-          <div className="space-y-6 py-4">
-            <div className="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
-              <div className="w-14 h-14 bg-slate-900 rounded-2xl flex items-center justify-center text-white shrink-0 text-2xl font-black">{selectedIndustry.name[0]}</div>
-              <div>
-                <h3 className="text-xl font-display font-black text-slate-900">{selectedIndustry.name}</h3>
-                <div className={clsx("status-badge mt-1", selectedIndustry.status === "Active" ? "badge-success" : "badge-neutral")}>{selectedIndustry.status}</div>
-              </div>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Detailed Description</p>
-                <p className="text-slate-600 leading-relaxed">{selectedIndustry.description || "No description provided."}</p>
-              </div>
-              <div className="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Active Products</p>
-                  <p className="text-2xl font-display font-black text-slate-900">{selectedIndustry.productsCount ?? 0}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Last Updated</p>
-                  <p className="text-sm font-bold text-slate-900">{new Date(selectedIndustry.updatedAt).toLocaleDateString()}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
-
-      <ConfirmModal isOpen={isDeleteOpen} onClose={() => setIsDeleteOpen(false)} onConfirm={handleDelete} title="Delete Sector" message={`Are you sure you want to remove ${selectedIndustry?.name}? This action will unassign all linked products.`} danger />
     </div>
+  );
+}
+
+function IndustryForm({ initialData, onSubmit, isSubmitting }: { initialData?: Industry, onSubmit: (data: any) => void, isSubmitting: boolean }) {
+  const [formData, setFormData] = useState({
+    name: initialData?.name || "",
+    overview: initialData?.overview || "",
+    isActive: initialData?.isActive ?? true,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    onSubmit({ ...formData, slug });
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Sector Designation</label>
+        <input 
+          required
+          className="w-full glass-input py-4 text-lg font-bold" 
+          placeholder="e.g. Pharmaceutical Packaging" 
+          value={formData.name} 
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
+        />
+      </div>
+      <div className="space-y-2">
+        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Mission Pipeline Overview</label>
+        <textarea 
+          rows={5}
+          className="w-full glass-input resize-none py-4 leading-relaxed" 
+          placeholder="Describe the industrial scope and primary packaging logic for this sector..." 
+          value={formData.overview} 
+          onChange={(e) => setFormData({ ...formData, overview: e.target.value })} 
+        />
+      </div>
+      <div className="flex items-center gap-4 py-2">
+        <label className="flex items-center gap-3 cursor-pointer group">
+          <div 
+            onClick={() => setFormData({ ...formData, isActive: !formData.isActive })}
+            className={cn("w-12 h-6 rounded-full transition-all relative border border-slate-200", formData.isActive ? "bg-emerald-500 border-emerald-600 shadow-lg shadow-emerald-500/20" : "bg-slate-100")}
+          >
+            <div className={cn("absolute top-0.5 w-4.5 h-4.5 bg-white rounded-full shadow-sm transition-all", formData.isActive ? "left-6.5" : "left-0.5")} />
+          </div>
+          <span className="text-xs font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-900 transition-colors">Active Protocol Status</span>
+        </label>
+      </div>
+      <button 
+        type="submit" 
+        disabled={isSubmitting}
+        className="w-full btn-primary justify-center py-5 font-black mt-4 shadow-2xl shadow-brand-500/40 text-sm tracking-widest uppercase"
+      >
+        {isSubmitting ? "Syncing Logic..." : initialData ? "Update Documentation" : "Establish Sector"}
+      </button>
+    </form>
   );
 }

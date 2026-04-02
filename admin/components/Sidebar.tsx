@@ -17,7 +17,7 @@ import { api } from "@/lib/api";
 const NAV = [
   {
     label: "Analyze",
-    roles: ["admin", "sales"],
+    roles: ["admin","super_admin", "sales"],
     items: [
       { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
       { icon: BarChart2, label: "Analytics", href: "/dashboard/analytics" },
@@ -25,7 +25,7 @@ const NAV = [
   },
   {
     label: "Inventory",
-    roles: ["admin", "editor"],
+    roles: ["admin", "super_admin", "content_manager"],
     items: [
       { icon: Package, label: "Products", href: "/dashboard/products" },
       { icon: Building2, label: "Industries", href: "/dashboard/industries" },
@@ -33,7 +33,7 @@ const NAV = [
   },
   {
     label: "Leads",
-    roles: ["admin", "sales"],
+    roles: ["admin", "super_admin", "sales_manager"],
     items: [
       { icon: MessageSquare, label: "Inquiries", href: "/dashboard/inquiries" },
       { icon: BarChart2, label: "Quotes", href: "/dashboard/quotes" },
@@ -41,7 +41,7 @@ const NAV = [
   },
   {
     label: "HR",
-    roles: ["admin", "hr"],
+    roles: ["admin", "super_admin", "hr_manager"],
     items: [
       { icon: Briefcase, label: "Jobs", href: "/dashboard/jobs" },
       { icon: Users, label: "Applications", href: "/dashboard/applications" },
@@ -49,7 +49,7 @@ const NAV = [
   },
   {
     label: "Content",
-    roles: ["admin", "editor"],
+    roles: ["admin", "super_admin", "content_manager"],
     items: [
       { icon: BookOpen, label: "Blog", href: "/dashboard/blog" },
       { icon: Star, label: "Testimonials", href: "/dashboard/testimonials" },
@@ -58,9 +58,16 @@ const NAV = [
   },
   {
     label: "System",
-    roles: ["admin"],
+    roles: ["admin", "super_admin"],
     items: [
       { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+    ],
+  },
+   {
+    label: "Create Roles",
+    roles: ["super_admin"],
+    items: [
+      { icon: UserCircle, label: "Create Roles", href: "/dashboard/create-roles" },
     ],
   },
 ];
