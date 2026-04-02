@@ -39,11 +39,12 @@ const itemVariants: Variants = {
   },
 };
 
-export function ProductsOverview() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export function ProductsOverview({ products: initialProducts }: { products?: Product[] }) {
+  const [products, setProducts] = useState<Product[]>(initialProducts || []);
+  const [isLoading, setIsLoading] = useState(!initialProducts);
 
   useEffect(() => {
+    if (initialProducts) return;
     const fetchProducts = async () => {
       try {
         const data = await getProducts({ limit: "4", isFeatured: "true" });
@@ -56,7 +57,7 @@ export function ProductsOverview() {
     };
 
     fetchProducts();
-  }, []);
+  }, [initialProducts]);
 
   return (
     <section className="py-40 bg-[#0A0F1A] text-white overflow-hidden relative">

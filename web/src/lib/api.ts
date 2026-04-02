@@ -27,12 +27,51 @@ export async function getProductBySlug(slug: string) {
 }
 
 export async function getIndustries() {
-  const res = await fetch(`${API_BASE_URL}/industries`, {
+  const res = await fetch(`${API_BASE_URL}/industry`, {
     cache: 'no-store',
   });
 
   if (!res.ok) {
     throw new Error('Failed to fetch industries');
+  }
+
+  const data = await res.json();
+  return data.data;
+}
+
+export async function getCategories() {
+  const res = await fetch(`${API_BASE_URL}/category`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch categories');
+  }
+
+  const data = await res.json();
+  return data.data;
+}
+
+export async function getBlogs() {
+  const res = await fetch(`${API_BASE_URL}/blog`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch blogs');
+  }
+
+  const data = await res.json();
+  return data.data;
+}
+
+export async function getSettings() {
+  const res = await fetch(`${API_BASE_URL}/settings`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch settings');
   }
 
   const data = await res.json();
