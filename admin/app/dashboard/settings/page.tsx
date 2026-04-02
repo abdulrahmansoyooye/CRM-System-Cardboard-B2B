@@ -1,10 +1,21 @@
-"use client";
-
-import { Save, Upload, Plus, Bell, Shield, User, Globe, Palette, Database, Trash2, Eye, EyeOff, Check, AlertCircle } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Save, Upload, Plus, Bell, Shield, User, Globe, Palette, Database, Trash2, Eye, EyeOff, Check, AlertCircle, Key, Mail, ShieldCheck, UserCheck, UserMinus, HardDrive } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSettings, updateSettings, createSettings } from "@/services/setting.service";
+import { getUsers, createUser, updateUser, deleteUser } from "@/services/user.service";
 import Skeleton from "@/components/Skeleton";
+import { useModal } from "@/lib/store/useModalStore";
+import { cn } from "@/lib/utils";
+
+interface TUser {
+  _id: string;
+  name: string;
+  email: string;
+  role: 'super_admin' | 'admin' | 'content_manager' | 'hr_manager' | 'sales_manager';
+  isActive: boolean;
+  lastLogin: string;
+  createdAt: string;
+}
 
 const TABS = [
   { id: "branding", label: "Branding", icon: Palette },
@@ -276,18 +287,8 @@ export default function SettingsPage() {
                 </div>
               )}
 
-              {activeTab === "team" && (
-                <div className="premium-card p-8 space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-black text-slate-900">Team Members</h2>
-                    <button className="btn-primary py-2.5 px-4 text-xs"><Plus className="w-4 h-4" /> Invite Member</button>
-                  </div>
-                  <div className="bg-slate-50 p-6 rounded-2xl border border-dashed border-slate-200 text-center">
-                    <AlertCircle className="w-8 h-8 mx-auto mb-3 text-slate-300" />
-                    <p className="text-xs font-bold text-slate-400">Team management is currently read-only. Role assignments are managed via Auth Service.</p>
-                  </div>
-                </div>
-              )}
+              {activeTab === "team" && <TeamTab />}
+
             </>
           )}
         </div>
