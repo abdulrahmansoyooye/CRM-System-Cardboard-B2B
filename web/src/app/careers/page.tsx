@@ -6,153 +6,175 @@ import {
   Building,
   GraduationCap,
   Users,
+  MapPin,
+  Clock,
+  ChevronRight,
 } from "lucide-react";
 import Image from "next/image";
 import { getPlaceholderImage } from "@/lib/utils";
+import { getJobs, getSettings } from "@/lib/api";
+import { Metadata } from 'next';
 
-const JOBS = [
-  {
-    id: 1,
-    title: "Production Shift Manager",
-    depart: "Operations",
-    loc: "Sector 4 Plant",
-    type: "Full-Time",
-  },
-  {
-    id: 2,
-    title: "Maintenance Engineer (Corrugator)",
-    depart: "Engineering",
-    loc: "Sector 4 Plant",
-    type: "Full-Time",
-  },
-  {
-    id: 3,
-    title: "Export Sales Executive",
-    depart: "Sales",
-    loc: "Corporate HQ",
-    type: "Full-Time",
-  },
-  {
-    id: 4,
-    title: "Quality Assurance Analyst",
-    depart: "Laboratory",
-    loc: "Sector 4 Plant",
-    type: "Shift Basis",
-  },
-];
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const settings = await getSettings();
+    const config = Array.isArray(settings) ? settings[0] : settings;
+    return {
+      title: `Industrial Careers | ${config?.companyName || 'CARDBOX'}`,
+      description: "Join the leading workforce in structural packaging engineering and industrial manufacturing.",
+    };
+  } catch {
+    return { title: "Careers | CARDBOX" };
+  }
+}
 
-export default function CareersPage() {
+interface TJob {
+  _id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  description: string;
+  isActive: boolean;
+}
+
+export default async function CareersPage() {
+  let jobs: TJob[] = [];
+  try {
+    jobs = await getJobs();
+  } catch {
+    jobs = [];
+  }
+
+  const activeJobs = jobs.filter(j => j.isActive !== false);
+
   return (
-    <div className="bg-background">
+    <div className="bg-background font-sans">
       <PageHeader
-        title="Careers & Growth"
+        title="Industrial Careers"
         subtitle="Join the leading workforce in structural packaging engineering."
       />
 
-      <div className="container mx-auto px-4 lg:px-8 py-24 max-w-6xl">
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <h2 className="text-4xl font-black text-primary tracking-tight leading-tight mb-8">
-            <span className="text-accent underline decoration-4 underline-offset-8">
-              BUILD
-            </span>{" "}
-            THE FUTURE OF LOGISTICS
+      <div className="container mx-auto px-4 lg:px-12 py-32">
+        <div className="text-center max-w-4xl mx-auto mb-32">
+          <div className="text-[11px] font-black tracking-[0.4em] text-accent mb-10 flex items-center justify-center gap-10 uppercase">
+            <span className="w-16 h-px bg-accent inline-block" />
+            Human Capital
+            <span className="w-16 h-px bg-accent inline-block" />
+          </div>
+          <h2 className="text-5xl md:text-7xl font-black text-primary tracking-tighter leading-[0.85] mb-12 uppercase italic">
+            ENGINEERING THE <br />
+            <span className="text-primary/30 font-light not-italic">WORKFORCE FUTURE.</span>
           </h2>
-          <p className="text-muted-foreground text-xl font-medium leading-relaxed">
+          <p className="text-muted-foreground text-xl font-bold leading-relaxed max-w-2xl mx-auto opacity-80">
             At CARDBOX, we don&apos;t just manufacture boxes; we engineer industrial
-            protection. We are looking for operators, engineers, and sales
-            professionals who thrive in high-volume, precision-driven
-            environments.
+            protection. We are looking for operators, engineers, and specialists
+            who thrive in high-precision environments.
           </p>
         </div>
 
         {/* Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-border/40 border border-border/40 mb-32 shadow-2xl">
           {[
             {
-              title: "Competitive Salary",
+              title: "Industrial Compensation",
               icon: Building,
-              desc: "Above market compensation with overtime pay.",
+              desc: "Above market base pay with performance-linked scaling.",
             },
             {
-              title: "Health Coverage",
+              title: "Health Intelligence",
               icon: Users,
-              desc: "Comprehensive insurance for you and family.",
+              desc: "Full comprehensive coverage for operators and dependents.",
             },
             {
-              title: "Career Growth",
+              title: "Career Hierarchy",
               icon: Briefcase,
-              desc: "Internal promotion preference structure.",
+              desc: "Defined internal promotion protocols for senior roles.",
             },
             {
-              title: "Skill Upgrading",
+              title: "Tech Training",
               icon: GraduationCap,
-              desc: "Training on latest automation control systems.",
+              desc: "Direct certification on 5-ply automated control networks.",
             },
           ].map((b) => (
             <div
               key={b.title}
-              className="bg-secondary/50 border border-border p-8 rounded-sm text-center"
+              className="bg-white p-12 text-center group hover:bg-accent transition-all duration-700"
             >
-              <div className="w-16 h-16 mx-auto bg-background rounded-full flex items-center justify-center text-accent mb-6 shadow-sm">
-                <b.icon className="w-8 h-8" />
+              <div className="w-20 h-20 mx-auto bg-secondary/50 rounded-none flex items-center justify-center mb-10 group-hover:bg-white group-hover:scale-110 group-hover:-rotate-12 transition-all duration-700 border border-border/10">
+                <b.icon className="w-10 h-10 text-accent group-hover:text-primary transition-colors" />
               </div>
-              <h3 className="font-bold text-lg text-primary mb-3 tracking-tighter">
+              <h3 className="font-black text-xl text-primary mb-5 group-hover:text-white transition-colors tracking-tighter uppercase leading-[0.9]">
                 {b.title}
               </h3>
-              <p className="text-sm font-medium text-muted-foreground">
+              <p className="text-xs font-bold text-muted-foreground group-hover:text-white/80 transition-colors uppercase tracking-tight leading-relaxed">
                 {b.desc}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start">
           {/* Job Openings */}
           <div>
-            <h3 className="text-3xl font-black text-primary mb-8 flex items-center gap-3 tracking-tight">
-              CURRENT OPENINGS
-              <span className="px-3 py-1 bg-accent/20 text-accent text-sm rounded-sm">
-                {JOBS.length}
+            <div className="flex items-center justify-between mb-12 border-b border-border pb-8">
+              <h3 className="text-4xl font-black text-primary flex items-center gap-6 tracking-tighter uppercase italic">
+                OPEN PROTOCOLS
+              </h3>
+              <span className="w-16 h-16 rounded-none bg-accent text-white flex items-center justify-center font-black text-2xl shadow-xl shadow-accent/20">
+                {activeJobs.length}
               </span>
-            </h3>
-            <div className="space-y-4">
-              {JOBS.map((job) => (
+            </div>
+            
+            <div className="space-y-6">
+              {activeJobs.map((job) => (
                 <div
-                  key={job.id}
-                  className="group border border-border bg-background hover:bg-secondary p-6 rounded-sm transition-colors cursor-pointer flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center"
+                  key={job._id}
+                  className="group border border-border bg-white hover:border-accent p-10 rounded-none transition-all duration-500 cursor-pointer flex flex-col sm:flex-row gap-8 justify-between items-start sm:items-center relative overflow-hidden"
                 >
-                  <div>
-                    <h4 className="font-bold text-xl text-primary group-hover:text-accent transition-colors mb-2">
+                  <div className="relative z-10">
+                    <h4 className="font-black text-2xl text-primary group-hover:text-accent transition-colors mb-4 uppercase tracking-tighter leading-[0.9]">
                       {job.title}
                     </h4>
-                    <div className="flex flex-wrap gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                      <span className="bg-primary/5 px-2 py-1 rounded-sm border border-border">
-                        {job.depart}
+                    <div className="flex flex-wrap gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+                      <span className="flex items-center gap-2 group-hover:text-primary transition-colors">
+                        <Building className="w-4 h-4 text-accent" />
+                        {job.department}
                       </span>
-                      <span className="bg-primary/5 px-2 py-1 rounded-sm border border-border">
-                        {job.loc}
+                      <span className="flex items-center gap-2 group-hover:text-primary transition-colors">
+                        <MapPin className="w-4 h-4 text-accent" />
+                        {job.location}
                       </span>
-                      <span className="bg-primary/5 px-2 py-1 rounded-sm border border-border">
+                      <span className="flex items-center gap-2 group-hover:text-primary transition-colors">
+                        <Clock className="w-4 h-4 text-accent" />
                         {job.type}
                       </span>
                     </div>
                   </div>
                   <Button
                     variant="outline"
-                    className="shrink-0 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-bold tracking-wider rounded-sm"
+                    className="relative z-10 shrink-0 border-2 border-primary text-primary hover:bg-primary hover:text-white font-black tracking-[0.3em] text-[10px] rounded-none h-14 px-10 transition-all uppercase group/btn"
                   >
-                    VIEW ROLE
+                    APPLY NOW
+                    <ChevronRight className="w-5 h-5 ml-3 group-hover/btn:translate-x-2 transition-transform" />
                   </Button>
                 </div>
               ))}
-              <div className="pt-4 text-center">
-                <p className="text-muted-foreground text-sm font-medium">
-                  Don&apos;t see a perfect fit? Send your resume to{" "}
+              
+              {activeJobs.length === 0 && (
+                 <div className="p-16 border-2 border-dashed border-border text-center bg-secondary/20">
+                    <p className="font-black text-primary/40 uppercase tracking-[0.2em] text-sm">All operations currently fully staffed.</p>
+                 </div>
+              )}
+
+              <div className="pt-10 text-center border-t border-border mt-10">
+                <p className="text-muted-foreground/60 text-[10px] font-black uppercase tracking-[0.3em]">
+                  Direct Resume Submission:{" "}
                   <a
                     href="mailto:careers@cardbox.demo"
-                    className="text-accent underline font-bold"
+                    className="text-accent underline underline-offset-4 hover:text-primary transition-colors"
                   >
-                    careers@cardbox.demo
+                    TALENT@CARDBOX.INDUSTRIAL
                   </a>
                 </p>
               </div>
@@ -160,22 +182,20 @@ export default function CareersPage() {
           </div>
 
           {/* Culture Image */}
-          <div className="relative aspect-4/3 lg:aspect-auto h-full min-h-125 w-full bg-secondary rounded-sm overflow-hidden border border-border">
+          <div className="relative aspect-square lg:aspect-auto h-full min-h-150 w-full bg-secondary rounded-none overflow-hidden border border-border group shadow-2xl">
             <Image
               src={getPlaceholderImage('factory')}
-              alt="Factory Machinery"
+              alt="Industrial Precision Floor"
               fill
-              className="object-cover grayscale"
+              className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 contrast-125 scale-105"
             />
-            {/* Overlay Pattern */}
-            <div className="absolute inset-0 bg-primary/20 mix-blend-multiply" />
-            <div className="absolute bottom-6 left-6 right-6 bg-background/90 backdrop-blur-sm p-6 border-l-4 border-accent">
-              <h4 className="text-2xl font-black text-primary tracking-tight mb-2">
-                OPERATIONAL EXCELLENCE
+            <div className="absolute inset-0 bg-primary/10 mix-blend-multiply group-hover:bg-transparent transition-colors duration-1000" />
+            <div className="absolute bottom-12 left-12 right-12 bg-white p-12 border-l-8 border-accent shadow-2xl transition-transform duration-700 group-hover:-translate-y-4">
+              <h4 className="text-4xl font-black text-primary tracking-tighter mb-4 uppercase leading-[0.9]">
+                OPERATIONAL <br />EXCELLENCE.
               </h4>
-              <p className="text-muted-foreground font-medium text-sm">
-                Join a facility operating the most advanced computerized
-                corrugation networks in the region.
+              <p className="text-muted-foreground font-bold text-xs uppercase tracking-tight leading-relaxed opacity-80">
+                Operate within a facility running ultra-advanced <br />computerized corrugation networks.
               </p>
             </div>
           </div>

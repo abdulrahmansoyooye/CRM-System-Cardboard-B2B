@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { TopBar } from "@/components/layout/TopBar";
 import { getSettings } from "@/lib/api";
+import { TSettings } from "@/types";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -25,7 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
       title: config?.companyName ? `${config.companyName} | ${config.tagline || 'Industrial Packaging'}` : "CARDBOX | Heavy Duty Packaging",
       description: config?.defaultSEO?.metaDesc || "Enterprise-grade manufacturing of heavy duty corrugated boxes.",
     };
-  } catch (error) {
+  } catch {
     return {
       title: "CARDBOX | Heavy Duty Packaging",
       description: "Enterprise-grade manufacturing of heavy duty corrugated boxes.",
@@ -33,16 +34,20 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
+
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  let settingsData = null;
+  let settingsData: TSettings | undefined = undefined;
   try {
     const settings = await getSettings();
-    settingsData = Array.isArray(settings) ? settings[0] : settings;
-  } catch (e) {}
+    settingsData = (Array.isArray(settings) ? settings[0] : settings) || undefined;
+  } catch {
+    // Fallback handled by settingsData being undefined
+  }
 
   return (
     <html lang="en">

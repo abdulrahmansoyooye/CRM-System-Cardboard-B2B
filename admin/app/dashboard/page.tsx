@@ -52,7 +52,7 @@ export default function DashboardPage() {
             <BarChart3 className="w-4 h-4" />
             <span className="hidden sm:inline text-xs">Analytics</span>
           </Link>
-          <Link href="/dashboard/products/new" className="btn-primary py-2.5">
+          <Link href="/dashboard/products/" className="btn-primary py-2.5">
             <Plus className="w-4 h-4" />
             <span className="text-xs">Create New</span>
           </Link>

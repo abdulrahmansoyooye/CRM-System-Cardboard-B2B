@@ -1,116 +1,122 @@
 import { CTABanner } from "@/components/sections/CTABanner";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Calendar, Tag } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Tag, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
+import { getBlogBySlug } from "@/lib/api";
+import { Metadata } from 'next';
 
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  try {
+    const post = await getBlogBySlug(params.slug);
+    return {
+      title: `${post.title} | CARDBOX Industrial Blog`,
+      description: post.excerpt || "Industrial packaging insights and corrugated engineering protocols.",
+    };
+  } catch {
+    return { title: "Blog Post | CARDBOX" };
+  }
+}
 
-export default function BlogDetailPage() {
-  // Mock blog data — in production this would be fetched by slug
-  const post = {
-    title:
-      "Understanding ECT vs. Burst Strength in Industrial Corrugated Boxes",
-    date: "March 5, 2026",
-    category: "Technical Guide",
-    image: getPlaceholderImage('box'),
-    content: [
-      {
-        heading: "What Is Edge Crush Test (ECT)?",
-        body: "The Edge Crush Test (ECT) measures the stacking strength of corrugated boards when force is applied to the edge. A board with a 32 ECT rating can withstand 32 lbs of force per linear inch. This is the primary spec for boxes that must be stacked during warehousing and transport.",
-      },
-      {
-        heading: "What Is Burst Strength (BMT)?",
-        body: "Burst strength, measured in kg/cm², evaluates resistance to outside forces penetrating the box wall — like punctures from forklift tines or sharp product corners. Higher burst values are critical for hazardous material packaging or abrasive goods.",
-      },
-      {
-        heading: "Which Should You Prioritize?",
-        body: "For palletized goods that are stacked in warehouses, ECT is the more important metric. For individually shipped items subject to drops and impact, burst strength matters more. High-value export goods often require both metrics to be specified independently.",
-      },
-      {
-        heading: "CARDBOX Standard Ranges",
-        body: "Our 5-ply boards offer ECT ratings from 32 to 48 ECT, while our 7-ply heavy duty boards reach 61 ECT. Burst strength for our export grades ranges from 20 to 45 kg/cm². Custom specifications are available on inquiry.",
-      },
-    ],
-  };
+export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+  let post = null;
+  try {
+    post = await getBlogBySlug(params.slug);
+  } catch {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center p-12 border border-border bg-secondary/20 max-w-lg rounded-none">
+          <h2 className="text-3xl font-black text-primary mb-6 tracking-tighter uppercase italic">Protocol Not Indexed</h2>
+          <p className="text-muted-foreground mb-10 font-bold uppercase text-xs tracking-widest leading-relaxed">The requested intelligence report is either restricted or the index has been purged.</p>
+          <Link href="/blog">
+             <Button className="font-black tracking-[0.3em] uppercase py-8 px-12 rounded-none bg-primary text-primary-foreground hover:bg-accent transition-all">Back to Intelligence Hub</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="bg-background">
+    <div className="bg-background font-sans">
       {/* Breadcrumb */}
-      <div className="bg-secondary/50 border-b border-border text-sm font-medium py-3">
-        <div className="container mx-auto px-4 lg:px-8 flex items-center gap-2 text-muted-foreground">
+      <div className="bg-secondary/40 border-b border-border text-[10px] font-black uppercase tracking-[0.2em] py-4">
+        <div className="container mx-auto px-4 lg:px-12 flex items-center gap-4 text-muted-foreground">
           <Link
             href="/blog"
-            className="hover:text-accent transition-colors flex items-center gap-1"
+            className="hover:text-accent transition-colors flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Blog
+            Intelligence Hub
           </Link>
-          <span>/</span>
-          <span className="text-primary font-bold truncate max-w-xs">
+          <span className="opacity-40">/</span>
+          <span className="text-primary truncate max-w-md">
             {post.title}
           </span>
         </div>
       </div>
 
-      <div className="container mx-auto px-4 lg:px-8 py-16 max-w-4xl">
+      <div className="container mx-auto px-4 lg:px-12 py-32 max-w-5xl">
         {/* Header */}
-        <div className="mb-10">
-          <div className="flex items-center gap-4 mb-6">
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-accent border border-accent bg-accent/10 px-3 py-1 rounded-sm">
-              <Tag className="w-3.5 h-3.5" />
-              {post.category}
+        <div className="mb-20">
+          <div className="flex flex-wrap items-center gap-8 mb-10">
+            <span className="inline-flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-accent border-r-4 border-accent bg-accent/5 px-6 py-2.5 shadow-sm">
+              <Tag className="w-4 h-4" />
+              {post.category || "General Intelligence"}
             </span>
-            <span className="flex items-center gap-1.5 text-xs text-muted-foreground font-bold uppercase tracking-wider">
-              <Calendar className="w-3.5 h-3.5" />
-              {post.date}
+            <span className="flex items-center gap-3 text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
+              <Calendar className="w-4 h-4 text-accent" />
+              {new Date(post.createdAt).toLocaleDateString()}
+            </span>
+             <span className="flex items-center gap-3 text-[10px] text-muted-foreground font-black uppercase tracking-[0.2em]">
+              <User className="w-4 h-4 text-accent" />
+              OPERATOR
             </span>
           </div>
-          <h1 className="text-3xl md:text-5xl font-black text-primary tracking-tight leading-tight mb-6">
+          <h1 className="text-5xl md:text-7xl font-black text-primary tracking-tighter leading-[0.85] mb-10 uppercase italic">
             {post.title}
           </h1>
+          {post.excerpt && (
+             <p className="text-xl md:text-2xl text-muted-foreground font-bold tracking-tight leading-relaxed italic opacity-80 border-l-8 border-accent pl-10 max-w-3xl">
+                {post.excerpt}
+             </p>
+          )}
         </div>
 
         {/* Hero Image */}
-        <div className="relative aspect-video w-full overflow-hidden rounded-sm border border-border mb-12 bg-secondary">
+        <div className="relative aspect-video w-full overflow-hidden border border-border mb-24 bg-secondary shadow-2xl group">
           <Image
-            src={post.image}
+            src={post.coverImage || getPlaceholderImage('hero')}
             alt={post.title}
             fill
-            className="object-cover"
+            className="object-cover grayscale brightness-110 group-hover:grayscale-0 transition-all duration-1000 contrast-125 scale-105"
             priority
           />
         </div>
 
         {/* Article Content */}
-        <article className="prose max-w-none">
-          {post.content.map((section, i) => (
-            <div key={i} className="mb-10">
-              <h2 className="text-2xl font-black text-primary tracking-tight mb-4 pb-3 border-b border-border">
-                {section.heading}
-              </h2>
-              <p className="text-muted-foreground text-lg leading-relaxed font-medium">
-                {section.body}
-              </p>
-            </div>
-          ))}
+        <article className="prose prose-invert prose-lg max-w-none mb-32">
+          <div 
+             className="text-primary font-medium leading-relaxed space-y-10 text-lg selection:bg-accent selection:text-white"
+             dangerouslySetInnerHTML={{ __html: post.content }}
+          />
         </article>
 
         {/* Navigation */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-between pt-12 border-t border-border mt-12">
+        <div className="flex flex-col sm:flex-row gap-8 justify-between pt-16 border-t border-border/60 mt-24">
           <Link href="/blog">
             <Button
               variant="outline"
-              className="border-border text-primary hover:bg-secondary rounded-sm font-bold tracking-wide"
+              className="border-2 border-primary text-primary hover:bg-secondary rounded-none font-black tracking-[0.3em] text-[10px] h-16 px-10 uppercase group transition-all"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              ALL ARTICLES
+              <ArrowLeft className="w-5 h-5 mr-4 group-hover:-translate-x-3 transition-transform" />
+              ALL PROTOCOLS
             </Button>
           </Link>
-          <Link href="/contact">
-            <Button className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-sm font-bold tracking-wide">
-              REQUEST A QUOTE
-              <ArrowRight className="w-4 h-4 ml-2" />
+          <Link href="/request-quote">
+            <Button className="bg-primary text-primary-foreground hover:bg-accent rounded-none font-black tracking-[0.3em] text-[10px] h-16 px-12 uppercase group shadow-xl shadow-primary/10">
+              INITIATE QUOTE
+              <ArrowRight className="w-5 h-5 ml-4 group-hover:translate-x-3 transition-transform" />
             </Button>
           </Link>
         </div>

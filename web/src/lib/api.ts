@@ -1,3 +1,4 @@
+import { TBlog, TSettings } from "@/types";
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api/v1";
 
 export async function getProducts(query?: Record<string, string>) {
@@ -52,7 +53,7 @@ export async function getCategories() {
   return data.data;
 }
 
-export async function getBlogs() {
+export async function getBlogs(): Promise<TBlog[]> {
   const res = await fetch(`${API_BASE_URL}/blog`, {
     cache: 'no-store',
   });
@@ -62,10 +63,35 @@ export async function getBlogs() {
   }
 
   const data = await res.json();
+  return data.data || [];
+}
+
+export async function getBlogBySlug(slug: string): Promise<TBlog> {
+  const res = await fetch(`${API_BASE_URL}/blog/${slug}`, {
+    cache: 'no-store',
+  });
+  if (!res.ok) {
+    throw new Error('Failed to fetch blog');
+  }
+
+  const data = await res.json();
   return data.data;
 }
 
-export async function getSettings() {
+export async function getJobs() {
+  const res = await fetch(`${API_BASE_URL}/jobs`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch jobs');
+  }
+
+  const data = await res.json();
+  return data.data;
+}
+
+export async function getSettings(): Promise<TSettings[]> {
   const res = await fetch(`${API_BASE_URL}/settings`, {
     cache: 'no-store',
   });

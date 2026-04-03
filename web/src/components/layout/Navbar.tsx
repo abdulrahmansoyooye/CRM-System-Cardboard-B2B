@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Menu, Search, X, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { TSettings } from "@/types";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -40,7 +41,7 @@ const NAV_LINKS = [
   { label: "Contact", href: "/contact" },
 ];
 
-export function Navbar() {
+export function Navbar({ settings }: { settings?: TSettings }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -57,10 +58,12 @@ export function Navbar() {
             className="w-10 h-10 bg-primary rounded-none flex items-center justify-center border-l-4 border-accent"
           >
             <span className="text-primary-foreground text-xs font-black">
-              CB
+              {settings?.companyName?.substring(0, 2).toUpperCase() || "CB"}
             </span>
           </motion.div>
-          <span className="group-hover:text-accent transition-colors duration-500">CARDBOX</span>
+          <span className="group-hover:text-accent transition-colors duration-500">
+            {settings?.companyName || "CARDBOX"}
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -130,72 +133,94 @@ export function Navbar() {
         </div>
 
         {/* Mobile Toggle */}
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          className="lg:hidden p-3 bg-secondary text-foreground rounded-none border-l-4 border-accent"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle mobile menu"
-        >
-          {isMobileMenuOpen ? (
-            <X className="w-6 h-6 text-accent" />
-          ) : (
-            <Menu className="w-6 h-6" />
-          )}
-        </motion.button>
+        <div className="flex items-center gap-4 lg:hidden">
+          <Button variant="ghost" size="icon" className="hover:bg-accent/10">
+            <Search className="w-5 h-5 text-muted-foreground" />
+          </Button>
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            className="p-3 bg-secondary text-foreground rounded-none border-l-4 border-accent transition-all active:bg-accent active:text-white"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6 text-accent" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
+          </motion.button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.5, ease: "circInOut" }}
-            className="lg:hidden border-t border-border bg-background overflow-hidden"
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 top-[80px] z-50 lg:hidden bg-background/98 backdrop-blur-3xl overflow-y-auto"
           >
-            <nav className="flex flex-col px-6 py-10 gap-2">
+            <nav className="flex flex-col px-6 py-12 gap-1 pb-32">
               {NAV_LINKS.map((link, idx) => (
                 <motion.div 
                   key={link.label}
-                  initial={{ opacity: 0, x: -20 }}
+                  initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.05 }}
+                  transition={{ delay: idx * 0.04 }}
+                  className="border-b border-border/10 last:border-0"
                 >
-                  <Link
-                    href={link.href}
-                    className="block py-4 px-2 hover:text-accent transition-colors text-foreground font-black text-xs tracking-widest uppercase border-b border-border/10"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                  {link.children && (
-                    <div className="ml-6 mt-2 space-y-1">
-                      {link.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className="block py-3 px-4 text-[10px] font-bold text-muted-foreground hover:text-accent transition-colors uppercase italic border-l-2 border-border/30 hover:border-accent"
-                          onClick={() => setIsMobileMenuOpen(false)}
-                        >
-                          {child.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
+                  <div className="flex flex-col">
+                    <Link
+                      href={link.href}
+                      className="flex items-center justify-between py-6 px-2 hover:text-accent transition-colors text-foreground font-black text-lg tracking-tighter uppercase leading-none"
+                      onClick={() => !link.children && setIsMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                      {link.children && (
+                        <ChevronDown className={`w-5 h-5 transition-transform duration-500 ${openDropdown === link.label ? 'rotate-180 text-accent' : ''}`} 
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setOpenDropdown(openDropdown === link.label ? null : link.label);
+                        }}/>
+                      )}
+                    </Link>
+                    
+                    {link.children && (
+                      <AnimatePresence>
+                        {openDropdown === link.label && (
+                          <motion.div 
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden bg-secondary/30 ml-2"
+                          >
+                            <div className="flex flex-col py-4 px-6 gap-6">
+                              {link.children.map((child) => (
+                                <Link
+                                  key={child.href}
+                                  href={child.href}
+                                  className="text-[11px] font-black text-muted-foreground hover:text-accent transition-colors uppercase tracking-[0.2em] border-l-2 border-transparent hover:border-accent pl-4"
+                                  onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                  {child.label}
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    )}
+                  </div>
                 </motion.div>
               ))}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Link href="/request-quote" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button className="w-full mt-10 bg-accent text-accent-foreground hover:bg-white hover:text-primary font-black tracking-[0.2em] rounded-none py-8 text-xs h-16 transition-all duration-500">
-                    REQUEST A QUOTE
-                  </Button>
-                </Link>
-              </motion.div>
+              
+              <Link href="/request-quote" className="mt-12" onClick={() => setIsMobileMenuOpen(false)}>
+                <Button className="w-full bg-accent text-accent-foreground hover:bg-white hover:text-primary font-black tracking-[0.2em] rounded-none py-10 text-xs h-20 transition-all duration-500 shadow-2xl">
+                  REQUEST A QUOTE
+                </Button>
+              </Link>
             </nav>
           </motion.div>
         )}

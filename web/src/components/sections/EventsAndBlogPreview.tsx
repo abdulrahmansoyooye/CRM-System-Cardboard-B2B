@@ -7,37 +7,12 @@ import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { getPlaceholderImage } from "@/lib/utils";
 
-const UPDATES = [
-  {
-    id: 1,
-    title: "CARDBOX Acquires New 5-Color Flexo Printer",
-    date: "March 12, 2026",
-    category: "Infrastructure",
-    imageType: 'factory',
-    slug: "new-flexo-printer",
-  },
-  {
-    id: 2,
-    title: "Sustainability: Shifting to 100% Recycled Kraft Liner",
-    date: "February 28, 2026",
-    category: "Corporate Update",
-    imageType: 'box',
-    slug: "sustainability-recycled-kraft",
-  },
-  {
-    id: 3,
-    title: "International Export Logistics Symposium 2026",
-    date: "February 15, 2026",
-    category: "Event",
-    imageType: 'hero',
-    slug: "export-symposium-2026",
-  },
-];
-
-export function EventsAndBlogPreview() {
+export function EventsAndBlogPreview({ blogs: initialBlogs }: { blogs?: { _id: string; title: string; slug: string; category: string; coverImage?: string; createdAt: string }[] }) {
+  const blogs = initialBlogs || [];
+  
   return (
-    <section className="py-32 bg-background overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="py-32 bg-background overflow-hidden font-sans">
+      <div className="container mx-auto px-4 lg:px-12">
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
           <motion.div 
             initial={{ opacity: 0, x: -30 }}
@@ -45,13 +20,13 @@ export function EventsAndBlogPreview() {
             viewport={{ once: true }}
             className="max-w-xl"
           >
-            <h2 className="text-accent font-black tracking-[0.3em] text-[10px] uppercase mb-6 flex items-center gap-6">
-              <span className="w-12 h-0.5 bg-accent inline-block" />
-              LATEST INSIGHTS
+            <h2 className="text-accent font-black tracking-[0.4em] text-[10px] uppercase mb-10 flex items-center gap-10">
+              <span className="w-16 h-px bg-accent inline-block" />
+              INTELLIGENCE HUB
             </h2>
-            <h3 className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.9] uppercase">
-              NEWS &{" "}
-              <span className="text-muted-foreground font-light italic">UPDATES</span>
+            <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.85] uppercase">
+              STRATEGIC <br />
+              <span className="text-muted-foreground font-light italic">INSIGHTS.</span>
             </h3>
           </motion.div>
           <motion.div
@@ -59,66 +34,71 @@ export function EventsAndBlogPreview() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
           >
-            <Button
-              variant="outline"
-              className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-black tracking-widest text-xs h-14 px-8 rounded-none transition-all duration-500"
-            >
-              VIEW ALL
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <Link href="/blog">
+              <Button
+                variant="outline"
+                className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-black tracking-[0.3em] text-[10px] h-16 px-12 rounded-none transition-all duration-700 uppercase group"
+              >
+                FULL KNOWLEDGE BASE
+                <ArrowRight className="w-5 h-5 ml-4 group-hover:translate-x-3 transition-transform duration-500" />
+              </Button>
+            </Link>
           </motion.div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {UPDATES.map((post, idx) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1px bg-border/40 border border-border/40">
+          {blogs.map((post: { _id: string; title: string; slug: string; category: string; coverImage?: string; createdAt: string }, idx: number) => (
             <motion.article
-              key={post.id}
+              key={post._id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: idx * 0.1, duration: 0.6 }}
-              className="group flex flex-col bg-secondary/50 overflow-hidden border border-border rounded-none hover:border-accent transition-colors duration-500"
+              transition={{ delay: idx * 0.1, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+              className="group flex flex-col bg-white overflow-hidden hover:z-20 transition-all duration-700 relative"
             >
               <Link
-                href={`/news/${post.slug}`}
-                className="relative h-72 overflow-hidden block"
+                href={`/blog/${post.slug}`}
+                className="relative h-80 overflow-hidden block group-hover:scale-105 transition-transform duration-1000"
               >
-                <div className="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors z-10 duration-700" />
+                <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors z-10 duration-700" />
                 <Image
-                  src={getPlaceholderImage(post.imageType as any)}
+                  src={post.coverImage || getPlaceholderImage('box')}
                   alt={post.title}
                   fill
-                  className="object-cover transition-transform duration-1000 group-hover:scale-110 grayscale group-hover:grayscale-0"
+                  className="object-cover transition-all duration-1000 group-hover:scale-110 grayscale brightness-110 group-hover:grayscale-0 contrast-125"
                 />
-                <div className="absolute top-6 left-6 bg-accent text-accent-foreground text-[10px] font-black px-4 py-1.5 uppercase tracking-[0.2em] rounded-none z-20 shadow-xl">
-                  {post.category}
+                <div className="absolute top-8 left-8 bg-accent text-accent-foreground text-[10px] font-black px-5 py-2 uppercase tracking-[0.3em] rounded-none z-20 shadow-2xl border-r-4 border-white">
+                  {post.category || "Insight"}
                 </div>
               </Link>
-              <div className="p-10 flex flex-col flex-1">
-                <div className="flex items-center gap-6 text-[10px] text-muted-foreground mb-6 font-black uppercase tracking-[0.15em]">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-accent" />
-                    {post.date}
+              <div className="p-12 flex flex-col flex-1 bg-white relative z-30 group-hover:-translate-y-10 transition-transform duration-700">
+                <div className="flex items-center gap-8 text-[10px] text-muted-foreground/60 mb-8 font-black uppercase tracking-[0.2em]">
+                  <div className="flex items-center gap-3">
+                    <Calendar className="w-4 h-4 text-accent" />
+                    {new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </div>
-                  <div className="flex items-center gap-2">
-                    <User className="w-3.5 h-3.5 text-accent" />
-                    ADMIN
+                  <div className="flex items-center gap-3">
+                    <User className="w-4 h-4 text-accent" />
+                    OPERATOR
                   </div>
                 </div>
-                <h4 className="font-black text-2xl mb-6 group-hover:text-accent transition-colors leading-tight tracking-tighter uppercase">
-                  <Link href={`/news/${post.slug}`}>{post.title}</Link>
+                <h4 className="font-black text-3xl mb-8 group-hover:text-accent transition-colors leading-[0.95] tracking-tighter uppercase line-clamp-2">
+                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
                 </h4>
-                <div className="mt-auto pt-8 border-t border-border/50">
+                <div className="mt-auto pt-10 border-t border-border/50">
                   <Link
-                    href={`/news/${post.slug}`}
-                    className="inline-flex items-center text-[10px] font-black tracking-[0.2em] uppercase text-primary group-hover:text-accent transition-all duration-300 gap-3 group/link"
+                    href={`/blog/${post.slug}`}
+                    className="inline-flex items-center text-[10px] font-black tracking-[0.3em] uppercase text-primary group-hover:text-accent transition-all duration-500 gap-4 group/link"
                   >
-                    READ MORE
-                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-2 transition-transform" />
+                    READ PROTOCOL
+                    <ArrowRight className="w-5 h-5 group-hover/link:translate-x-3 transition-transform duration-500" />
                   </Link>
                 </div>
               </div>
             </motion.article>
+          ))}
+          {blogs.length === 0 && Array(3).fill(0).map((_, i) => (
+             <div key={i} className="h-125 bg-secondary/20 animate-pulse border border-border/10" />
           ))}
         </div>
       </div>

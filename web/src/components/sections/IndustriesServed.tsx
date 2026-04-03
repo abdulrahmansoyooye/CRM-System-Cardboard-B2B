@@ -14,11 +14,12 @@ type Industry = {
   overview: string;
 };
 
-export function IndustriesServed() {
-  const [industries, setIndustries] = useState<Industry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export function IndustriesServed({ industries: initialIndustries }: { industries?: Industry[] }) {
+  const [industries, setIndustries] = useState<Industry[]>(initialIndustries || []);
+  const [isLoading, setIsLoading] = useState(!initialIndustries);
 
   useEffect(() => {
+    if (initialIndustries) return;
     const fetchIndustries = async () => {
       try {
         const data = await getIndustries();
@@ -31,7 +32,7 @@ export function IndustriesServed() {
     };
 
     fetchIndustries();
-  }, []);
+  }, [initialIndustries]);
 
   return (
     <section className="py-40 bg-[#0A0F1A] relative overflow-hidden">
@@ -42,7 +43,7 @@ export function IndustriesServed() {
       }} />
 
       <div className="container mx-auto px-4 lg:px-12 relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-24 gap-12">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 lg:mb-24 gap-10 lg:gap-12">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -50,11 +51,11 @@ export function IndustriesServed() {
             transition={{ duration: 1 }}
             className="max-w-3xl"
           >
-            <h2 className="text-accent font-black tracking-[0.4em] text-[11px] uppercase mb-10 flex items-center gap-10">
-              <span className="w-16 h-px bg-accent inline-block" />
+            <h2 className="text-accent font-black tracking-[0.4em] text-[10px] md:text-[11px] uppercase mb-8 md:mb-10 flex items-center gap-6 md:gap-10">
+              <span className="w-10 md:w-16 h-px bg-accent inline-block" />
               VERTICAL MARKETS
             </h2>
-            <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] uppercase">
+            <h3 className="text-4xl md:text-5xl lg:text-7xl font-black text-white tracking-tighter leading-[0.9] lg:leading-[0.85] uppercase">
               SECTORS <span className="text-white/30 italic font-light">WE EMPOWER.</span>
             </h3>
           </motion.div>
@@ -64,7 +65,7 @@ export function IndustriesServed() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
-            className="flex items-center gap-4 text-white/40 text-[10px] font-black tracking-widest uppercase mb-4"
+            className="flex items-center gap-4 text-white/40 text-[9px] md:text-[10px] font-black tracking-widest uppercase mb-4"
           >
             <Activity className="w-4 h-4 text-accent animate-pulse" />
             LIVE MARKET OPERATIONS

@@ -6,155 +6,115 @@ import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { getProducts, getCategories, getSettings } from "@/lib/api";
+import { Metadata } from 'next';
 
-const PRODUCTS = [
-  {
-    id: "corrugated-boxes",
-    name: "Corrugated Master Cartons",
-    category: "Heavy",
-    imageType: "box",
-  },
-  {
-    id: "custom-printed",
-    name: "Custom Printed Boxes",
-    category: "Printed",
-    imageType: "box",
-  },
-  {
-    id: "heavy-duty",
-    name: "7-Ply Heavy Duty Boxes",
-    category: "Heavy",
-    imageType: "box",
-  },
-  {
-    id: "die-cut",
-    name: "Specialized Die Cut Cartons",
-    category: "Custom",
-    imageType: "box",
-  },
-  {
-    id: "export-packaging",
-    name: "Export Packaging",
-    category: "Export",
-    imageType: "box",
-  },
-  {
-    id: "pallet-boxes",
-    name: "Bulk Pallet Boxes",
-    category: "Heavy",
-    imageType: "box",
-  },
-];
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const settings = await getSettings();
+    const config = Array.isArray(settings) ? settings[0] : settings;
+    return {
+      title: `Industrial Catalog | ${config?.companyName || 'CARDBOX'}`,
+      description: "Explore our structural catalog of corrugated solutions and heavy-duty packaging.",
+    };
+  } catch (e) {
+    return { title: "Catalog | CARDBOX" };
+  }
+}
 
-const CATEGORIES = ["All", "Heavy", "Printed", "Custom", "Export"];
+export default async function ProductsPage() {
+  const [products, categories] = await Promise.all([
+    getProducts().catch(() => []),
+    getCategories().catch(() => []),
+  ]);
 
-export default function ProductsPage() {
   return (
     <div className="bg-background">
       <PageHeader
-        title="Industrial Products"
+        title="Industrial Catalog"
         subtitle="Explore our structural catalog of corrugated solutions designed for maximum supply chain efficiency."
       />
 
       <div className="container mx-auto px-4 lg:px-8 py-24">
-        {/* Filters and Search */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-12">
-          <div className="flex flex-wrap gap-2">
-            {CATEGORIES.map((cat) => (
+        {/* Filters and Search (Simplified Server View) */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-16">
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="default"
+              className="bg-primary text-primary-foreground font-black tracking-widest rounded-sm uppercase text-xs h-12 px-8"
+            >
+              All Specs
+            </Button>
+            {categories.map((cat: any) => (
               <Button
-                key={cat}
-                variant={cat === "All" ? "default" : "outline"}
-                className={
-                  cat === "All"
-                    ? "bg-primary text-primary-foreground font-bold tracking-wide rounded-sm"
-                    : "text-primary rounded-sm tracking-wide font-medium"
-                }
+                key={cat._id}
+                variant="outline"
+                className="text-primary rounded-sm tracking-widest font-black uppercase text-xs h-12 px-8 border-border hover:bg-secondary transition-all"
               >
-                {cat}
+                {cat.name}
               </Button>
             ))}
           </div>
 
-          <div className="relative w-full md:w-72">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <div className="relative w-full md:w-96 group">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-accent transition-colors" />
             <Input
               type="search"
-              placeholder="Search specifications..."
-              className="w-full pl-9 h-12 rounded-sm bg-secondary border-border focus-visible:ring-accent"
+              placeholder="Query specifications..."
+              className="w-full pl-12 h-14 rounded-sm bg-secondary/50 border-border focus-visible:ring-accent font-medium"
             />
           </div>
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {PRODUCTS.map((prod) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {products.map((prod: any) => (
             <div
-              key={prod.id}
-              className="group border border-border bg-secondary overflow-hidden flex flex-col hover:-translate-y-2 transition-transform duration-300 rounded-sm"
+              key={prod._id}
+              className="group border border-border bg-secondary/30 overflow-hidden flex flex-col hover:border-accent transition-all duration-500 rounded-sm"
             >
               <Link
-                href={`/products/${prod.id}`}
-                className="block relative aspect-video overflow-hidden"
+                href={`/products/${prod.slug}`}
+                className="block relative aspect-square overflow-hidden bg-secondary"
               >
                 <Image
-                  src={getPlaceholderImage(prod.imageType as "box" | "factory" | "hero")}
+                  src={prod.images?.[0] || getPlaceholderImage('box')}
                   alt={prod.name}
                   fill
-                  className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                  className="object-cover grayscale brightness-110 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000 contrast-125"
                 />
-                <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-sm shadow-md">
-                  {prod.category}
+                <div className="absolute top-4 left-4 bg-accent text-accent-foreground px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-sm shadow-xl border-r-4 border-white">
+                  {prod.categoryId?.name || "Industrial"}
                 </div>
               </Link>
 
-              <div className="p-6 flex flex-col flex-1">
-                <h3 className="text-xl font-bold tracking-tight text-primary mb-4 group-hover:text-accent transition-colors">
-                  <Link href={`/products/${prod.id}`}>{prod.name}</Link>
+              <div className="p-8 flex flex-col flex-1">
+                <div className="text-[10px] font-black uppercase tracking-widest text-accent mb-3">
+                  {prod.ply || "Custom Ply"}
+                </div>
+                <h3 className="text-2xl font-black tracking-tighter text-primary mb-4 group-hover:text-accent transition-colors uppercase leading-[0.9]">
+                  <Link href={`/products/${prod.slug}`}>{prod.name}</Link>
                 </h3>
-                <p className="text-muted-foreground text-sm font-medium mb-6 flex-1">
-                  High performance commercial packaging engineered for stacking
-                  and load bearing capabilities during transit.
+                <p className="text-muted-foreground text-xs font-bold mb-8 flex-1 leading-relaxed opacity-80 uppercase tracking-tight">
+                  {prod.shortDescription || "High performance commercial packaging engineered for structural load bearing."}
                 </p>
                 <Link
-                  href={`/products/${prod.id}`}
-                  className="inline-flex items-center text-sm font-bold tracking-wide uppercase text-accent group-hover:text-primary transition-colors gap-2"
+                  href={`/products/${prod.slug}`}
+                  className="inline-flex items-center text-[10px] font-black tracking-[0.2em] uppercase text-accent group-hover:gap-4 transition-all gap-2"
                 >
-                  View Specifications
+                  <span className="w-8 h-0.5 bg-accent group-hover:w-12 transition-all" />
+                  Technical Specs
                 </Link>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Pagination mock */}
-        <div className="flex justify-center mt-16 gap-2">
-          <Button
-            variant="outline"
-            className="w-10 h-10 border-border text-primary rounded-sm"
-            disabled
-          >
-            &lt;
-          </Button>
-          <Button
-            variant="default"
-            className="w-10 h-10 bg-primary text-primary-foreground rounded-sm font-bold"
-          >
-            1
-          </Button>
-          <Button
-            variant="outline"
-            className="w-10 h-10 border-border text-primary rounded-sm font-bold"
-          >
-            2
-          </Button>
-          <Button
-            variant="outline"
-            className="w-10 h-10 border-border text-primary rounded-sm"
-            disabled
-          >
-            &gt;
-          </Button>
-        </div>
+        {products.length === 0 && (
+          <div className="text-center py-40 border border-dashed border-border rounded-sm">
+             <h3 className="text-xl font-black text-primary/40 uppercase tracking-tighter">No configurations found in the active catalog.</h3>
+          </div>
+        )}
       </div>
 
       <CTABanner />

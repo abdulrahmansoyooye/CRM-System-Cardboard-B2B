@@ -104,16 +104,16 @@ export function HeroSection() {
 
           {/* Main Heading with Reveal Effect */}
           <div className="overflow-hidden mb-6">
-            <motion.h1
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-              className="text-6xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-[0.85] uppercase"
-            >
-              ENGI<span className="text-accent italic">NEER</span>ING <br />
-              <span className="text-white/40 font-light italic">STRUCTURAL</span> <br />
-              DEFENSE.
-            </motion.h1>
+              <motion.h1
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                className="text-4xl sm:text-6xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-[0.85] uppercase"
+              >
+                ENGI<span className="text-accent italic">NEER</span>ING <br />
+                <span className="text-white/40 font-light italic">STRUCTURAL</span> <br />
+                DEFENSE.
+              </motion.h1>
           </div>
 
           <motion.p
@@ -130,14 +130,14 @@ export function HeroSection() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col sm:flex-row gap-8"
+            className="flex flex-col sm:flex-row gap-6 md:gap-8"
           >
             <Button
               size="lg"
-              className="bg-accent text-accent-foreground hover:bg-white hover:text-[#0A0F1A] h-20 px-12 text-xs tracking-[0.3em] font-black group transition-all duration-700 rounded-none shadow-[15px_15px_0px_rgba(255,183,77,0.15)] relative overflow-hidden"
+              className="bg-accent text-accent-foreground hover:bg-white hover:text-[#0A0F1A] h-16 md:h-20 px-8 md:px-12 text-[10px] md:text-xs tracking-[0.3em] font-black group transition-all duration-700 rounded-none shadow-[15px_15px_0px_rgba(255,183,77,0.15)] relative overflow-hidden"
             >
               <span className="relative z-10">REQUEST QUOTE</span>
-              <MoveRight className="w-6 h-6 ml-3 group-hover:translate-x-4 transition-transform duration-700 relative z-10" />
+              <MoveRight className="w-5 h-5 md:w-6 md:h-6 ml-3 group-hover:translate-x-4 transition-transform duration-700 relative z-10" />
               <motion.div 
                 className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-700"
               />
@@ -145,15 +145,15 @@ export function HeroSection() {
             <Button
               size="lg"
               variant="outline"
-              className="h-20 px-12 bg-transparent border-2 border-white/10 text-white hover:border-accent text-xs tracking-[0.3em] font-black rounded-none group transition-all duration-700 flex items-center gap-4"
+              className="h-16 md:h-20 px-8 md:px-12 bg-transparent border-2 border-white/10 text-white hover:border-accent text-[10px] md:text-xs tracking-[0.3em] font-black rounded-none group transition-all duration-700 flex items-center justify-center gap-4"
             >
-              <Zap className="w-5 h-5 text-accent hover:text-whit" />
+              <Zap className="w-4 h-4 md:w-5 md:h-5 text-accent hover:text-white" />
               EXPLORE SOLUTIONS
             </Button>
           </motion.div>
 
           {/* Real-time metrics */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-16 mt-24 pt-12 border-t border-white/5">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-16 mt-16 md:mt-24 pt-12 border-t border-white/5">
             {[
               { label: "Precision Machining", value: "0.01mm" },
               { label: "Daily Output Tons", value: "450T" },
@@ -166,10 +166,10 @@ export function HeroSection() {
                 transition={{ duration: 0.8, delay: 1.1 + idx * 0.1 }}
                 className="relative"
               >
-                <div className="text-5xl font-black text-white mb-2 tracking-tighter flex items-end gap-1">
+                <div className="text-3xl md:text-5xl font-black text-white mb-2 tracking-tighter flex items-end gap-1">
                   {stat.value}
                 </div>
-                <div className="text-[10px] font-black tracking-[0.2em] text-accent uppercase flex items-center gap-3">
+                <div className="text-[9px] md:text-[10px] font-black tracking-[0.2em] text-accent uppercase flex items-center gap-3">
                    <span className="w-1.5 h-1.5 bg-accent rounded-full animate-pulse" />
                    {stat.label}
                 </div>

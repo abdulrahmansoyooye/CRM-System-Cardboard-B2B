@@ -68,7 +68,7 @@ export function ProductsOverview({ products: initialProducts }: { products?: Pro
 
       <div className="container mx-auto px-4 lg:px-12">
         {/* Section Header */}
-        <div className="flex flex-col lg:flex-row justify-between items-end mb-32 gap-12">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-20 lg:mb-32 gap-10 lg:gap-12">
           <motion.div 
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -76,11 +76,11 @@ export function ProductsOverview({ products: initialProducts }: { products?: Pro
             transition={{ duration: 1 }}
             className="max-w-2xl"
           >
-            <h2 className="text-accent font-black tracking-[0.4em] text-[11px] uppercase mb-10 flex items-center gap-10">
-              <span className="w-16 h-px bg-accent inline-block" />
+            <h2 className="text-accent font-black tracking-[0.4em] text-[10px] md:text-[11px] uppercase mb-8 md:mb-10 flex items-center gap-6 md:gap-10">
+              <span className="w-10 md:w-16 h-px bg-accent inline-block" />
               SYSTEM PORTFOLIO
             </h2>
-            <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.85] uppercase">
+            <h3 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter leading-[0.9] lg:leading-[0.85] uppercase">
               HIGH-STRENGTH <br />
               <span className="text-white/30 italic font-light">PACKAGING</span> <br />
               ARCHITECTURES.
@@ -92,15 +92,15 @@ export function ProductsOverview({ products: initialProducts }: { products?: Pro
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
-            className="flex flex-col items-end gap-6"
+            className="flex flex-col items-start lg:items-end gap-6 w-full lg:w-auto"
           >
-            <p className="text-white/40 text-sm font-bold max-w-xs text-right leading-relaxed tracking-tight">
+            <p className="text-white/40 text-xs md:text-sm font-bold max-w-xs text-left lg:text-right leading-relaxed tracking-tight italic">
               Our automated production lines deliver structural precision for high-velocity supply chains.
             </p>
-            <Link href="/products">
+            <Link href="/products" className="w-full lg:w-auto">
               <Button
                 variant="outline"
-                className="border-2 border-white/10 hover:border-accent text-white hover:text-accent font-black tracking-[0.3em] text-[10px] h-16 px-10 rounded-none transition-all duration-700 bg-transparent uppercase group"
+                className="w-full lg:w-auto border-2 border-white/10 hover:border-accent text-white hover:text-accent font-black tracking-[0.3em] text-[10px] h-14 md:h-16 px-10 rounded-none transition-all duration-700 bg-transparent uppercase group"
               >
                 FULL CAPABILITIES
                 <ArrowRight className="w-5 h-5 ml-3 group-hover:translate-x-3 transition-transform duration-500" />
