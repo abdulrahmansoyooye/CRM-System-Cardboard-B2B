@@ -39,6 +39,7 @@ export interface TSettings {
     linkedin?: string;
     twitter?: string;
     facebook?: string;
+    instagram?: string;
   };
   contactInfo?: {
     phone?: string;
