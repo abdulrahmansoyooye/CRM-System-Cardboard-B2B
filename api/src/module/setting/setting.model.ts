@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 export const settingSchema = new Schema({
+  companyName: { type: String },
+  tagline: { type: String },
   logo: { type: String },
   favicon: { type: String },
   contactEmail: { type: String },
