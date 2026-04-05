@@ -140,6 +140,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    onClick={onClose}
                     className="relative block"
                   >
                     <motion.div
