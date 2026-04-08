@@ -12,6 +12,8 @@ import { SettingRoutes } from '../module/setting/setting.route';
 import { TestimonialRoutes } from '../module/testimonial/testimonial.route';
 import { AssetRoutes } from '../module/asset/asset.route';
 
+import { EventRoutes } from '../module/event/event.route';
+
 const router = Router();
 
 const moduleRoutes = [
@@ -27,6 +29,7 @@ const moduleRoutes = [
   { path: '/', route: SettingRoutes },
   { path: '/', route: TestimonialRoutes },
   { path: '/', route: AssetRoutes },
+  { path: '/', route: EventRoutes },
 ];
 
 moduleRoutes.forEach((route) => router.use(route.path, route.route));

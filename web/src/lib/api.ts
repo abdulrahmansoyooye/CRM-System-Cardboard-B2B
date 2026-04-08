@@ -28,7 +28,7 @@ export async function getProductBySlug(slug: string) {
 }
 
 export async function getIndustries() {
-  const res = await fetch(`${API_BASE_URL}/industry`, {
+  const res = await fetch(`${API_BASE_URL}/industries`, {
     cache: 'no-store',
   });
 
@@ -41,7 +41,7 @@ export async function getIndustries() {
 }
 
 export async function getCategories() {
-  const res = await fetch(`${API_BASE_URL}/category`, {
+  const res = await fetch(`${API_BASE_URL}/categories`, {
     cache: 'no-store',
   });
 
@@ -54,7 +54,7 @@ export async function getCategories() {
 }
 
 export async function getBlogs(): Promise<TBlog[]> {
-  const res = await fetch(`${API_BASE_URL}/blog`, {
+  const res = await fetch(`${API_BASE_URL}/blogs`, {
     cache: 'no-store',
   });
 
@@ -67,7 +67,7 @@ export async function getBlogs(): Promise<TBlog[]> {
 }
 
 export async function getBlogBySlug(slug: string): Promise<TBlog> {
-  const res = await fetch(`${API_BASE_URL}/blog/${slug}`, {
+  const res = await fetch(`${API_BASE_URL}/blogs/${slug}`, {
     cache: 'no-store',
   });
   if (!res.ok) {
@@ -104,7 +104,7 @@ export async function getSettings(): Promise<TSettings[]> {
   return data.data;
 }
 export async function submitInquiry(data: unknown) {
-  const res = await fetch(`${API_BASE_URL}/inquiry`, {
+  const res = await fetch(`${API_BASE_URL}/contact`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
@@ -131,4 +131,13 @@ export async function submitApplication(data: unknown) {
   });
   if (!res.ok) throw new Error('Failed to submit application');
   return res.json();
+}
+
+export async function getEvents() {
+  const res = await fetch(`${API_BASE_URL}/events`, {
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new Error('Failed to fetch events');
+  const data = await res.json();
+  return data.data || [];
 }

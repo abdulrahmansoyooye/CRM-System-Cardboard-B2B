@@ -8,6 +8,8 @@ export type TProduct = {
   fullDescription?: string;
   specifications?: string[];
   materialDetails?: string;
+  strengthDetails?: string;
+  availableSizes?: string[];
   moq: number;
   deliveryTimeline: string;
   isFeatured: boolean;
@@ -33,6 +35,8 @@ const productSchema = new Schema<TProduct>(
     fullDescription: { type: String },
     specifications: [{ type: String }],
     materialDetails: { type: String },
+    strengthDetails: { type: String },
+    availableSizes: [{ type: String }],
     moq: { type: Number, default: 1 },
     deliveryTimeline: { type: String },
     isFeatured: { type: Boolean, default: false, index: true },

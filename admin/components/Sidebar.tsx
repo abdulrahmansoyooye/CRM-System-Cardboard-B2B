@@ -52,6 +52,7 @@ const NAV = [
     roles: ["admin", "super_admin", "content_manager"],
     items: [
       { icon: BookOpen, label: "Blog", href: "/dashboard/blog" },
+      { icon: Star, label: "Events", href: "/dashboard/events" },
       { icon: Star, label: "Testimonials", href: "/dashboard/testimonials" },
       { icon: ImageIcon, label: "Gallery", href: "/dashboard/gallery" },
     ],

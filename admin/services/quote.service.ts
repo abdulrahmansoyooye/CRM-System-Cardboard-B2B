@@ -3,18 +3,18 @@ import { api } from "@/lib/api";
 export const quoteService = {
   getAll: (params?: any) => {
     const query = params ? `?${new URLSearchParams(params).toString()}` : "";
-    return api(`/quote${query}`);
+    return api(`/admin/quotes${query}`);
   },
-  getOne: (id: string) => api(`/quote/${id}`),
+  getOne: (id: string) => api(`/admin/quotes/${id}`),
   updateStatus: (id: string, status: string) => 
-    api(`/quote/${id}/status`, { 
-      method: "PATCH", 
+    api(`/admin/quotes/${id}`, { 
+      method: "PUT", 
       body: JSON.stringify({ status }) 
     }),
-  delete: (id: string) => api(`/quote/${id}`, { method: "DELETE" }),
+  delete: (id: string) => api(`/admin/quotes/${id}`, { method: "DELETE" }),
   addNote: (id: string, note: string) => 
-    api(`/quote/${id}/notes`, { 
-      method: "POST", 
-      body: JSON.stringify({ note }) 
+    api(`/admin/quotes/${id}`, { 
+      method: "PUT", 
+      body: JSON.stringify({ notes: note }) 
     }),
 };

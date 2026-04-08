@@ -1,7 +1,9 @@
 import { Category, TCategory } from "./category.model";
 import { AppError } from "../../core/errors/AppError";
+import { generateSlug } from "../../utils/slug";
 
 const createCategory = async (payload: TCategory) => {
+    if (payload.name) payload.slug = generateSlug(payload.name);
     const isExists = await Category.findOne({ slug: payload.slug });
     if (isExists) throw new AppError('Category with this slug already exists!', 400);
     return await Category.create(payload);
@@ -18,6 +20,7 @@ const getCategoryBySlug = async (slug: string) => {
 };
 
 const updateCategory = async (id: string, payload: Partial<TCategory>) => {
+    if (payload.name) payload.slug = generateSlug(payload.name);
     const category = await Category.findByIdAndUpdate(id, payload, { new: true });
     if (!category) throw new AppError('Category not found', 404);
     return category;

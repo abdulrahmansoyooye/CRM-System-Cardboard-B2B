@@ -3,7 +3,7 @@ import { z } from 'zod';
 const createCategorySchema = z.object({
   body: z.object({
     name: z.string(),
-    slug: z.string(),
+    slug: z.string().optional(),
     description: z.string().optional(),
     coverImage: z.string().optional(),
     seo: z.object({

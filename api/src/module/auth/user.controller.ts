@@ -1,3 +1,4 @@
+import sendResponse from '../../core/response/sendResponse';
 import asyncHandler from "../../utils/asyncHandler";
 import { UserService } from "./user.service"
 import { NextFunction, Request, Response } from "express"
@@ -14,12 +15,22 @@ export const login = asyncHandler(async (req: Request, res: Response, next: Next
 
 export const getAll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const users = await UserService.getUsers()
-    res.status(200).json({ success: true, data: users });
+    sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Success',
+    data: users
+  });
 })
 
 export const getById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const user = await UserService.getUserById(req.params.id as string as string)
-    res.status(200).json({ success: true, data: user });
+    sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Success',
+    data: user
+  });
 })
 
 export const update = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

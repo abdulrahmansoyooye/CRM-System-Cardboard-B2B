@@ -5,32 +5,16 @@ import Image from "next/image";
 import { getPlaceholderImage } from "@/lib/utils";
 import { Calendar, MapPin, ExternalLink, ArrowRight } from "lucide-react";
 import Link from "next/link";
-
-const EVENTS = [
-  {
-    title: "Global Supply Chain Summit 2026",
-    date: "May 14, 2026",
-    location: "Industrial Center, Dubai",
-    desc: "Showcasing our 7-Ply Heavy Duty corrugation technology for international export logistics.",
-    category: "EXPO"
-  },
-  {
-    title: "Sustainability Milestone: 100% Recyclable Board",
-    date: "April 02, 2026",
-    location: "Headquarters",
-    desc: "A significant breakthrough in sustainable packaging: all our corrugated boards are now fully FSC certified.",
-    category: "MILESTONE"
-  },
-  {
-    title: "New Automated Printing Line Launch",
-    date: "March 15, 2026",
-    location: "Sector 4 Plant",
-    desc: "Expanding our high-resolution flexo-printing capacity with a new 6-color automated line.",
-    category: "EXPANSION"
-  }
-];
+import { useEffect, useState } from "react";
+import { getEvents } from "@/lib/api";
 
 export default function UpdatesPage() {
+  const [events, setEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    getEvents().then(data => setEvents(data)).catch(() => setEvents([]));
+  }, []);
+
   return (
     <main className="pt-20">
       {/* Hero Banner */}
@@ -67,9 +51,13 @@ export default function UpdatesPage() {
            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
               <div className="lg:col-span-12">
                  <div className="space-y-12">
-                   {EVENTS.map((event, idx) => (
+                   {events.length === 0 ? (
+                     <div className="text-center py-32 bg-secondary/20 border border-border/40">
+                       <h3 className="text-2xl font-black uppercase tracking-widest text-muted-foreground">No upcoming events currently scheduled.</h3>
+                     </div>
+                   ) : events.map((event, idx) => (
                      <motion.div
-                       key={event.title}
+                       key={event._id}
                        initial={{ opacity: 0, x: -50 }}
                        whileInView={{ opacity: 1, x: 0 }}
                        viewport={{ once: true }}
@@ -82,22 +70,22 @@ export default function UpdatesPage() {
                        <div className="md:w-1/3 w-full">
                           <div className="aspect-square relative overflow-hidden bg-secondary">
                              <Image 
-                               src={getPlaceholderImage('hero')}
+                               src={event.images?.[0] || getPlaceholderImage('hero')}
                                alt={event.title}
                                fill
                                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 saturate-50 group-hover:scale-110"
                              />
                              <div className="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-primary to-transparent opacity-80" />
                              <div className="absolute bottom-6 left-6 flex items-center gap-2">
-                                <span className="px-3 py-1 bg-accent text-accent-foreground text-[10px] font-black uppercase tracking-widest">{event.category}</span>
+                                <span className="px-3 py-1 bg-accent text-accent-foreground text-[10px] font-black uppercase tracking-widest">EVENT</span>
                              </div>
                           </div>
                        </div>
 
                        <div className="md:w-2/3 w-full">
                           <div className="flex flex-wrap gap-10 text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-8">
-                             <div className="flex items-center gap-3"><Calendar className="w-3.5 h-3.5 text-accent" /> {event.date}</div>
-                             <div className="flex items-center gap-3"><MapPin className="w-3.5 h-3.5 text-accent" /> {event.location}</div>
+                             <div className="flex items-center gap-3"><Calendar className="w-3.5 h-3.5 text-accent" /> {event.eventDate ? new Date(event.eventDate).toLocaleDateString() : "TBD"}</div>
+                             {event.isFeatured && <div className="flex items-center gap-3 text-accent font-bold"><MapPin className="w-3.5 h-3.5 text-accent" /> Featured Event</div>}
                           </div>
                           
                           <h3 className="text-3xl md:text-4xl font-black tracking-tighter uppercase mb-8 leading-tight group-hover:text-accent transition-colors">
@@ -105,11 +93,11 @@ export default function UpdatesPage() {
                           </h3>
                           
                           <p className="text-muted-foreground text-sm font-bold uppercase leading-relaxed tracking-tight mb-12 max-w-xl">
-                             {event.desc}
+                             {event.description}
                           </p>
                           
                           <Link href="#" className="inline-flex items-center gap-4 text-xs font-black tracking-[0.3em] uppercase text-primary group-hover:text-accent transition-all">
-                             READ FULL PRESS RELEASE <ArrowRight className="w-5 h-5 group-hover:translate-x-4 transition-transform duration-500" />
+                             RSVP / READ DETAILS <ArrowRight className="w-5 h-5 group-hover:translate-x-4 transition-transform duration-500" />
                           </Link>
                        </div>
                      </motion.div>

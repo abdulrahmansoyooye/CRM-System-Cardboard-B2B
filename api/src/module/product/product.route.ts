@@ -16,7 +16,7 @@ router.post(
 router.get('/products', ProductController.getAll);
 router.get('/products/:slug', ProductController.getBySlug);
 
-router.patch(
+router.put(
   '/admin/products/:id',
   authMiddleware(['admin']),
   validateRequest(ProductValidation.updateProductSchema),
