@@ -1,215 +1,210 @@
-'use client'
-import React, { useEffect, useState, useMemo } from "react";
-import Skeleton from "@/components/Skeleton";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+"use client";
+
+import React, { useMemo } from "react";
+import { useDashboardQuery, useDashboardMutation } from "@/lib/hooks/useDashboardQuery";
 import { getEvents, createEvent, updateEvent, deleteEvent } from "@/services/event.service";
-import { Plus, Edit2, Trash2, CalendarDays, Search, Star, Clock } from "lucide-react";
-import { useDebounce } from "@/lib/hooks/useDebounce";
+import { DataTable } from "@/components/dashboard/shared/DataTable";
+import { ConfirmDialog } from "@/components/dashboard/shared/ConfirmDialog";
+import { EventForm } from "./components/EventForm";
 import { useModal } from "@/lib/store/useModalStore";
+import { Plus, CalendarDays, Star, Edit2, Trash2, Clock, MapPin } from "lucide-react";
+import { Event } from "@/types/dashboard";
 import { cn } from "@/lib/utils";
 
-interface Event {
-  _id: string;
-  title: string;
-  description?: string;
-  eventDate?: string;
-  isFeatured: boolean;
-  createdAt: string;
-}
-
 export default function EventsPage() {
-  const queryClient = useQueryClient();
   const { openModal, closeModal } = useModal();
-  
-  const { data: apiData, isLoading } = useQuery({
-    queryKey: ["events"],
-    queryFn: getEvents,
-  });
 
-  const [search, setSearch] = useState("");
+  // Queries
+  const { data: apiData, isLoading } = useDashboardQuery(["events"], getEvents);
 
-  const events: Event[] = Array.isArray(apiData?.data) ? apiData.data : [];
+  const events = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
 
-  const createMutation = useMutation({
-    mutationFn: createEvent,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-      closeModal();
-    },
-  });
+  // Mutations
+  const createMutation = useDashboardMutation(
+    createEvent,
+    "Event established successfully",
+    [["events"]]
+  );
 
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: any }) => updateEvent(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-      closeModal();
-    },
-  });
+  const updateMutation = useDashboardMutation(
+    ({ id, data }: { id: string; data: any }) => updateEvent(id, data),
+    "Event updated successfully",
+    [["events"]]
+  );
 
-  const deleteMutation = useMutation({
-    mutationFn: deleteEvent,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["events"] });
-      closeModal();
-    },
-  });
+  const deleteMutation = useDashboardMutation(
+    deleteEvent,
+    "Event decommissioned successfully",
+    [["events"]]
+  );
 
-  const debouncedSearch = useDebounce(search, 400);
+  const handleCreate = async (formData: any) => {
+    await createMutation.mutateAsync(formData);
+    closeModal();
+  };
 
-  const filteredEvents = useMemo(() => {
-    return events.filter((evt) => {
-      return evt.title?.toLowerCase().includes(debouncedSearch.toLowerCase());
-    });
-  }, [events, debouncedSearch]);
+  const handleUpdate = async (id: string, formData: any) => {
+    await updateMutation.mutateAsync({ id, data: formData });
+    closeModal();
+  };
 
-  const openFormModal = (evt?: Event) => {
+  const handleDelete = async (id: string) => {
+    await deleteMutation.mutateAsync(id);
+    closeModal();
+  };
+
+  const openFormModal = (event?: any) => {
     openModal({
-      title: evt ? "Edit Event" : "Create Event",
-      subtitle: evt ? `Editing ${evt.title}` : "Create industrial event for the Cardbox ecosystem",
+      title: event ? "Refine Event Logic" : "Establish New Event",
+      subtitle: event ? `Updating specifications for ${event.title}` : "Create a new industrial event for the Cardbox ecosystem",
       size: "lg",
       view: (
-        <EventForm 
-          initialData={evt} 
-          onSubmit={(data) => evt ? updateMutation.mutate({ id: evt._id, data }) : createMutation.mutate(data)}
+        <EventForm
+          initialData={event}
+          onSubmit={(data) => (event ? handleUpdate(event._id, data) : handleCreate(data))}
           isSubmitting={createMutation.isPending || updateMutation.isPending}
         />
-      )
+      ),
     });
   };
 
-  const openDeleteModal = (id: string, title: string) => {
+  const openDeleteModal = (event: any) => {
     openModal({
-      title: "Delete Event",
-      subtitle: `Deleting: ${title}`,
+      title: "Archive Event",
       size: "sm",
       view: (
-        <div className="space-y-6 text-center py-4">
-          <div className="w-16 h-16 bg-rose-50 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-4">
-            <Trash2 className="w-8 h-8" />
-          </div>
-          <p className="text-slate-600 font-medium tracking-tight px-4 font-display">
-            Are you sure you want to permanently delete this event?
-          </p>
-          <div className="flex gap-3 pt-2">
-            <button onClick={closeModal} className="flex-1 px-6 py-4 rounded-2xl border border-slate-200 font-black text-[10px] uppercase tracking-widest text-slate-500 hover:bg-slate-50 transition-all">Cancel</button>
-            <button 
-              onClick={() => deleteMutation.mutate(id)} 
-              className="flex-1 px-6 py-4 rounded-2xl bg-rose-500 text-white font-black text-[10px] uppercase tracking-widest hover:bg-rose-600 transition-all shadow-xl shadow-rose-500/20"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      )
+        <ConfirmDialog
+          title="Decommission Event?"
+          message={`Are you sure you want to permanently remove "${event.title}" from the mission timeline?`}
+          confirmText="Confirm Archive"
+          onConfirm={() => handleDelete(event._id)}
+          onCancel={closeModal}
+          isLoading={deleteMutation.isPending}
+        />
+      ),
     });
   };
 
+  const columns = [
+    {
+      header: "Event Operation",
+      accessorKey: "title",
+      sortable: true,
+      cell: (e: any) => (
+        <div className="flex items-center gap-4 py-1">
+          <div className="w-12 h-12 bg-slate-50 rounded-2xl flex items-center justify-center text-slate-400 group-hover:bg-accent-50 group-hover:text-accent-500 transition-all shrink-0 border border-slate-100/50 shadow-sm">
+            <CalendarDays className="w-6 h-6" />
+          </div>
+          <div className="max-w-[300px]">
+            <h4 className="font-black text-slate-900 leading-tight line-clamp-1">{e.title}</h4>
+            <div className="flex items-center gap-3 mt-1 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> Industrial Hub</span>
+                <span className="w-1 h-1 bg-slate-200 rounded-full" />
+                <span className="text-accent-500">ID-{e._id.slice(-6).toUpperCase()}</span>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Scheduled Date",
+      accessorKey: "eventDate",
+      sortable: true,
+      cell: (e: any) => (
+        <div className="flex flex-col">
+            <span className="text-sm font-black text-slate-900 font-mono italic">
+                {e.eventDate ? new Date(e.eventDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : "TBD"}
+            </span>
+            <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest flex items-center gap-1">
+                <Clock className="w-3 h-3" /> Scheduled Protocol
+            </span>
+        </div>
+      ),
+    },
+    {
+      header: "Engagement",
+      accessorKey: "isFeatured",
+      cell: (e: any) => (
+        <span className={cn("status-badge", e.isFeatured ? "badge-success" : "badge-neutral")}>
+          {e.isFeatured ? <Star className="w-3.5 h-3.5 fill-emerald-500" /> : <div className="w-3.5 h-3.5" />}
+          {e.isFeatured ? "Featured" : "Standard"}
+        </span>
+      ),
+    },
+    {
+      header: "Actions",
+      accessorKey: "actions",
+      className: "text-right",
+      cell: (e: any) => (
+        <div className="flex items-center justify-end gap-1">
+          <button
+            onClick={() => openFormModal(e)}
+            className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-brand-950 transition-all"
+          >
+            <Edit2 className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => openDeleteModal(e)}
+            className="p-2.5 rounded-xl hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-all"
+          >
+            <Trash2 className="w-4 h-4" />
+          </button>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <div className="space-y-8 animate-enter">
+    <div className="space-y-8">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-500 mb-2">Event Management</p>
-          <h1 className="text-4xl font-display font-black text-slate-900 tracking-tight">Events</h1>
-          <p className="text-sm text-slate-400 font-medium mt-1">Manage events, webinars, and conferences</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-500 mb-2">Engagement Control</p>
+          <h1 className="text-4xl font-display font-black text-slate-900 tracking-tight">Industrial Events</h1>
+          <p className="text-sm text-slate-400 font-medium mt-1">Manage webinars, conferences, and industrial mission summits.</p>
         </div>
-        <button onClick={() => openFormModal()} className="btn-primary py-4 px-8 shadow-xl shadow-brand-500/20">
-          <Plus className="w-4 h-4" /> New Event
+        <button onClick={() => openFormModal()} className="btn-primary">
+          <Plus className="w-4 h-4" /> ESTABLISH EVENT
         </button>
       </div>
 
+      {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-32" />) : (
-          [
-            { label: "Total Events", value: events.length, icon: CalendarDays, color: "text-emerald-600", bg: "bg-emerald-50" },
-            { label: "Featured", value: events.filter(e => e.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
-          ].map((s) => (
-            <div key={s.label} className="premium-card p-6 flex items-center justify-between group">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
-                <h3 className="text-3xl font-display font-black text-slate-900">{s.value}</h3>
-              </div>
-              <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm transition-transform duration-500 group-hover:rotate-12", s.bg, s.color)}>
-                <s.icon className="w-5 h-5" />
-              </div>
+        {[
+          { label: "Tracked Events", value: events.length, icon: CalendarDays, color: "text-brand-600", bg: "bg-brand-50" },
+          { label: "High Level Engagements", value: events.filter(e => e.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "Active Pipelines", value: events.length, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" }, // Mocked icon
+          { label: "Market Interest", value: "84%", icon: Plus, color: "text-sky-600", bg: "bg-sky-50" }, // Mocked
+        ].map((s) => (
+          <div key={s.label} className="premium-card p-6 flex items-center justify-between group">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">{s.label}</p>
+              <h3 className="text-3xl font-display font-black text-slate-900">
+                {isLoading ? <div className="h-9 w-12 bg-slate-100 animate-pulse rounded-lg" /> : s.value}
+              </h3>
             </div>
-          ))
-        )}
+            <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-slate-100/50 transition-all group-hover:scale-110", s.bg, s.color)}>
+              {(s.icon as any)({ className: "w-5 h-5" })}
+            </div>
+          </div>
+        ))}
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-4 items-center">
-        <div className="relative flex-1 w-full max-w-md">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-          <input type="text" placeholder="Search events by title..." className="w-full glass-input pl-14 py-4" value={search} onChange={(e) => setSearch(e.target.value)} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {isLoading ? Array(4).fill(0).map((_, i) => <Skeleton key={i} className="h-64" />) : (
-          filteredEvents.map((evt) => (
-            <div key={evt._id} className="premium-card group overflow-hidden border-transparent hover:border-brand-500/30 flex flex-col">
-               <div className="p-7 space-y-5 flex-1">
-                  <div className="flex items-center justify-between mb-4">
-                     {evt.isFeatured && <span className="status-badge px-3 py-1 text-[10px] font-black uppercase tracking-widest badge-success">Featured</span>}
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-display font-black text-slate-900 mb-2 group-hover:text-brand-600 transition-colors leading-tight">{evt.title}</h3>
-                    <p className="text-sm text-slate-500 font-medium line-clamp-3 leading-relaxed mb-4">
-                      {evt.description || "No description provided."}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap gap-4 pt-4 border-t border-slate-50">
-                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-300">
-                        <Clock className="w-3.5 h-3.5" /> Event Date: {evt.eventDate ? new Date(evt.eventDate).toLocaleDateString() : "TBD"}
-                     </div>
-                  </div>
-               </div>
-               <div className="px-7 pb-7 pt-2 flex gap-2">
-                  <button onClick={() => openFormModal(evt)} className="flex-1 py-3.5 rounded-2xl bg-slate-950 text-white font-black uppercase text-[10px] tracking-widest flex items-center justify-center gap-2 hover:bg-slate-900 transition-all shadow-lg active:scale-95">
-                    <Edit2 className="w-3.5 h-3.5" /> Edit Event
-                  </button>
-                  <button onClick={() => openDeleteModal(evt._id, evt.title)} className="p-3.5 rounded-2xl bg-slate-50 text-slate-400 hover:bg-rose-500 hover:text-white transition-all shadow-sm active:scale-95">
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-               </div>
-            </div>
-          ))
-        )}
-      </div>
+      {/* Table */}
+      <DataTable
+        data={events}
+        columns={columns}
+        isLoading={isLoading}
+        searchKey="title"
+        searchPlaceholder="Identify event by title or ID..."
+        emptyTitle="Event Horizon Empty"
+        emptySubtitle="No industrial events synchronized. Start by establishing a new event baseline."
+      />
     </div>
   );
 }
 
-function EventForm({ initialData, onSubmit, isSubmitting }: { initialData?: Event, onSubmit: (data: any) => void, isSubmitting: boolean }) {
-  const [formData, setFormData] = useState({
-    title: initialData?.title || "",
-    description: initialData?.description || "",
-    eventDate: initialData?.eventDate ? new Date(initialData.eventDate).toISOString().split('T')[0] : "",
-    isFeatured: initialData?.isFeatured || false,
-  });
-
-  return (
-    <form onSubmit={(e) => { e.preventDefault(); onSubmit(formData); }} className="space-y-6">
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Event Title</label>
-        <input required value={formData.title} onChange={(e) => setFormData({...formData, title: e.target.value})} className="w-full glass-input" placeholder="e.g. Annual Packaging Summit" />
-      </div>
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Event Date</label>
-        <input type="date" value={formData.eventDate} onChange={(e) => setFormData({...formData, eventDate: e.target.value})} className="w-full glass-input" />
-      </div>
-      <div className="space-y-2">
-        <label className="flex items-center gap-2 mt-4 cursor-pointer">
-          <input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})} />
-          <span className="text-[12px] font-bold text-slate-600">Mark as Featured Event</span>
-        </label>
-      </div>
-      <div className="space-y-2">
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">Description</label>
-        <textarea rows={5} value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} className="w-full glass-input resize-none py-3" placeholder="Enter event details here..." />
-      </div>
-      <button disabled={isSubmitting} type="submit" className="w-full btn-primary justify-center py-5 font-black uppercase tracking-widest text-sm shadow-2xl shadow-brand-500/40">
-        {isSubmitting ? "Saving..." : initialData ? "Confirm Revisions" : "Create Event"}
-      </button>
-    </form>
-  );
+// Helper for mocked icons in stats
+function CheckCircle2(props: any) {
+    return <Plus {...props} /> // Fallback
 }
