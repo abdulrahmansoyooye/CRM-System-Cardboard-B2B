@@ -163,8 +163,8 @@ export default function IndustriesPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Mapped Sectors", value: industries.length, icon: Building2, color: "text-brand-600", bg: "bg-brand-50" },
-          { label: "Active Pipelines", value: industries.filter(i => i.isActive).length, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
-          { label: "Internal Drafts", value: industries.filter(i => !i.isActive).length, icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "Active Pipelines", value: industries.filter((i: any) => i.isActive).length, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { label: "Internal Drafts", value: industries.filter((i: any) => !i.isActive).length, icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-50" },
           { label: "Market Integration", value: "98.2%", icon: ArrowUpRight, color: "text-sky-600", bg: "bg-sky-50" },
         ].map((s) => (
           <div key={s.label} className="premium-card p-6 flex items-center justify-between group">

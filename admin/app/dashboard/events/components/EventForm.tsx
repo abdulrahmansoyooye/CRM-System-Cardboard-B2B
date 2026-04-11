@@ -12,10 +12,15 @@ const eventSchema = z.object({
   title: z.string().min(3, "Event title must be at least 3 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   eventDate: z.string().min(1, "Event date is required"),
-  isFeatured: z.boolean().default(false),
+  isFeatured: z.boolean(),
 });
 
-type EventFormValues = z.infer<typeof eventSchema>;
+interface EventFormValues {
+  title: string;
+  description: string;
+  eventDate: string;
+  isFeatured: boolean;
+}
 
 interface EventFormProps {
   initialData?: any;

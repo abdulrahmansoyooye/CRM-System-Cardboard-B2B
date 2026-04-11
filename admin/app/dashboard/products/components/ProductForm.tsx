@@ -13,17 +13,27 @@ const productSchema = z.object({
   categoryId: z.string().min(1, "Category is required"),
   moq: z.number().min(1, "MOQ must be at least 1"),
   deliveryTimeline: z.string().min(1, "Delivery timeline is required"),
-  isFeatured: z.boolean().default(false),
-  isActive: z.boolean().default(true),
+  isFeatured: z.boolean(),
+  isActive: z.boolean(),
   shortDescription: z.string().optional(),
   fullDescription: z.string().optional(),
   materialDetails: z.string().optional(),
 });
 
-type ProductFormValues = z.infer<typeof productSchema>;
+interface ProductFormValues {
+  name: string;
+  categoryId: string;
+  moq: number;
+  deliveryTimeline: string;
+  isFeatured: boolean;
+  isActive: boolean;
+  shortDescription?: string;
+  fullDescription?: string;
+  materialDetails?: string;
+}
 
 interface ProductFormProps {
-  initialData?: Product;
+  initialData?: any;
   categories: Category[];
   onSubmit: (data: ProductFormValues) => void;
   isSubmitting: boolean;

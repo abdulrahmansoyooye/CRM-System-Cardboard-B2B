@@ -3,6 +3,7 @@
 import React, { useMemo } from "react";
 import { useDashboardQuery, useDashboardMutation } from "@/lib/hooks/useDashboardQuery";
 import { getInquiries, createInquiry, updateInquiry, deleteInquiry } from "@/services/inquiry.service";
+import { Inquiry } from "@/types/dashboard";
 import { DataTable } from "@/components/dashboard/shared/DataTable";
 import { ConfirmDialog } from "@/components/dashboard/shared/ConfirmDialog";
 import { InquiryForm } from "./components/InquiryForm";
@@ -22,9 +23,9 @@ export default function InquiriesPage() {
   const { openModal, closeModal } = useModal();
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery(["inquiries"], getInquiries);
+  const { data: apiData, isLoading } = useDashboardQuery<{ data: Inquiry[] }>(["inquiries"], getInquiries);
 
-  const inquiries = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
+  const inquiries = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Inquiry[], [apiData]);
 
   // Mutations
   const createMutation = useDashboardMutation(
@@ -33,13 +34,13 @@ export default function InquiriesPage() {
     [["inquiries"]]
   );
 
-  const updateMutation = useDashboardMutation(
-    ({ id, data }: { id: string; data: any }) => updateInquiry(id, data),
-    "Lead intelligence updated",
+  const updateMutation = useDashboardMutation<{ id: string; data: any }>(
+    ({ id, data }) => updateInquiry(id, data),
+    "Lead intelligence recalibrated",
     [["inquiries"]]
   );
 
-  const deleteMutation = useDashboardMutation(
+  const deleteMutation = useDashboardMutation<string>(
     deleteInquiry,
     "Lead purged from system",
     [["inquiries"]]
@@ -197,9 +198,9 @@ export default function InquiriesPage() {
       {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Incoming Loads", value: inquiries.filter(i => i.status === "new").length, icon: MessageSquare, color: "text-brand-600", bg: "bg-brand-50" },
+          { label: "Incoming Loads", value: inquiries.filter((i: any) => i.status === "new").length, icon: MessageSquare, color: "text-brand-600", bg: "bg-brand-50" },
           { label: "Lead Conversion", value: "85.2%", icon: ArrowUpRight, color: "text-emerald-600", bg: "bg-emerald-50" },
-          { label: "Active Proposals", value: inquiries.filter(i => i.status === "quoted").length, icon: Calendar, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "Active Proposals", value: inquiries.filter((i: any) => i.status === "quoted").length, icon: Calendar, color: "text-amber-600", bg: "bg-amber-50" },
           { label: "Avg Response", value: "4.2h", icon: Clock, color: "text-sky-600", bg: "bg-sky-50" },
         ].map((s) => (
           <div key={s.label} className="premium-card p-6 flex items-center justify-between group">

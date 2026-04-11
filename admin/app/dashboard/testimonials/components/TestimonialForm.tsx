@@ -12,10 +12,16 @@ const testimonialSchema = z.object({
   company: z.string().optional(),
   feedback: z.string().min(10, "Feedback must be at least 10 characters"),
   rating: z.number().min(1).max(5),
-  isPublished: z.boolean().default(false),
+  isPublished: z.boolean(),
 });
 
-type TestimonialFormValues = z.infer<typeof testimonialSchema>;
+interface TestimonialFormValues {
+  clientName: string;
+  company?: string;
+  feedback: string;
+  rating: number;
+  isPublished: boolean;
+}
 
 interface TestimonialFormProps {
   initialData?: any;

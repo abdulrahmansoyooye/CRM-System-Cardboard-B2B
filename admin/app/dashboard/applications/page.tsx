@@ -9,10 +9,11 @@ import { ApplicationDetailView } from "./components/ApplicationDetailView";
 import { useModal } from "@/lib/store/useModalStore";
 import { Search, Eye, Download, Users, Mail, Phone, Calendar, Clock, ShieldCheck, User, Trash2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Application } from "@/types/dashboard";
 
 type AppStatus = "New" | "Reviewed" | "Shortlisted" | "Rejected" | "Hired";
 
-const statusStyles = {
+const statusStyles: Record<AppStatus, string> = {
   New: "badge-neutral",
   Reviewed: "badge-blue",
   Shortlisted: "badge-warning",
@@ -28,10 +29,10 @@ export default function ApplicationsPage() {
 
   const apps = useMemo(() => {
     if (!Array.isArray(apiData?.data)) return [];
-    return apiData.data.map((a: any) => ({
+    return apiData.data.map((a: Application) => ({
       ...a,
       status: a.status.charAt(0).toUpperCase() + a.status.slice(1) as AppStatus,
-    }));
+    })) as (Application & { status: AppStatus })[];
   }, [apiData]);
 
   // Mutations
@@ -61,7 +62,7 @@ export default function ApplicationsPage() {
     closeModal();
   };
 
-  const openDetailModal = (app: any) => {
+  const openDetailModal = (app: Application) => {
     openModal({
       title: "Candidate Analysis",
       subtitle: `Analyzing mission potential for ${app.name}`,
@@ -77,7 +78,7 @@ export default function ApplicationsPage() {
     });
   };
 
-  const openDeleteModal = (app: any) => {
+  const openDeleteModal = (app: Application) => {
     openModal({
       title: "Purge Candidate Record",
       size: "sm",

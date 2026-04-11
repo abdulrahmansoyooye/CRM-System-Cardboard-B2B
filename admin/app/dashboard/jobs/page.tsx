@@ -172,9 +172,9 @@ export default function JobsPage() {
       {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Active Roles", value: jobs.filter(j => j.status === "open").length, icon: Briefcase, color: "text-brand-600", bg: "bg-brand-50" },
+          { label: "Active Roles", value: jobs.filter((j: any) => j.status === "open").length, icon: Briefcase, color: "text-brand-600", bg: "bg-brand-50" },
           { label: "Lead Candidates", value: "48", icon: Users, color: "text-blue-600", bg: "bg-blue-50" },
-          { label: "Deployment Zones", value: [...new Set(jobs.map(j => j.location))].length || 0, icon: MapPin, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { label: "Deployment Zones", value: [...new Set(jobs.map((j: any) => j.location))].length || 0, icon: MapPin, color: "text-emerald-600", bg: "bg-emerald-50" },
           { label: "Recruitment Velocity", value: "+18%", icon: ArrowUpRight, color: "text-sky-600", bg: "bg-sky-50" },
         ].map((s) => (
           <div key={s.label} className="premium-card p-6 flex items-center justify-between group">

@@ -15,26 +15,26 @@ export default function EventsPage() {
   const { openModal, closeModal } = useModal();
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery(["events"], getEvents);
+  const { data: apiData, isLoading } = useDashboardQuery<{ data: Event[] }>(["events"], getEvents);
 
-  const events = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
+  const events = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Event[], [apiData]);
 
   // Mutations
-  const createMutation = useDashboardMutation(
+  const createMutation = useDashboardMutation<any>(
     createEvent,
-    "Event established successfully",
+    "Event logic established",
     [["events"]]
   );
 
-  const updateMutation = useDashboardMutation(
-    ({ id, data }: { id: string; data: any }) => updateEvent(id, data),
+  const updateMutation = useDashboardMutation<{ id: string; data: any }>(
+    ({ id, data }) => updateEvent(id, data),
     "Event updated successfully",
     [["events"]]
   );
 
-  const deleteMutation = useDashboardMutation(
+  const deleteMutation = useDashboardMutation<string>(
     deleteEvent,
-    "Event decommissioned successfully",
+    "Event purged from archive",
     [["events"]]
   );
 
@@ -172,7 +172,7 @@ export default function EventsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Tracked Events", value: events.length, icon: CalendarDays, color: "text-brand-600", bg: "bg-brand-50" },
-          { label: "High Level Engagements", value: events.filter(e => e.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "High Level Engagements", value: events.filter((e: any) => e.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
           { label: "Active Pipelines", value: events.length, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" }, // Mocked icon
           { label: "Market Interest", value: "84%", icon: Plus, color: "text-sky-600", bg: "bg-sky-50" }, // Mocked
         ].map((s) => (

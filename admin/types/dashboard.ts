@@ -64,6 +64,7 @@ export interface Job extends BaseEntity {
 
 export interface Inquiry extends BaseEntity {
   name: string;
+  company?: string;
   email: string;
   phone: string;
   subject: string;
@@ -92,4 +93,28 @@ export interface Setting extends BaseEntity {
   key: string;
   value: any;
   description?: string;
+}
+
+export interface Application extends BaseEntity {
+  name: string;
+  email: string;
+  phone: string;
+  jobId: {
+    _id: string;
+    title: string;
+  };
+  notes?: string;
+  status: string;
+}
+
+export interface Quote extends BaseEntity {
+  name: string;
+  email: string;
+  phone: string;
+  companyName: string;
+  productType: string;
+  quantity: string;
+  details: string;
+  status: string;
+  internalNotes?: string;
 }

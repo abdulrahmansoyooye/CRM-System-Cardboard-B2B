@@ -172,8 +172,8 @@ export default function TestimonialsPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: "Endorsements", value: testimonials.length, icon: MessageSquare, color: "text-brand-600", bg: "bg-brand-50" },
-          { label: "Public Interface", value: testimonials.filter(t => t.isPublished).length, icon: Globe, color: "text-emerald-600", bg: "bg-emerald-50" },
-          { label: "Engagement Index", value: (testimonials.reduce((sum, t) => sum + (t.rating || 0), 0) / (testimonials.length || 1)).toFixed(1), icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "Public Interface", value: testimonials.filter((t: any) => t.isPublished).length, icon: Globe, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { label: "Engagement Index", value: (testimonials.reduce((sum: number, t: any) => sum + (t.rating || 0), 0) / (testimonials.length || 1)).toFixed(1), icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
           { label: "Credibility Rate", value: "92%", icon: ArrowUpRight, color: "text-blue-600", bg: "bg-blue-50" },
         ].map((s) => (
           <div key={s.label} className="premium-card p-6 flex items-center justify-between group">

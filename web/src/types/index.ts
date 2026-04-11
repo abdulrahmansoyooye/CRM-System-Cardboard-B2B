@@ -103,5 +103,10 @@ export interface TSettings {
     phone?: string;
     email?: string;
     address?: string;
+    exportCount?: string;
+    establishedYear?: string;
+    coordinates?: string;
+    productionCapacity?: string;
+    factoryArea?: string;
   };
 }

@@ -3,6 +3,7 @@
 import React, { useMemo, useState } from "react";
 import { useDashboardQuery, useDashboardMutation } from "@/lib/hooks/useDashboardQuery";
 import { getAssets, createAsset, deleteAsset } from "@/services/asset.service";
+import { Gallery } from "@/types/dashboard";
 import { DataTable } from "@/components/dashboard/shared/DataTable";
 import { ConfirmDialog } from "@/components/dashboard/shared/ConfirmDialog";
 import { AssetForm } from "./components/AssetForm";
@@ -15,18 +16,18 @@ export default function GalleryPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery(["assets"], getAssets);
+  const { data: apiData, isLoading } = useDashboardQuery<{ data: Gallery[] }>(["assets"], getAssets);
 
-  const assets = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
+  const assets = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Gallery[], [apiData]);
 
   // Mutations
-  const createMutation = useDashboardMutation(
+  const createMutation = useDashboardMutation<any>(
     createAsset,
     "Media asset logged successfully",
     [["assets"]]
   );
 
-  const deleteMutation = useDashboardMutation(
+  const deleteMutation = useDashboardMutation<string>(
     deleteAsset,
     "Asset purged from archive",
     [["assets"]]
@@ -247,7 +248,7 @@ export default function GalleryPage() {
       {view === "grid" ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
           {isLoading ? Array(8).fill(0).map((_, i) => <div key={i} className="h-64 bg-slate-100 animate-pulse rounded-[32px]" />) : (
-            assets.map((asset) => (
+            assets.map((asset: any) => (
               <div 
                 key={asset._id} 
                 className="premium-card group overflow-hidden cursor-pointer active:scale-[0.98] transition-all"
@@ -291,7 +292,7 @@ export default function GalleryPage() {
           data={assets}
           columns={columns}
           isLoading={isLoading}
-          searchKey="name"
+          searchKey="title"
           searchPlaceholder="Scan media archive by identifier..."
           emptyTitle="Registry Archive Empty"
           emptySubtitle="No industrial visual assets preserved. Deploy a new media record."

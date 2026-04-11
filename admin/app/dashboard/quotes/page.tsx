@@ -9,16 +9,17 @@ import { QuoteDetailView } from "./components/QuoteDetailView";
 import { useModal } from "@/lib/store/useModalStore";
 import { FileText, Eye, Trash2, Package, Clock, Truck, CheckCircle, XCircle, BarChart3, TrendingUp, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Quote } from "@/types/dashboard";
 
 export default function QuoteRequestsPage() {
   const { openModal, closeModal } = useModal();
   const [filterStatus, setFilterStatus] = useState("all");
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery(["quotes"], () => quoteService.getAll());
+  const { data: apiData, isLoading } = useDashboardQuery<{ data: Quote[] }>(["quotes"], () => quoteService.getAll());
 
   const quotes = useMemo(() => {
-    const raw = Array.isArray(apiData?.data) ? apiData.data : [];
+    const raw = (Array.isArray(apiData?.data) ? apiData.data : []) as Quote[];
     if (filterStatus === "all") return raw;
     return raw.filter((q: any) => q.status === filterStatus);
   }, [apiData, filterStatus]);

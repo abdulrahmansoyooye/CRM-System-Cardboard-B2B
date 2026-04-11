@@ -15,24 +15,24 @@ export default function BlogPage() {
   const { openModal, closeModal } = useModal();
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery(["blogs"], getBlogs);
+  const { data: apiData, isLoading } = useDashboardQuery<{ data: Blog[] }>(["blogs"], getBlogs);
 
-  const blogs = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
+  const blogs = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Blog[], [apiData]);
 
   // Mutations
-  const createMutation = useDashboardMutation(
+  const createMutation = useDashboardMutation<any>(
     createBlog,
     "Article published successfully",
     [["blogs"]]
   );
 
-  const updateMutation = useDashboardMutation(
-    ({ id, data }: { id: string; data: any }) => updateBlog(id, data),
+  const updateMutation = useDashboardMutation<{ id: string; data: any }>(
+    ({ id, data }) => updateBlog(id, data),
     "Article updated successfully",
     [["blogs"]]
   );
 
-  const deleteMutation = useDashboardMutation(
+  const deleteMutation = useDashboardMutation<string>(
     deleteBlog,
     "Article purged successfully",
     [["blogs"]]
@@ -183,10 +183,10 @@ export default function BlogPage() {
       {/* Stats Summary */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Publicized", value: blogs.filter(b => (b as any).isPublished || (b as any).status === "published").length, icon: Globe, color: "text-emerald-600", bg: "bg-emerald-50" },
-          { label: "Active Drafts", value: blogs.filter(b => !((b as any).isPublished || (b as any).status === "published")).length, icon: FileText, color: "text-slate-400", bg: "bg-slate-50" },
+          { label: "Publicized", value: blogs.filter((b: any) => (b as any).isPublished || (b as any).status === "published").length, icon: Globe, color: "text-emerald-600", bg: "bg-emerald-50" },
+          { label: "Active Drafts", value: blogs.filter((b: any) => !((b as any).isPublished || (b as any).status === "published")).length, icon: FileText, color: "text-slate-400", bg: "bg-slate-50" },
           { label: "Total Asset Reach", value: "14.2k", icon: ArrowUpRight, color: "text-brand-600", bg: "bg-brand-50" },
-          { label: "Sectors Managed", value: [...new Set(blogs.map(b => b.category))].length, icon: Tag, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "Sectors Managed", value: [...new Set(blogs.map((b: any) => b.category))].length, icon: Tag, color: "text-amber-600", bg: "bg-amber-50" },
         ].map((s) => (
           <div key={s.label} className="premium-card p-6 flex items-center justify-between group">
             <div>

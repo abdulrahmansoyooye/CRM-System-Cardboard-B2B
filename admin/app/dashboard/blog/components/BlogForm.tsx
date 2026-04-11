@@ -13,16 +13,25 @@ const blogSchema = z.object({
   slug: z.string().min(1, "Slug is required"),
   category: z.string().min(1, "Category is required"),
   content: z.string().min(10, "Content must be at least 10 characters"),
-  author: z.string().default("Admin"),
-  isPublished: z.boolean().default(false),
+  author: z.string(),
+  isPublished: z.boolean(),
   excerpt: z.string().optional(),
   tags: z.array(z.string()).optional(),
 });
 
-type BlogFormValues = z.infer<typeof blogSchema>;
+interface BlogFormValues {
+  title: string;
+  slug: string;
+  category: string;
+  content: string;
+  author: string;
+  isPublished: boolean;
+  excerpt?: string;
+  tags?: string[];
+}
 
 interface BlogFormProps {
-  initialData?: Blog;
+  initialData?: any;
   onSubmit: (data: BlogFormValues) => void;
   isSubmitting: boolean;
 }

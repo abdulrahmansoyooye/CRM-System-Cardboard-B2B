@@ -12,13 +12,18 @@ const industrySchema = z.object({
   name: z.string().min(3, "Sector name must be at least 3 characters"),
   slug: z.string().min(1, "Mission slug is required"),
   overview: z.string().min(10, "Overview must be at least 10 characters"),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(),
 });
 
-type IndustryFormValues = z.infer<typeof industrySchema>;
+interface IndustryFormValues {
+  name: string;
+  slug: string;
+  overview: string;
+  isActive: boolean;
+}
 
 interface IndustryFormProps {
-  initialData?: Industry;
+  initialData?: any;
   onSubmit: (data: IndustryFormValues) => void;
   isSubmitting: boolean;
 }

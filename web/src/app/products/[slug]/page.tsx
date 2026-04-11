@@ -33,6 +33,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: product.shortDescription || product.description,
     };
   } catch {
+    return {
+      title: 'Product Not Found | CARDBOX Industrial',
+    };
   }
 }
 

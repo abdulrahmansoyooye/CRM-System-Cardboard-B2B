@@ -18,10 +18,16 @@ const userSchema = z.object({
   email: z.string().email("Invalid email"),
   role: z.enum(['super_admin', 'admin', 'content_manager', 'hr_manager', 'sales_manager']),
   password: z.string().min(6, "Password must be at least 6 chars").optional().or(z.literal("")),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(),
 });
 
-type UserFormValues = z.infer<typeof userSchema>;
+interface UserFormValues {
+  name: string;
+  email: string;
+  role: 'super_admin' | 'admin' | 'content_manager' | 'hr_manager' | 'sales_manager';
+  password?: string;
+  isActive: boolean;
+}
 
 export function TeamSettings() {
   const { openModal, closeModal } = useModal();

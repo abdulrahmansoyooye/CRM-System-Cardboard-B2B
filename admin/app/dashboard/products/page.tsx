@@ -188,9 +188,9 @@ export default function ProductsPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { label: "Active SKUs", value: products.filter((p) => p.isActive).length, icon: Package, color: "text-brand-600", bg: "bg-brand-50" },
-          { label: "Featured", value: products.filter((p) => p.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
-          { label: "Draft Process", value: products.filter((p) => !p.isActive).length, icon: Edit2, color: "text-slate-400", bg: "bg-slate-50" },
+          { label: "Active SKUs", value: products.filter((p: any) => p.isActive).length, icon: Package, color: "text-brand-600", bg: "bg-brand-50" },
+          { label: "Featured", value: products.filter((p: any) => p.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
+          { label: "Draft Process", value: products.filter((p: any) => !p.isActive).length, icon: Edit2, color: "text-slate-400", bg: "bg-slate-50" },
           { label: "Total Asset Count", value: products.length, icon: Package, color: "text-emerald-600", bg: "bg-emerald-50" },
         ].map((s) => (
           <div key={s.label} className="premium-card p-6 flex items-center justify-between">
