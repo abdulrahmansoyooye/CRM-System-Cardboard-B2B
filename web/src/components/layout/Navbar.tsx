@@ -2,37 +2,24 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Menu, Search, X, ChevronDown, MoveRight } from "lucide-react";
+import { 
+  Menu, Search, X, ChevronDown, MoveRight, 
+  Mail, Phone, MapPin, Globe, ShieldCheck, 
+  ArrowUpRight, LayoutGrid, Box, Factory, 
+  Newspaper, Info, Briefcase, MessageSquare 
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import { TSettings } from "@/types";
+import { TSettings, TCategory, TIndustry } from "@/types";
 import { cn } from "@/lib/utils";
 
-const NAV_LINKS = [
-  { label: "Products", href: "/products" },
-  { label: "Industries", href: "/industries" },
-  {
-    label: "Solutions",
-    href: "#",
-    children: [
-      { label: "Manufacturing Process", href: "/process" },
-      { label: "Infrastructure Hub", href: "/infrastructure" },
-      { label: "Quality Protocol", href: "/quality" },
-      { label: "Industrial Gallery", href: "/gallery" },
-    ],
-  },
-  {
-    label: "Intelligence",
-    href: "#",
-    children: [
-      { label: "Operational Log (Blog)", href: "/blog" },
-      { label: "System Updates", href: "/updates" },
-      { label: "About Cardbox", href: "/about" },
-    ],
-  },
-  { label: "Careers", href: "/careers" },
-  { label: "Contact", href: "/contact" },
-];
+interface NavItem {
+  label: string;
+  href: string;
+  description?: string;
+  icon?: any;
+  children?: NavItem[];
+}
 
 export function Navbar({ 
   settings, 
@@ -40,15 +27,18 @@ export function Navbar({
   industries = [] 
 }: { 
   settings?: TSettings;
-  categories?: any[];
-  industries?: any[];
+  categories?: TCategory[];
+  industries?: TIndustry[];
 }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -62,245 +52,404 @@ export function Navbar({
     }
   }, [isMobileMenuOpen]);
 
-  const DYNAMIC_NAV = [
+  const DYNAMIC_NAV: NavItem[] = [
     {
       label: "Products",
       href: "/products",
+      icon: Box,
+      description: "Advanced industrial packaging solutions",
       children: categories.map(cat => ({
         label: cat.name,
-        href: `/products?category=${cat._id}`
-      })).slice(0, 5) // Limit to top 5 in nav
+        href: `/products?category=${cat._id}`,
+        description: "Custom specification handling",
+        icon: Factory
+      })).slice(0, 6)
     },
     {
       label: "Industries",
       href: "/industries",
+      icon: LayoutGrid,
+      description: "Sector-specific manufacturing expertise",
       children: industries.map(ind => ({
         label: ind.name,
-        href: `/industries/${ind.slug}`
-      }))
+        href: `/industries/${ind.slug}`,
+        description: "Enterprise integration",
+        icon: ShieldCheck
+      })).slice(0, 6)
     },
     {
       label: "Solutions",
       href: "#",
+      icon: Factory,
+      description: "Our end-to-end operational capacity",
       children: [
-        { label: "Manufacturing Process", href: "/process" },
-        { label: "Infrastructure Hub", href: "/infrastructure" },
-        { label: "Quality Protocol", href: "/quality" },
-        { label: "Industrial Gallery", href: "/gallery" },
+        { label: "Manufacturing Process", href: "/process", description: "Automated production cycles", icon: Globe },
+        { label: "Infrastructure Hub", href: "/infrastructure", description: "Logistics and warehousing", icon: Box },
+        { label: "Quality Protocol", href: "/quality", description: "ISO 9001 certified standards", icon: ShieldCheck },
+        { label: "Industrial Gallery", href: "/gallery", description: "Visual asset archive", icon: Newspaper },
       ],
     },
     {
       label: "Intelligence",
       href: "#",
+      icon: Newspaper,
+      description: "Thought leadership and corporate updates",
       children: [
-        { label: "Operational Log (Blog)", href: "/blog" },
-        { label: "System Updates", href: "/updates" },
-        { label: "About Cardbox", href: "/about" },
+        { label: "Operational Log", href: "/blog", description: "Industry insights and news", icon: Newspaper },
+        { label: "System Updates", href: "/updates", description: "Latest platform deployment", icon: Info },
+        { label: "About Cardbox", href: "/about", description: "Management and core mission", icon: Globe },
       ],
     },
-    { label: "Careers", href: "/careers" },
-    { label: "Contact", href: "/contact" },
+    { label: "Careers", href: "/careers", icon: Briefcase },
+    { label: "Contact", href: "/contact", icon: MessageSquare },
   ];
 
   return (
-    <header 
-      className={cn(
-        "fixed top-0 z-[100] w-full transition-all duration-500 border-b",
-        scrolled || isMobileMenuOpen
-          ? "bg-background/95 backdrop-blur-xl border-border py-2 shadow-2xl" 
-          : "bg-transparent border-transparent py-4"
-      )}
-    >
-      <div className="container mx-auto px-4 lg:px-12 flex items-center justify-between">
-        {/* Logo Section */}
-        <Link
-          href="/"
-          className="flex items-center gap-4 group shrink-0 relative z-[110]"
-          onClick={() => setIsMobileMenuOpen(false)}
-        >
-          <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
-            <motion.div 
-              animate={{ rotate: scrolled ? 90 : 0 }}
-              className="absolute inset-0 bg-primary rounded-none border-l-4 border-accent"
-            />
-            <span className="relative text-white text-[9px] md:text-[10px] font-black tracking-tighter z-10">
-              {settings?.companyName?.substring(0, 2).toUpperCase() || "CB"}
-            </span>
+    <>
+      {/* Integrated TopBar - Hidden on scroll */}
+      <div className={cn(
+        "bg-primary text-white py-2.5 transition-all duration-500 overflow-hidden relative z-[101]",
+        scrolled ? "h-0 opacity-0" : "h-10 opacity-100"
+      )}>
+        <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em]">
+          <div className="flex gap-8 items-center">
+            <div className="flex items-center gap-2 group cursor-pointer">
+              <Phone className="w-3 h-3 text-accent group-hover:scale-110 transition-transform" />
+              <span className="group-hover:text-accent transition-colors">{settings?.contactPhone || "+1 (800) CARDBOX"}</span>
+            </div>
+            <div className="flex items-center gap-2 group cursor-pointer">
+              <Mail className="w-3 h-3 text-accent group-hover:scale-110 transition-transform" />
+              <span className="group-hover:text-accent transition-colors">{settings?.contactEmail || "SALES@CARDBOX.DEMO"}</span>
+            </div>
           </div>
-          <div className="flex flex-col -gap-1">
-            <span className="text-lg md:text-xl font-black text-primary tracking-tighter leading-none group-hover:text-accent transition-colors">
-              {settings?.companyName || "CARDBOX"}
+          <div className="hidden md:flex items-center gap-6">
+            <span className="text-white/40 font-bold uppercase tracking-widest flex items-center gap-2">
+                <Globe className="w-3 h-3" /> System Live: 99.9% Uptime
             </span>
-            <span className="text-[8px] md:text-[9px] font-black tracking-[0.4em] text-muted-foreground uppercase opacity-50">
-              Industrial
-            </span>
+            <div className="w-px h-3 bg-white/10" />
+            <div className="flex items-center gap-2 group">
+              <MapPin className="w-3 h-3 text-accent" />
+              <span className="text-white/70">{settings?.address?.split(',')[0]} Global Hub</span>
+            </div>
           </div>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-1">
-          {DYNAMIC_NAV.map((link) =>
-            link.children && link.children.length > 0 ? (
-              <div
-                key={link.label}
-                className="relative group"
-                onMouseEnter={() => setOpenDropdown(link.label)}
-                onMouseLeave={() => setOpenDropdown(null)}
-              >
-                <div
-                  className={cn(
-                    "flex items-center gap-2 px-6 py-3 text-[10px] font-black tracking-[0.2em] uppercase cursor-pointer transition-all",
-                    openDropdown === link.label ? "text-accent" : "text-primary/70 hover:text-primary"
-                  )}
-                >
-                  {link.label}
-                  <ChevronDown className={cn("w-3 h-3 transition-transform duration-500", openDropdown === link.label && "rotate-180")} />
-                </div>
-                
-                <AnimatePresence>
-                  {openDropdown === link.label && (
-                    <motion.div 
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 10 }}
-                      className="absolute top-full left-0 min-w-[240px] bg-white border border-border shadow-2xl p-2 z-50"
-                    >
-                      <div className="w-full h-1 bg-accent absolute top-0 left-0" />
-                      {link.children.map((child) => (
-                        <Link
-                          key={child.href}
-                          href={child.href}
-                          className="flex items-center justify-between px-5 py-4 text-[10px] font-black tracking-widest text-primary/60 hover:bg-secondary hover:text-accent transition-all uppercase group/item"
-                        >
-                          {child.label}
-                          <MoveRight className="w-4 h-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                        </Link>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            ) : (
-              <Link
-                key={link.label}
-                href={link.href}
-                className="px-6 py-3 text-[10px] font-black tracking-[0.2em] uppercase text-primary/70 hover:text-primary transition-all relative group"
-              >
-                {link.label}
-                <span className="absolute bottom-0 left-6 right-6 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-              </Link>
-            ),
-          )}
-        </nav>
-
-        {/* Action Group */}
-        <div className="hidden lg:flex items-center gap-6">
-          <Button variant="ghost" size="icon" className="text-primary/40 hover:text-accent hover:bg-transparent transition-colors">
-            <Search className="w-5 h-5" />
-          </Button>
-          <div className="w-px h-8 bg-border/40" />
-          <Link href="/request-quote">
-            <Button className="font-black tracking-[0.2em] bg-primary text-white hover:bg-accent border-none rounded-none px-10 text-[10px] h-14 transition-all duration-500 shadow-xl shadow-primary/10">
-              SYNC QUOTE
-            </Button>
-          </Link>
-        </div>
-
-        {/* Mobile Toggle */}
-        <div className="flex items-center gap-4 xl:hidden relative z-[110]">
-          <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={cn(
-              "p-3 rounded-none transition-all duration-300 flex items-center justify-center",
-              isMobileMenuOpen ? "text-accent bg-transparent" : "bg-secondary text-primary border-l-4 border-accent"
-            )}
-            aria-label="Toggle Menu"
-          >
-            {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
-          </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-primary/40 backdrop-blur-md z-[90]"
-              onClick={() => setIsMobileMenuOpen(false)}
-            />
-            <motion.div 
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-white shadow-2xl z-[105] flex flex-col pt-28 pb-12 px-10 overflow-y-auto"
-            >
-              <div className="flex flex-col gap-2">
-                {DYNAMIC_NAV.map((link) => (
-                  <div key={link.label} className="border-b border-border/40 py-4">
-                    {link.children && link.children.length > 0 ? (
-                      <div>
-                        <button 
-                          onClick={() => setOpenDropdown(openDropdown === link.label ? null : link.label)}
-                          className="flex items-center justify-between w-full text-2xl font-black text-primary uppercase tracking-tighter"
-                        >
-                          {link.label}
-                          <ChevronDown className={cn("w-6 h-6 transition-transform", openDropdown === link.label && "rotate-180")} />
-                        </button>
-                        <AnimatePresence>
-                          {openDropdown === link.label && (
-                            <motion.div 
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="overflow-hidden mt-4 flex flex-col gap-4 pl-4 border-l-2 border-accent/20"
-                            >
-                              {link.children.map(child => (
-                                <Link 
-                                  key={child.href}
-                                  href={child.href}
-                                  className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em] hover:text-accent"
-                                  onClick={() => setIsMobileMenuOpen(false)}
-                                >
-                                  {child.label}
-                                </Link>
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ) : (
-                      <Link 
-                        href={link.href}
-                        className="text-2xl font-black text-primary uppercase tracking-tighter block"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {link.label}
-                      </Link>
+      <header 
+        className={cn(
+          "fixed z-[100] w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
+          scrolled 
+            ? "top-0 bg-background/90 backdrop-blur-2xl border-b border-border/50 py-3 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)]" 
+            : cn("py-6", scrolled ? "top-0" : "top-10") 
+        )}
+        style={{ top: scrolled ? 0 : undefined }}
+      >
+        <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between">
+          {/* Logo Cluster */}
+          <Link
+            href="/"
+            className="flex items-center gap-4 group shrink-0 relative z-[110]"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <div className="relative w-12 h-12 flex items-center justify-center overflow-hidden">
+               <motion.div 
+                 className="absolute inset-0 bg-primary group-hover:bg-accent transition-colors duration-500"
+                 layoutId="logoBg"
+               />
+               <div className="absolute inset-0 border-[3px] border-white/10" />
+               <div className="relative z-10 text-white font-black text-xs tracking-tighter flex flex-col items-center">
+                 <span className="leading-none">{settings?.companyName?.substring(0, 2).toUpperCase() || "CB"}</span>
+                 <div className="w-4 h-0.5 bg-accent mt-0.5 group-hover:bg-white transition-colors" />
+               </div>
+            </div>
+            <div className="flex flex-col -gap-1">
+              <span className={cn(
+                "text-2xl font-black tracking-tighter leading-none transition-colors duration-500",
+                scrolled ? "text-primary" : "text-primary" // Can adjust to white if needed
+              )}>
+                {settings?.companyName || "CARDBOX"}
+              </span>
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black tracking-[0.4em] text-accent uppercase">
+                  Enterprise
+                </span>
+                <div className="h-[1px] w-8 bg-border" />
+                <span className="text-[8px] font-bold text-muted-foreground uppercase opacity-40">
+                  Industrial Systems
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation - Advanced Dropdowns */}
+          <nav className="hidden xl:flex items-center gap-2">
+            {DYNAMIC_NAV.map((link) =>
+              link.children && link.children.length > 0 ? (
+                <div
+                  key={link.label}
+                  className="relative"
+                  onMouseEnter={() => setOpenDropdown(link.label)}
+                  onMouseLeave={() => setOpenDropdown(null)}
+                >
+                  <button
+                    className={cn(
+                      "flex items-center gap-2.5 px-6 py-4 text-[11px] font-black tracking-[0.25em] uppercase cursor-pointer transition-all relative group",
+                      openDropdown === link.label ? "text-accent" : "text-primary/60 hover:text-primary"
                     )}
-                  </div>
-                ))}
-              </div>
-              <div className="mt-12">
-                <Link href="/request-quote" onClick={() => setIsMobileMenuOpen(false)}>
-                  <Button className="w-full h-20 bg-accent text-white font-black tracking-widest text-xs uppercase rounded-none border-b-4 border-black/10">
-                    REQUEST A QUOTE
-                  </Button>
+                  >
+                    <span className="relative z-10">{link.label}</span>
+                    <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-500 relative z-10", openDropdown === link.label && "rotate-180")} />
+                    <motion.div 
+                      className="absolute inset-0 bg-secondary opacity-0 group-hover:opacity-100 transition-opacity rounded-none"
+                    />
+                  </button>
+                  
+                  <AnimatePresence>
+                    {openDropdown === link.label && (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                        transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
+                        className="absolute top-full left-0 min-w-[500px] bg-white border border-border shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] p-0 z-50 overflow-hidden"
+                      >
+                        <div className="grid grid-cols-2">
+                            <div className="p-8 bg-slate-50 border-r border-border">
+                                <div className="p-4 bg-primary text-white w-12 h-12 flex items-center justify-center mb-6">
+                                    <link.icon className="w-6 h-6" />
+                                </div>
+                                <h3 className="text-lg font-black text-primary leading-tight uppercase tracking-tighter mb-2">{link.label}</h3>
+                                <p className="text-xs text-muted-foreground leading-relaxed font-medium">
+                                    {link.description}
+                                </p>
+                                <div className="mt-8 pt-8 border-t border-border/50">
+                                    <Link href={link.href} className="text-[10px] font-black text-accent flex items-center gap-3 uppercase tracking-widest hover:gap-5 transition-all">
+                                        Exploration Protocol <ArrowUpRight className="w-4 h-4" />
+                                    </Link>
+                                </div>
+                            </div>
+                            <div className="p-4 flex flex-col gap-1">
+                                {link.children.map((child) => (
+                                    <Link
+                                        key={child.href}
+                                        href={child.href}
+                                        className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-all group/item"
+                                    >
+                                        <div className="w-8 h-8 rounded-none border border-border flex items-center justify-center text-primary group-hover/item:border-accent group-hover/item:bg-accent group-hover/item:text-white transition-all">
+                                            {child.icon ? <child.icon className="w-4 h-4" /> : <Box className="w-4 h-4" />}
+                                        </div>
+                                        <div>
+                                            <h4 className="text-[10px] font-black text-primary uppercase tracking-widest">{child.label}</h4>
+                                            <p className="text-[9px] text-muted-foreground font-bold uppercase opacity-60 mt-0.5">{child.description}</p>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="px-6 py-4 text-[11px] font-black tracking-[0.25em] uppercase text-primary/60 hover:text-primary transition-all relative group"
+                >
+                  <span className="relative z-10">{link.label}</span>
+                  <span className="absolute bottom-0 left-6 right-6 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </Link>
+              ),
+            )}
+          </nav>
+
+          {/* Action Group */}
+          <div className="hidden lg:flex items-center gap-4">
+            <button className="p-3 text-primary/40 hover:text-accent transition-colors flex items-center justify-center">
+              <Search className="w-5 h-5" />
+            </button>
+            <div className="w-px h-8 bg-border/40 mx-2" />
+            <Link href="/request-quote" className="group relative">
+               <div className="absolute inset-0 bg-accent translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300" />
+               <Button className="relative z-10 font-black tracking-[0.25em] bg-primary text-white hover:bg-black border-none rounded-none px-12 text-[10px] h-14 transition-all duration-300">
+                PROVISION QUOTE
+               </Button>
+            </Link>
+          </div>
+
+          {/* Mobile Toggle - Improved design */}
+          <div className="flex items-center gap-4 xl:hidden relative z-[110]">
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={cn(
+                "w-12 h-12 flex items-center justify-center transition-all duration-500",
+                isMobileMenuOpen ? "bg-white text-primary" : "bg-primary text-white"
+              )}
+            >
+              <div className="relative w-6 h-5">
+                <span className={cn(
+                    "absolute h-0.5 w-6 bg-current transition-all duration-500",
+                    isMobileMenuOpen ? "top-2.5 rotate-45" : "top-0"
+                )} />
+                <span className={cn(
+                    "absolute h-0.5 w-6 bg-current transition-all duration-500 top-2.5",
+                    isMobileMenuOpen ? "opacity-0 translate-x-2" : "opacity-100"
+                )} />
+                <span className={cn(
+                    "absolute h-0.5 w-4 bg-current transition-all duration-500 right-0",
+                    isMobileMenuOpen ? "top-2.5 -rotate-45 w-6" : "top-5"
+                )} />
               </div>
-              
-              <div className="mt-12 pt-8 border-t border-border/40 text-[9px] font-black text-muted-foreground/50 tracking-[0.3em] uppercase">
-                {settings?.companyName} Industrial System // v1.0
-              </div>
-            </motion.div>
-          </>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Command Center - Refactored */}
+      <AnimatePresence mode="wait">
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[105] flex overflow-hidden"
+          >
+            {/* Backdrop Shard */}
+            <motion.div 
+              initial={{ scaleY: 0 }}
+              animate={{ scaleY: 1 }}
+              exit={{ scaleY: 0 }}
+              transition={{ duration: 0.8, ease: [0.85, 0, 0.15, 1] }}
+              className="absolute inset-0 bg-primary origin-top"
+            />
+
+            {/* Grid Pattern Overlay */}
+            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ 
+                backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
+                backgroundSize: '40px 40px'
+            }} />
+
+            <div className="relative w-full h-full flex flex-col container mx-auto px-8 pt-40 pb-12 overflow-y-auto overflow-x-hidden custom-scrollbar">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 flex-1">
+                    <div className="flex flex-col gap-1 sm:gap-2">
+                         {DYNAMIC_NAV.map((link, idx) => (
+                            <motion.div 
+                                key={link.label}
+                                initial={{ x: -100, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                transition={{ delay: 0.2 + (idx * 0.05) }}
+                                className="group"
+                            >
+                                {link.children ? (
+                                    <div className="py-2">
+                                        <button 
+                                            onClick={() => setActiveTab(activeTab === link.label ? null : link.label)}
+                                            className="text-4xl sm:text-6xl font-black text-white hover:text-accent transition-colors uppercase tracking-tighter flex items-center gap-4"
+                                        >
+                                            {link.label}
+                                            <ChevronDown className={cn("w-8 h-8 transition-transform duration-500", activeTab === link.label && "rotate-180")} />
+                                        </button>
+                                        <AnimatePresence>
+                                            {activeTab === link.label && (
+                                                <motion.div 
+                                                    initial={{ height: 0, opacity: 0 }}
+                                                    animate={{ height: "auto", opacity: 1 }}
+                                                    exit={{ height: 0, opacity: 0 }}
+                                                    className="overflow-hidden flex flex-col gap-4 mt-6 pl-6 border-l-4 border-accent/30"
+                                                >
+                                                    {link.children.map(child => (
+                                                        <Link 
+                                                            key={child.href}
+                                                            href={child.href}
+                                                            onClick={() => setIsMobileMenuOpen(false)}
+                                                            className="text-lg font-black text-white/40 hover:text-white uppercase tracking-widest transition-colors flex items-center justify-between group/sub"
+                                                        >
+                                                            {child.label}
+                                                            <ArrowUpRight className="w-5 h-5 opacity-0 group-hover/sub:opacity-100 transition-all" />
+                                                        </Link>
+                                                    ))}
+                                                </motion.div>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                ) : (
+                                    <Link 
+                                        href={link.href}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        className="text-4xl sm:text-6xl font-black text-white hover:text-accent transition-colors uppercase tracking-tighter block py-2"
+                                    >
+                                        {link.label}
+                                    </Link>
+                                )}
+                            </motion.div>
+                         ))}
+                    </div>
+
+                    <div className="lg:border-l lg:border-white/10 lg:pl-12 flex flex-col justify-between py-12">
+                        <div className="space-y-12">
+                            <div>
+                                <p className="text-[10px] font-black text-accent uppercase tracking-[0.4em] mb-6">Headquarters Protocol</p>
+                                <div className="space-y-4">
+                                    <div className="flex items-start gap-4 text-white group">
+                                        <MapPin className="w-5 h-5 text-accent mt-1" />
+                                        <span className="text-xl font-bold leading-tight opacity-70 group-hover:opacity-100 transition-opacity">
+                                            {settings?.address || "123 Manufacturing Way, Industrial Sector 4, Tech City"}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-4 text-white group">
+                                        <Phone className="w-5 h-5 text-accent" />
+                                        <span className="text-xl font-bold opacity-70 group-hover:opacity-100 transition-opacity">
+                                            {settings?.contactPhone || "+1 (800) 123-4567"}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-4 text-white group">
+                                        <Mail className="w-5 h-5 text-accent" />
+                                        <span className="text-xl font-bold opacity-70 group-hover:opacity-100 transition-opacity uppercase tracking-tight">
+                                            {settings?.contactEmail || "SALES@CARDBOX.DEMO"}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex gap-4">
+                                {['LinkedIn', 'X-Platform', 'Instagram', 'YouTube'].map(social => (
+                                    <button key={social} className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:border-accent transition-all">
+                                        <ArrowUpRight className="w-5 h-5" />
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="mt-12">
+                            <Link href="/request-quote" onClick={() => setIsMobileMenuOpen(false)}>
+                                <button className="w-full h-24 bg-accent text-white font-black tracking-[0.3em] text-sm uppercase group relative overflow-hidden">
+                                    <span className="relative z-10">Initialize Production Quote</span>
+                                    <motion.div 
+                                        className="absolute inset-0 bg-black/20"
+                                        initial={{ x: "-100%" }}
+                                        whileHover={{ x: 0 }}
+                                        transition={{ duration: 0.5, ease: "circOut" }}
+                                    />
+                                </button>
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="mt-20 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <p className="text-[9px] font-bold text-white/30 uppercase tracking-[0.4em]">
+                        © {new Date().getFullYear()} {settings?.companyName} INDUSTRIAL SYSTEMS // v2.4.0
+                    </p>
+                    <div className="flex gap-8 text-[9px] font-black text-white/50 uppercase tracking-widest">
+                        <Link href="/privacy" className="hover:text-accent">Security Protocol</Link>
+                        <Link href="/terms" className="hover:text-accent">Terms of Engagement</Link>
+                    </div>
+                </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }
 

@@ -3,9 +3,8 @@ import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { TopBar } from "@/components/layout/TopBar";
 import { getSettings, getCategories, getIndustries } from "@/lib/api";
-import { TSettings } from "@/types";
+import { TSettings, TCategory, TIndustry } from "@/types";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -42,8 +41,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   let settingsData: TSettings | undefined = undefined;
-  let categories: any[] = [];
-  let industries: any[] = [];
+  let categories: TCategory[] = [];
+  let industries: TIndustry[] = [];
   
   try {
     const [settings, cats, inds] = await Promise.all([
@@ -64,7 +63,6 @@ export default async function RootLayout({
         className={`${inter.variable} ${robotoMono.variable} antialiased min-h-screen flex flex-col font-sans relative`}
       >
         <div className="grain-overlay" />
-        <TopBar settings={settingsData} />
         <Navbar 
           settings={settingsData} 
           categories={categories}
