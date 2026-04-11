@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FormSection, FormInput } from "@/components/dashboard/shared/FormLayout";
-import { Upload, Palette } from "lucide-react";
+import { Upload, Palette, Plus } from "lucide-react";
 
 interface BrandingSettingsProps {
   branding: any;

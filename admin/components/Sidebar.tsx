@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Package, BookOpen, Briefcase,
   MessageSquare, Image as ImageIcon, Star, Settings,
   BarChart2, ChevronRight, ShieldCheck, UserCircle, X,
-  Users, Building2, LogOut
+  Users, Building2, LogOut, Layers
 } from "lucide-react";
 import { clsx } from "clsx";
 import { useState } from "react";
@@ -28,6 +28,7 @@ const NAV = [
     roles: ["admin", "super_admin", "content_manager"],
     items: [
       { icon: Package, label: "Products", href: "/dashboard/products" },
+      { icon: Layers, label: "Categories", href: "/dashboard/categories" },
       { icon: Building2, label: "Industries", href: "/dashboard/industries" },
     ],
   },
@@ -62,13 +63,6 @@ const NAV = [
     roles: ["admin", "super_admin"],
     items: [
       { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-    ],
-  },
-   {
-    label: "Create Roles",
-    roles: ["super_admin"],
-    items: [
-      { icon: UserCircle, label: "Create Roles", href: "/dashboard/create-roles" },
     ],
   },
 ];
