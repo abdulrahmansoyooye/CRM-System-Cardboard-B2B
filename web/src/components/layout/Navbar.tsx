@@ -6,7 +6,8 @@ import {
   Menu, Search, X, ChevronDown, MoveRight, 
   Mail, Phone, MapPin, Globe, ShieldCheck, 
   ArrowUpRight, LayoutGrid, Box, Factory, 
-  Newspaper, Info, Briefcase, MessageSquare 
+  Newspaper, Info, Briefcase, MessageSquare,
+  LucideIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,7 +18,7 @@ interface NavItem {
   label: string;
   href: string;
   description?: string;
-  icon?: any;
+  icon?: LucideIcon;
   children?: NavItem[];
 }
 
@@ -106,44 +107,13 @@ export function Navbar({
 
   return (
     <>
-      {/* Integrated TopBar - Hidden on scroll */}
-      <div className={cn(
-        "bg-primary text-white py-2.5 transition-all duration-500 overflow-hidden relative z-[101]",
-        scrolled ? "h-0 opacity-0" : "h-10 opacity-100"
-      )}>
-        <div className="container mx-auto px-6 lg:px-12 flex justify-between items-center text-[10px] font-black uppercase tracking-[0.2em]">
-          <div className="flex gap-8 items-center">
-            <div className="flex items-center gap-2 group cursor-pointer">
-              <Phone className="w-3 h-3 text-accent group-hover:scale-110 transition-transform" />
-              <span className="group-hover:text-accent transition-colors">{settings?.contactPhone || "+1 (800) CARDBOX"}</span>
-            </div>
-            <div className="flex items-center gap-2 group cursor-pointer">
-              <Mail className="w-3 h-3 text-accent group-hover:scale-110 transition-transform" />
-              <span className="group-hover:text-accent transition-colors">{settings?.contactEmail || "SALES@CARDBOX.DEMO"}</span>
-            </div>
-          </div>
-          <div className="hidden md:flex items-center gap-6">
-            <span className="text-white/40 font-bold uppercase tracking-widest flex items-center gap-2">
-                <Globe className="w-3 h-3" /> System Live: 99.9% Uptime
-            </span>
-            <div className="w-px h-3 bg-white/10" />
-            <div className="flex items-center gap-2 group">
-              <MapPin className="w-3 h-3 text-accent" />
-              <span className="text-white/70">{settings?.address?.split(',')[0]} Global Hub</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <header 
-        className={cn(
-          "fixed z-[100] w-full transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]",
-          scrolled 
-            ? "top-0 bg-background/90 backdrop-blur-2xl border-b border-border/50 py-3 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)]" 
-            : cn("py-6", scrolled ? "top-0" : "top-10") 
-        )}
-        style={{ top: scrolled ? 0 : undefined }}
-      >
+    <header 
+      className={cn(
+        "fixed top-0 w-full bg-background/90 backdrop-blur-2xl border-b border-border/50 py-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)] transition-all duration-500",
+        isMobileMenuOpen ? "z-[120] bg-transparent border-none shadow-none" : "z-[100]",
+        scrolled ? "py-2" : "py-3"
+      )}
+    >
         <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between">
           {/* Logo Cluster */}
           <Link
@@ -165,26 +135,27 @@ export function Navbar({
             <div className="flex flex-col -gap-1">
               <span className={cn(
                 "text-2xl font-black tracking-tighter leading-none transition-colors duration-500",
-                scrolled ? "text-primary" : "text-primary" // Can adjust to white if needed
+                isMobileMenuOpen ? "text-white" : "text-primary"
               )}>
-                {settings?.companyName || "CARDBOX"}
+                {"CARDBOX"}
               </span>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black tracking-[0.4em] text-accent uppercase">
+                <span className={cn(
+                  "text-[10px] font-black tracking-[0.4em] uppercase transition-colors",
+                  isMobileMenuOpen ? "text-white/60" : "text-accent"
+                )}>
                   Enterprise
                 </span>
                 <div className="h-[1px] w-8 bg-border" />
-                <span className="text-[8px] font-bold text-muted-foreground uppercase opacity-40">
-                  Industrial Systems
-                </span>
               </div>
             </div>
           </Link>
 
           {/* Desktop Navigation - Advanced Dropdowns */}
-          <nav className="hidden xl:flex items-center gap-2">
-            {DYNAMIC_NAV.map((link) =>
-              link.children && link.children.length > 0 ? (
+          <nav className="hidden xl:flex items-center gap-1">
+            {DYNAMIC_NAV.map((link) => {
+              const Icon = link.icon;
+              return link.children && link.children.length > 0 ? (
                 <div
                   key={link.label}
                   className="relative"
@@ -193,12 +164,12 @@ export function Navbar({
                 >
                   <button
                     className={cn(
-                      "flex items-center gap-2.5 px-6 py-4 text-[11px] font-black tracking-[0.25em] uppercase cursor-pointer transition-all relative group",
-                      openDropdown === link.label ? "text-accent" : "text-primary/60 hover:text-primary"
+                      "flex items-center gap-2 px-4 py-3 text-[10px] font-black tracking-[0.2em] uppercase cursor-pointer transition-all relative group",
+                      openDropdown === link.label ? "text-accent" : "text-primary/70 hover:text-primary"
                     )}
                   >
                     <span className="relative z-10">{link.label}</span>
-                    <ChevronDown className={cn("w-3.5 h-3.5 transition-transform duration-500 relative z-10", openDropdown === link.label && "rotate-180")} />
+                    <ChevronDown className={cn("w-3 h-3 transition-transform duration-500 relative z-10", openDropdown === link.label && "rotate-180")} />
                     <motion.div 
                       className="absolute inset-0 bg-secondary opacity-0 group-hover:opacity-100 transition-opacity rounded-none"
                     />
@@ -211,12 +182,12 @@ export function Navbar({
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
                         transition={{ duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-                        className="absolute top-full left-0 min-w-[500px] bg-white border border-border shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] p-0 z-50 overflow-hidden"
+                        className="absolute top-full left-1/2 -translate-x-1/2 min-w-[500px] bg-white border border-border shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] p-0 z-50 overflow-hidden mt-1"
                       >
                         <div className="grid grid-cols-2">
                             <div className="p-8 bg-slate-50 border-r border-border">
                                 <div className="p-4 bg-primary text-white w-12 h-12 flex items-center justify-center mb-6">
-                                    <link.icon className="w-6 h-6" />
+                                    {Icon && <Icon className="w-6 h-6" />}
                                 </div>
                                 <h3 className="text-lg font-black text-primary leading-tight uppercase tracking-tighter mb-2">{link.label}</h3>
                                 <p className="text-xs text-muted-foreground leading-relaxed font-medium">
@@ -229,21 +200,23 @@ export function Navbar({
                                 </div>
                             </div>
                             <div className="p-4 flex flex-col gap-1">
-                                {link.children.map((child) => (
-                                    <Link
-                                        key={child.href}
-                                        href={child.href}
-                                        className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-all group/item"
-                                    >
-                                        <div className="w-8 h-8 rounded-none border border-border flex items-center justify-center text-primary group-hover/item:border-accent group-hover/item:bg-accent group-hover/item:text-white transition-all">
-                                            {child.icon ? <child.icon className="w-4 h-4" /> : <Box className="w-4 h-4" />}
-                                        </div>
+                                {link.children.map((child) => {
+                                    const ChildIcon = child.icon;
+                                    return (
+                                        <Link
+                                            key={child.href}
+                                            href={child.href}
+                                            className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-all group/item"
+                                        >
+                                            <div className="w-8 h-8 rounded-none border border-border flex items-center justify-center text-primary group-hover/item:border-accent group-hover/item:bg-accent group-hover/item:text-white transition-all">
+                                                {ChildIcon ? <ChildIcon className="w-4 h-4" /> : <Box className="w-4 h-4" />}
+                                            </div>
                                         <div>
                                             <h4 className="text-[10px] font-black text-primary uppercase tracking-widest">{child.label}</h4>
                                             <p className="text-[9px] text-muted-foreground font-bold uppercase opacity-60 mt-0.5">{child.description}</p>
                                         </div>
                                     </Link>
-                                ))}
+                                )})}
                             </div>
                         </div>
                       </motion.div>
@@ -254,13 +227,13 @@ export function Navbar({
                 <Link
                   key={link.label}
                   href={link.href}
-                  className="px-6 py-4 text-[11px] font-black tracking-[0.25em] uppercase text-primary/60 hover:text-primary transition-all relative group"
+                  className="px-4 py-3 text-[10px] font-black tracking-[0.2em] uppercase text-primary/70 hover:text-primary transition-all relative group"
                 >
                   <span className="relative z-10">{link.label}</span>
-                  <span className="absolute bottom-0 left-6 right-6 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                  <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                 </Link>
-              ),
-            )}
+              );
+            })}
           </nav>
 
           {/* Action Group */}
@@ -271,7 +244,7 @@ export function Navbar({
             <div className="w-px h-8 bg-border/40 mx-2" />
             <Link href="/request-quote" className="group relative">
                <div className="absolute inset-0 bg-accent translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300" />
-               <Button className="relative z-10 font-black tracking-[0.25em] bg-primary text-white hover:bg-black border-none rounded-none px-12 text-[10px] h-14 transition-all duration-300">
+               <Button className="relative z-10 font-black tracking-[0.25em] bg-primary text-white hover:bg-black border-none rounded-none px-8 text-[10px] h-14 transition-all duration-300">
                 PROVISION QUOTE
                </Button>
             </Link>
@@ -289,15 +262,15 @@ export function Navbar({
               <div className="relative w-6 h-5">
                 <span className={cn(
                     "absolute h-0.5 w-6 bg-current transition-all duration-500",
-                    isMobileMenuOpen ? "top-2.5 rotate-45" : "top-0"
+                    isMobileMenuOpen ? "top-[9px] rotate-45" : "top-[2px]"
                 )} />
                 <span className={cn(
-                    "absolute h-0.5 w-6 bg-current transition-all duration-500 top-2.5",
-                    isMobileMenuOpen ? "opacity-0 translate-x-2" : "opacity-100"
+                    "absolute h-0.5 w-6 bg-current transition-all duration-500 top-[9px]",
+                    isMobileMenuOpen ? "opacity-0 translate-x-3" : "opacity-100"
                 )} />
                 <span className={cn(
                     "absolute h-0.5 w-4 bg-current transition-all duration-500 right-0",
-                    isMobileMenuOpen ? "top-2.5 -rotate-45 w-6" : "top-5"
+                    isMobileMenuOpen ? "top-[9px] -rotate-45 w-6" : "top-[16px]"
                 )} />
               </div>
             </button>
@@ -312,7 +285,7 @@ export function Navbar({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[105] flex overflow-hidden"
+            className="fixed inset-0 z-[110] flex overflow-hidden"
           >
             {/* Backdrop Shard */}
             <motion.div 
