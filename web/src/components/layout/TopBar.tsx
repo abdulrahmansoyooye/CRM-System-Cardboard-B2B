@@ -2,7 +2,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import { TSettings } from "@/types";
 
 export function TopBar({ settings }: { settings?: TSettings }) {
-  const contact = settings?.contactInfo;
+  const contact = settings;
   
   return (
     <div className="bg-primary text-secondary/90 py-2 border-b-2 border-accent hidden lg:block">
@@ -10,11 +10,11 @@ export function TopBar({ settings }: { settings?: TSettings }) {
         <div className="flex gap-6 items-center">
           <div className="flex items-center gap-2 hover:text-accent transition-colors cursor-pointer">
             <Phone className="w-3 h-3 text-accent" />
-            <span>{contact?.phone || "+1 (800) 123-4567"}</span>
+            <span>{contact?.contactPhone || "+1 (800) 123-4567"}</span>
           </div>
           <div className="flex items-center gap-2 hover:text-accent transition-colors cursor-pointer">
             <Mail className="w-3 h-3 text-accent" />
-            <span>{contact?.email || "sales@cardbox.demo"}</span>
+            <span>{contact?.contactEmail || "sales@cardbox.demo"}</span>
           </div>
         </div>
         <div className="flex items-center gap-2">

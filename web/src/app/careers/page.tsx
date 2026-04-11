@@ -1,6 +1,5 @@
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CTABanner } from "@/components/sections/CTABanner";
-import { Button } from "@/components/ui/button";
 import {
   Briefcase,
   Building,
@@ -8,12 +7,13 @@ import {
   Users,
   MapPin,
   Clock,
-  ChevronRight,
 } from "lucide-react";
 import Image from "next/image";
 import { getPlaceholderImage } from "@/lib/utils";
 import { getJobs, getSettings } from "@/lib/api";
 import { Metadata } from 'next';
+import { JobDetailsModal } from "@/components/forms/JobDetailsModal";
+import { TJob } from "@/types";
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -26,16 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
   } catch {
     return { title: "Careers | CARDBOX" };
   }
-}
-
-interface TJob {
-  _id: string;
-  title: string;
-  department: string;
-  location: string;
-  type: string;
-  description: string;
-  isActive: boolean;
 }
 
 export default async function CareersPage() {
@@ -130,7 +120,7 @@ export default async function CareersPage() {
               {activeJobs.map((job) => (
                 <div
                   key={job._id}
-                  className="group border border-border bg-white hover:border-accent p-10 rounded-none transition-all duration-500 cursor-pointer flex flex-col sm:flex-row gap-8 justify-between items-start sm:items-center relative overflow-hidden"
+                  className="group border border-border bg-white hover:border-accent p-10 rounded-none transition-all duration-500 flex flex-col sm:flex-row gap-8 justify-between items-start sm:items-center relative overflow-hidden"
                 >
                   <div className="relative z-10">
                     <h4 className="font-black text-2xl text-primary group-hover:text-accent transition-colors mb-4 uppercase tracking-tighter leading-[0.9]">
@@ -151,13 +141,7 @@ export default async function CareersPage() {
                       </span>
                     </div>
                   </div>
-                  <Button
-                    variant="outline"
-                    className="relative z-10 shrink-0 border-2 border-primary text-primary hover:bg-primary hover:text-white font-black tracking-[0.3em] text-[10px] rounded-none h-14 px-10 transition-all uppercase group/btn"
-                  >
-                    APPLY NOW
-                    <ChevronRight className="w-5 h-5 ml-3 group-hover/btn:translate-x-2 transition-transform" />
-                  </Button>
+                  <JobDetailsModal job={job} />
                 </div>
               ))}
               

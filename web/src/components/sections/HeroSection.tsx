@@ -7,7 +7,9 @@ import { motion, useScroll, useTransform, useSpring, useMotionValue } from "fram
 import { useRef, useEffect, useState } from "react";
 import { getPlaceholderImage } from "@/lib/utils";
 
-export function HeroSection() {
+import { TSettings } from "@/types";
+
+export function HeroSection({ settings }: { settings?: TSettings }) {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -99,7 +101,7 @@ export function HeroSection() {
             className="inline-flex items-center gap-3 px-5 py-2 rounded-none bg-accent text-accent-foreground font-black text-[11px] tracking-[0.3em] mb-12 w-fit uppercase border-l-4 border-white shadow-2xl"
           >
             <ShieldCheck className="w-4 h-4" />
-            <span>ESTABLISHED 1998 • ISO 9001:2015 CERTIFIED</span>
+            <span>ESTABLISHED {settings?.contactInfo?.establishedYear || "1998"} • ISO 9001:2015 CERTIFIED</span>
           </motion.div>
 
           {/* Main Heading with Reveal Effect */}
@@ -210,8 +212,8 @@ export function HeroSection() {
 
       {/* Decorative vertical coordinates */}
       <div className="absolute right-12 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-20 text-[10px] font-black text-white/20 tracking-[0.5em] rotate-180 [writing-mode:vertical-lr]">
-        <span>40.7128° N, 74.0060° W</span>
-        <span className="text-accent underline">SYSTEM ACTIVE // 2026.03.25</span>
+        <span>{settings?.contactInfo?.coordinates || "40.7128° N, 74.0060° W"}</span>
+        <span className="text-accent underline">SYSTEM ACTIVE // {new Date().getFullYear()}</span>
       </div>
 
       {/* Scroll Indicator */}

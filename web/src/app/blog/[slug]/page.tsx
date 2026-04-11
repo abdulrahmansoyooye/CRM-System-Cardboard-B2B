@@ -7,9 +7,12 @@ import { getPlaceholderImage } from "@/lib/utils";
 import { getBlogBySlug } from "@/lib/api";
 import { Metadata } from 'next';
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export const revalidate = 60;
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   try {
-    const post = await getBlogBySlug(params.slug);
+    const { slug } = await params;
+    const post = await getBlogBySlug(slug);
     return {
       title: `${post.title} | CARDBOX Industrial Blog`,
       description: post.excerpt || "Industrial packaging insights and corrugated engineering protocols.",
@@ -19,10 +22,11 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   }
 }
 
-export default async function BlogDetailPage({ params }: { params: { slug: string } }) {
+export default async function BlogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   let post = null;
   try {
-    post = await getBlogBySlug(params.slug);
+    post = await getBlogBySlug(slug);
   } catch {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">

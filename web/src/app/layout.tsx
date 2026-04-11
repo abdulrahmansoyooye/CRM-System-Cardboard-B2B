@@ -4,7 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { TopBar } from "@/components/layout/TopBar";
-import { getSettings } from "@/lib/api";
+import { getSettings, getCategories, getIndustries } from "@/lib/api";
 import { TSettings } from "@/types";
 
 const inter = Inter({
@@ -42,9 +42,18 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   let settingsData: TSettings | undefined = undefined;
+  let categories: any[] = [];
+  let industries: any[] = [];
+  
   try {
-    const settings = await getSettings();
+    const [settings, cats, inds] = await Promise.all([
+      getSettings(),
+      getCategories().catch(() => []),
+      getIndustries().catch(() => []),
+    ]);
     settingsData = (Array.isArray(settings) ? settings[0] : settings) || undefined;
+    categories = cats;
+    industries = inds;
   } catch {
     // Fallback handled by settingsData being undefined
   }
@@ -56,7 +65,11 @@ export default async function RootLayout({
       >
         <div className="grain-overlay" />
         <TopBar settings={settingsData} />
-        <Navbar settings={settingsData} />
+        <Navbar 
+          settings={settingsData} 
+          categories={categories}
+          industries={industries}
+        />
         <main className="flex-1">{children}</main>
         <Footer settings={settingsData} />
       </body>

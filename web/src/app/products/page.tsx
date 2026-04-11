@@ -1,13 +1,14 @@
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CTABanner } from "@/components/sections/CTABanner";
-import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { getProducts, getCategories, getSettings } from "@/lib/api";
+import { TProduct } from "@/types";
 import { Metadata } from 'next';
+import { ProductFilterBar } from "@/components/sections/ProductFilterBar";
+
+export const revalidate = 60;
 
 export async function generateMetadata(): Promise<Metadata> {
   try {
@@ -17,15 +18,24 @@ export async function generateMetadata(): Promise<Metadata> {
       title: `Industrial Catalog | ${config?.companyName || 'CARDBOX'}`,
       description: "Explore our structural catalog of corrugated solutions and heavy-duty packaging.",
     };
-  } catch (e) {
-    return { title: "Catalog | CARDBOX" };
+  } catch {
+    return { title: "Industrial Catalog | CARDBOX" };
   }
 }
 
-export default async function ProductsPage() {
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string; searchTerm?: string }>;
+}) {
+  const { category, searchTerm } = await searchParams;
+  
   const [products, categories] = await Promise.all([
-    getProducts().catch(() => []),
-    getCategories().catch(() => []),
+    getProducts({ 
+      categoryId: category || "", 
+      searchTerm: searchTerm || "" 
+    }).catch(() => []),
+    getCategories().catch(() => []), 
   ]);
 
   return (
@@ -36,39 +46,12 @@ export default async function ProductsPage() {
       />
 
       <div className="container mx-auto px-4 lg:px-8 py-24">
-        {/* Filters and Search (Simplified Server View) */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-16">
-          <div className="flex flex-wrap gap-3">
-            <Button
-              variant="default"
-              className="bg-primary text-primary-foreground font-black tracking-widest rounded-sm uppercase text-xs h-12 px-8"
-            >
-              All Specs
-            </Button>
-            {categories.map((cat: any) => (
-              <Button
-                key={cat._id}
-                variant="outline"
-                className="text-primary rounded-sm tracking-widest font-black uppercase text-xs h-12 px-8 border-border hover:bg-secondary transition-all"
-              >
-                {cat.name}
-              </Button>
-            ))}
-          </div>
-
-          <div className="relative w-full md:w-96 group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-focus-within:text-accent transition-colors" />
-            <Input
-              type="search"
-              placeholder="Query specifications..."
-              className="w-full pl-12 h-14 rounded-sm bg-secondary/50 border-border focus-visible:ring-accent font-medium"
-            />
-          </div>
-        </div>
+        {/* Filters and Search */}
+        <ProductFilterBar categories={categories} />
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {products.map((prod: any) => (
+          {products.map((prod: TProduct) => (
             <div
               key={prod._id}
               className="group border border-border bg-secondary/30 overflow-hidden flex flex-col hover:border-accent transition-all duration-500 rounded-sm"
@@ -112,7 +95,7 @@ export default async function ProductsPage() {
 
         {products.length === 0 && (
           <div className="text-center py-40 border border-dashed border-border rounded-sm">
-             <h3 className="text-xl font-black text-primary/40 uppercase tracking-tighter">No configurations found in the active catalog.</h3>
+             <h3 className="text-xl font-black text-primary/40 uppercase tracking-tighter">No configurations found matching your parameters.</h3>
           </div>
         )}
       </div>

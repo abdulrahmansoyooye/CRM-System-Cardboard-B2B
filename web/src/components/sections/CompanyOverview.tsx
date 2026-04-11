@@ -30,7 +30,9 @@ const FEATURES = [
   },
 ];
 
-export function CompanyOverview() {
+import { TSettings } from "@/types";
+
+export function CompanyOverview({ settings }: { settings?: TSettings }) {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -106,7 +108,7 @@ export function CompanyOverview() {
               <h3 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-[0.85] mb-10 uppercase">
                 ENGINEERING <br />
                 <span className="text-white/30 italic font-light">RELIABILITY</span> <br />
-                SINCE 1998.
+                SINCE {settings?.contactInfo?.establishedYear || "1998"}.
               </h3>
               <p className="text-white/50 text-xl mb-16 leading-relaxed font-medium tracking-tight max-w-xl">
                 For over two decades, CARDBOX has been the backbone of
@@ -151,25 +153,25 @@ export function CompanyOverview() {
             >
                <div>
                   <div className="text-3xl font-black text-white tracking-tighter mb-2">
-                    <StatCounter value={25} suffix="+" />
+                    <StatCounter value={new Date().getFullYear() - parseInt(settings?.contactInfo?.establishedYear || "1998")} suffix="+" />
                   </div>
                   <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">YEARS OF EXPERIENCE</div>
                </div>
                <div>
                   <div className="text-3xl font-black text-white tracking-tighter mb-2">
-                    <StatCounter value={450} suffix="T" />
+                    <StatCounter value={parseInt(settings?.contactInfo?.productionCapacity || "450")} suffix="T" />
                   </div>
                   <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">PRODUCTION CAPACITY</div>
                </div>
                <div>
                   <div className="text-3xl font-black text-white tracking-tighter mb-2">
-                    <StatCounter value={500} suffix="K+" />
+                    <StatCounter value={parseInt(settings?.contactInfo?.factoryArea || "500")} suffix="K+" />
                   </div>
                   <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">FACTORY AREA (SQ.FT)</div>
                </div>
                <div>
                   <div className="text-3xl font-black text-white tracking-tighter mb-2">
-                    <StatCounter value={35} suffix="+" />
+                    <StatCounter value={parseInt(settings?.contactInfo?.exportCount || "35")} suffix="+" />
                   </div>
                   <div className="text-[9px] font-black text-white/40 tracking-widest uppercase">EXPORT COUNTRIES</div>
                </div>

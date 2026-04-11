@@ -146,7 +146,7 @@ export function ProductsOverview({ products: initialProducts }: { products?: Pro
                     </div>
                   )}
 
-                  <div className="absolute inset-0 bg-linear-to-t from-[#0D121F] via-transparent to-transparent opacity-80" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0D121F] via-transparent to-transparent opacity-80" />
                 </div>
 
                 <div className="p-10 flex flex-col flex-1 relative z-30">
@@ -172,7 +172,7 @@ export function ProductsOverview({ products: initialProducts }: { products?: Pro
                 </div>
 
                 {/* Decorative border animation */}
-                <div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-accent/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 delay-100" />
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-accent/50 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 delay-100" />
               </motion.div>
             ))}
           </motion.div>

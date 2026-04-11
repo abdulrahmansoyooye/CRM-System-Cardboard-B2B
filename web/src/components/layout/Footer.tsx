@@ -173,16 +173,16 @@ export function Footer({ settings }: { settings?: TSettings }) {
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-accent mt-0.5 shrink-0" />
                 <span>
-                  {contact?.address || "123 Industrial Park, Sector 4, Manufacturing City, 452001"}
+                  {settings?.address || "123 Industrial Park, Sector 4, Manufacturing City, 452001"}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-accent shrink-0" />
-                <span>{contact?.phone || "+1 (800) 123-4567"}</span>
+                <span>{settings?.contactPhone || "+1 (800) 123-4567"}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="w-5 h-5 text-accent shrink-0" />
-                <span>{contact?.email || "sales@cardbox.demo"}</span>
+                <span>{settings?.contactEmail || "sales@cardbox.demo"}</span>
               </li>
             </ul>
           </div>

@@ -1,10 +1,9 @@
 import { CTABanner } from "@/components/sections/CTABanner";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, ChevronRight, Settings } from "lucide-react";
+import { CheckCircle2, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
-import { getProductBySlug } from "@/lib/api";
 import {
   Accordion,
   AccordionContent,
@@ -12,24 +11,37 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Metadata } from 'next';
+import { getProductBySlug, getProducts } from "@/lib/api";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export const revalidate = 60;
+
+export async function generateStaticParams() {
   try {
-    const product = await getProductBySlug(params.slug);
+    const products = await getProducts();
+    return products.map((p: { slug: string }) => ({ slug: p.slug }));
+  } catch {
+    return [];
+  }
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  try {
+    const { slug } = await params;
+    const product = await getProductBySlug(slug);
     return {
       title: `${product.name} | CARDBOX Industrial`,
       description: product.shortDescription || product.description,
     };
-  } catch (e) {
-    return { title: "Product | CARDBOX" };
+  } catch {
   }
 }
 
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
+export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   let product = null;
   try {
-    product = await getProductBySlug(params.slug);
-  } catch (e) {
+    product = await getProductBySlug(slug);
+  } catch {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center p-8 border border-border bg-secondary/30 rounded-sm max-w-md">

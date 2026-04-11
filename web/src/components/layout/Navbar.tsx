@@ -1,105 +1,179 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, Search, X, ChevronDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, Search, X, ChevronDown, MoveRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { TSettings } from "@/types";
+import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-  { label: "Home", href: "/" },
-  { label: "About Us", href: "/about" },
-  {
-    label: "Products",
-    href: "/products",
-    children: [
-      {
-        label: "Corrugated Boxes",
-        href: "/products/corrugated-boxes",
-      },
-      { label: "Custom Printed", href: "/products/custom-printed" },
-      { label: "Heavy Duty", href: "/products/heavy-duty" },
-      { label: "Die-Cut Boxes", href: "/products/die-cut" },
-      { label: "Export Packaging", href: "/products/export-packaging" },
-    ],
-  },
+  { label: "Products", href: "/products" },
   { label: "Industries", href: "/industries" },
   {
-    label: "Company",
+    label: "Solutions",
     href: "#",
     children: [
       { label: "Manufacturing Process", href: "/process" },
-      { label: "Infrastructure", href: "/infrastructure" },
-      { label: "Quality Assurance", href: "/quality" },
-      { label: "Events & Updates", href: "/updates" },
-      { label: "Gallery", href: "/gallery" },
+      { label: "Infrastructure Hub", href: "/infrastructure" },
+      { label: "Quality Protocol", href: "/quality" },
+      { label: "Industrial Gallery", href: "/gallery" },
     ],
   },
-  { label: "Blog", href: "/blog" },
+  {
+    label: "Intelligence",
+    href: "#",
+    children: [
+      { label: "Operational Log (Blog)", href: "/blog" },
+      { label: "System Updates", href: "/updates" },
+      { label: "About Cardbox", href: "/about" },
+    ],
+  },
   { label: "Careers", href: "/careers" },
   { label: "Contact", href: "/contact" },
 ];
 
-export function Navbar({ settings }: { settings?: TSettings }) {
+export function Navbar({ 
+  settings, 
+  categories = [], 
+  industries = [] 
+}: { 
+  settings?: TSettings;
+  categories?: any[];
+  industries?: any[];
+}) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Prevent scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [isMobileMenuOpen]);
+
+  const DYNAMIC_NAV = [
+    {
+      label: "Products",
+      href: "/products",
+      children: categories.map(cat => ({
+        label: cat.name,
+        href: `/products?category=${cat._id}`
+      })).slice(0, 5) // Limit to top 5 in nav
+    },
+    {
+      label: "Industries",
+      href: "/industries",
+      children: industries.map(ind => ({
+        label: ind.name,
+        href: `/industries/${ind.slug}`
+      }))
+    },
+    {
+      label: "Solutions",
+      href: "#",
+      children: [
+        { label: "Manufacturing Process", href: "/process" },
+        { label: "Infrastructure Hub", href: "/infrastructure" },
+        { label: "Quality Protocol", href: "/quality" },
+        { label: "Industrial Gallery", href: "/gallery" },
+      ],
+    },
+    {
+      label: "Intelligence",
+      href: "#",
+      children: [
+        { label: "Operational Log (Blog)", href: "/blog" },
+        { label: "System Updates", href: "/updates" },
+        { label: "About Cardbox", href: "/about" },
+      ],
+    },
+    { label: "Careers", href: "/careers" },
+    { label: "Contact", href: "/contact" },
+  ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 shadow-xl transition-all duration-500">
-      <div className="container mx-auto px-4 lg:px-8 h-20 flex items-center justify-between">
-        {/* Logo */}
+    <header 
+      className={cn(
+        "fixed top-0 z-[100] w-full transition-all duration-500 border-b",
+        scrolled || isMobileMenuOpen
+          ? "bg-background/95 backdrop-blur-xl border-border py-2 shadow-2xl" 
+          : "bg-transparent border-transparent py-4"
+      )}
+    >
+      <div className="container mx-auto px-4 lg:px-12 flex items-center justify-between">
+        {/* Logo Section */}
         <Link
           href="/"
-          className="font-black text-2xl tracking-tighter text-primary flex items-center gap-3 shrink-0 group"
+          className="flex items-center gap-4 group shrink-0 relative z-[110]"
+          onClick={() => setIsMobileMenuOpen(false)}
         >
-          <motion.div 
-            whileHover={{ rotate: 180 }}
-            className="w-10 h-10 bg-primary rounded-none flex items-center justify-center border-l-4 border-accent"
-          >
-            <span className="text-primary-foreground text-xs font-black">
+          <div className="relative w-10 h-10 md:w-12 md:h-12 flex items-center justify-center">
+            <motion.div 
+              animate={{ rotate: scrolled ? 90 : 0 }}
+              className="absolute inset-0 bg-primary rounded-none border-l-4 border-accent"
+            />
+            <span className="relative text-white text-[9px] md:text-[10px] font-black tracking-tighter z-10">
               {settings?.companyName?.substring(0, 2).toUpperCase() || "CB"}
             </span>
-          </motion.div>
-          <span className="group-hover:text-accent transition-colors duration-500">
-            {settings?.companyName || "CARDBOX"}
-          </span>
+          </div>
+          <div className="flex flex-col -gap-1">
+            <span className="text-lg md:text-xl font-black text-primary tracking-tighter leading-none group-hover:text-accent transition-colors">
+              {settings?.companyName || "CARDBOX"}
+            </span>
+            <span className="text-[8px] md:text-[9px] font-black tracking-[0.4em] text-muted-foreground uppercase opacity-50">
+              Industrial
+            </span>
+          </div>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-2">
-          {NAV_LINKS.map((link) =>
-            link.children ? (
+        <nav className="hidden xl:flex items-center gap-1">
+          {DYNAMIC_NAV.map((link) =>
+            link.children && link.children.length > 0 ? (
               <div
                 key={link.label}
-                className="relative"
+                className="relative group"
                 onMouseEnter={() => setOpenDropdown(link.label)}
                 onMouseLeave={() => setOpenDropdown(null)}
               >
                 <div
-                  className="flex items-center gap-2 px-5 py-2 rounded-none transition-all duration-500 hover:text-accent text-foreground font-black text-[10px] tracking-[0.2em] uppercase cursor-pointer group"
+                  className={cn(
+                    "flex items-center gap-2 px-6 py-3 text-[10px] font-black tracking-[0.2em] uppercase cursor-pointer transition-all",
+                    openDropdown === link.label ? "text-accent" : "text-primary/70 hover:text-primary"
+                  )}
                 >
                   {link.label}
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-500 ${openDropdown === link.label ? 'rotate-180 text-accent' : ''}`} />
+                  <ChevronDown className={cn("w-3 h-3 transition-transform duration-500", openDropdown === link.label && "rotate-180")} />
                 </div>
                 
                 <AnimatePresence>
                   {openDropdown === link.label && (
                     <motion.div 
-                      initial={{ opacity: 0, y: 15, scale: 0.95 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                      transition={{ duration: 0.3, ease: "easeOut" }}
-                      className="absolute top-full left-0 min-w-[280px] bg-background border border-border shadow-2xl rounded-none overflow-hidden z-50 py-3 mt-1"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute top-full left-0 min-w-[240px] bg-white border border-border shadow-2xl p-2 z-50"
                     >
                       <div className="w-full h-1 bg-accent absolute top-0 left-0" />
                       {link.children.map((child) => (
                         <Link
                           key={child.href}
                           href={child.href}
-                          className="block px-6 py-3 text-[10px] font-black tracking-widest text-foreground/60 hover:bg-secondary hover:text-accent transition-all duration-300 uppercase border-l-0 hover:border-l-4 border-accent"
+                          className="flex items-center justify-between px-5 py-4 text-[10px] font-black tracking-widest text-primary/60 hover:bg-secondary hover:text-accent transition-all uppercase group/item"
                         >
                           {child.label}
+                          <MoveRight className="w-4 h-4 opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                         </Link>
                       ))}
                     </motion.div>
@@ -110,121 +184,123 @@ export function Navbar({ settings }: { settings?: TSettings }) {
               <Link
                 key={link.label}
                 href={link.href}
-                className="px-5 py-2 rounded-none transition-all duration-500 hover:text-accent text-foreground font-black text-[10px] tracking-[0.2em] uppercase border-b-2 border-transparent hover:border-accent"
+                className="px-6 py-3 text-[10px] font-black tracking-[0.2em] uppercase text-primary/70 hover:text-primary transition-all relative group"
               >
                 {link.label}
+                <span className="absolute bottom-0 left-6 right-6 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
               </Link>
             ),
           )}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden lg:flex items-center gap-5">
-          <motion.div whileHover={{ rotate: 90 }}>
-            <Button variant="ghost" size="icon" className="hover:bg-accent/10">
-              <Search className="w-5 h-5 text-muted-foreground hover:text-accent" />
-            </Button>
-          </motion.div>
+        {/* Action Group */}
+        <div className="hidden lg:flex items-center gap-6">
+          <Button variant="ghost" size="icon" className="text-primary/40 hover:text-accent hover:bg-transparent transition-colors">
+            <Search className="w-5 h-5" />
+          </Button>
+          <div className="w-px h-8 bg-border/40" />
           <Link href="/request-quote">
-            <Button className="font-black tracking-[0.2em] bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all duration-500 rounded-none px-8 text-[10px] h-12 shadow-[8px_8px_0px_rgba(255,183,77,0.1)]">
-              REQUEST A QUOTE
+            <Button className="font-black tracking-[0.2em] bg-primary text-white hover:bg-accent border-none rounded-none px-10 text-[10px] h-14 transition-all duration-500 shadow-xl shadow-primary/10">
+              SYNC QUOTE
             </Button>
           </Link>
         </div>
 
         {/* Mobile Toggle */}
-        <div className="flex items-center gap-4 lg:hidden">
-          <Button variant="ghost" size="icon" className="hover:bg-accent/10">
-            <Search className="w-5 h-5 text-muted-foreground" />
-          </Button>
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            className="p-3 bg-secondary text-foreground rounded-none border-l-4 border-accent transition-all active:bg-accent active:text-white"
+        <div className="flex items-center gap-4 xl:hidden relative z-[110]">
+          <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6 text-accent" />
-            ) : (
-              <Menu className="w-6 h-6" />
+            className={cn(
+              "p-3 rounded-none transition-all duration-300 flex items-center justify-center",
+              isMobileMenuOpen ? "text-accent bg-transparent" : "bg-secondary text-primary border-l-4 border-accent"
             )}
-          </motion.button>
+            aria-label="Toggle Menu"
+          >
+            {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, x: "100%" }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: "100%" }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 top-[80px] z-50 lg:hidden bg-background/98 backdrop-blur-3xl overflow-y-auto"
-          >
-            <nav className="flex flex-col px-6 py-12 gap-1 pb-32">
-              {NAV_LINKS.map((link, idx) => (
-                <motion.div 
-                  key={link.label}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.04 }}
-                  className="border-b border-border/10 last:border-0"
-                >
-                  <div className="flex flex-col">
-                    <Link
-                      href={link.href}
-                      className="flex items-center justify-between py-6 px-2 hover:text-accent transition-colors text-foreground font-black text-lg tracking-tighter uppercase leading-none"
-                      onClick={() => !link.children && setIsMobileMenuOpen(false)}
-                    >
-                      {link.label}
-                      {link.children && (
-                        <ChevronDown className={`w-5 h-5 transition-transform duration-500 ${openDropdown === link.label ? 'rotate-180 text-accent' : ''}`} 
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setOpenDropdown(openDropdown === link.label ? null : link.label);
-                        }}/>
-                      )}
-                    </Link>
-                    
-                    {link.children && (
-                      <AnimatePresence>
-                        {openDropdown === link.label && (
-                          <motion.div 
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden bg-secondary/30 ml-2"
-                          >
-                            <div className="flex flex-col py-4 px-6 gap-6">
-                              {link.children.map((child) => (
-                                <Link
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-primary/40 backdrop-blur-md z-[90]"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+            <motion.div 
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 200 }}
+              className="fixed right-0 top-0 bottom-0 w-full max-w-sm bg-white shadow-2xl z-[105] flex flex-col pt-28 pb-12 px-10 overflow-y-auto"
+            >
+              <div className="flex flex-col gap-2">
+                {DYNAMIC_NAV.map((link) => (
+                  <div key={link.label} className="border-b border-border/40 py-4">
+                    {link.children && link.children.length > 0 ? (
+                      <div>
+                        <button 
+                          onClick={() => setOpenDropdown(openDropdown === link.label ? null : link.label)}
+                          className="flex items-center justify-between w-full text-2xl font-black text-primary uppercase tracking-tighter"
+                        >
+                          {link.label}
+                          <ChevronDown className={cn("w-6 h-6 transition-transform", openDropdown === link.label && "rotate-180")} />
+                        </button>
+                        <AnimatePresence>
+                          {openDropdown === link.label && (
+                            <motion.div 
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="overflow-hidden mt-4 flex flex-col gap-4 pl-4 border-l-2 border-accent/20"
+                            >
+                              {link.children.map(child => (
+                                <Link 
                                   key={child.href}
                                   href={child.href}
-                                  className="text-[11px] font-black text-muted-foreground hover:text-accent transition-colors uppercase tracking-[0.2em] border-l-2 border-transparent hover:border-accent pl-4"
+                                  className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.25em] hover:text-accent"
                                   onClick={() => setIsMobileMenuOpen(false)}
                                 >
                                   {child.label}
                                 </Link>
                               ))}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    ) : (
+                      <Link 
+                        href={link.href}
+                        className="text-2xl font-black text-primary uppercase tracking-tighter block"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
                     )}
                   </div>
-                </motion.div>
-              ))}
+                ))}
+              </div>
+              <div className="mt-12">
+                <Link href="/request-quote" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button className="w-full h-20 bg-accent text-white font-black tracking-widest text-xs uppercase rounded-none border-b-4 border-black/10">
+                    REQUEST A QUOTE
+                  </Button>
+                </Link>
+              </div>
               
-              <Link href="/request-quote" className="mt-12" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button className="w-full bg-accent text-accent-foreground hover:bg-white hover:text-primary font-black tracking-[0.2em] rounded-none py-10 text-xs h-20 transition-all duration-500 shadow-2xl">
-                  REQUEST A QUOTE
-                </Button>
-              </Link>
-            </nav>
-          </motion.div>
+              <div className="mt-12 pt-8 border-t border-border/40 text-[9px] font-black text-muted-foreground/50 tracking-[0.3em] uppercase">
+                {settings?.companyName} Industrial System // v1.0
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </header>
   );
 }
+
