@@ -51,6 +51,10 @@ export function DataTable<T>({
   const filteredData = React.useMemo(() => {
     let result = [...data];
 
+    const getNestedValue = (obj: any, path: string) => {
+      return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    };
+
     if (search && searchKey) {
       result = result.filter((item) => {
         const value = item[searchKey];
@@ -60,9 +64,10 @@ export function DataTable<T>({
 
     if (sortField) {
       result.sort((a, b) => {
-        const aValue = (a as any)[sortField];
-        const bValue = (b as any)[sortField];
+        const aValue = getNestedValue(a, sortField);
+        const bValue = getNestedValue(b, sortField);
 
+        if (aValue === undefined || bValue === undefined) return 0;
         if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
         if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
         return 0;
@@ -180,12 +185,28 @@ export function DataTable<T>({
             </button>
             {Array.from({ length: totalPages }).map((_, i) => {
                 const page = i + 1;
-                // Show only 5 pages around current
+                // Complex pagination logic
                 if (totalPages > 7) {
-                    if (page !== 1 && page !== totalPages && (page < currentPage - 1 || page > currentPage + 1)) {
-                        if (page === currentPage - 2 || page === currentPage + 2) return <span key={i} className="px-1 text-slate-300">...</span>;
-                        return null;
+                    if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
+                        return (
+                            <button
+                                key={i}
+                                onClick={() => setCurrentPage(page)}
+                                className={cn(
+                                    "w-10 h-10 rounded-xl text-xs font-black transition-all",
+                                    currentPage === page 
+                                        ? "bg-slate-900 text-white shadow-lg" 
+                                        : "text-slate-500 hover:bg-slate-100"
+                                )}
+                            >
+                                {page}
+                            </button>
+                        );
                     }
+                    if (page === currentPage - 2 || page === currentPage + 2) {
+                        return <span key={i} className="w-10 h-10 flex items-center justify-center text-slate-300">...</span>;
+                    }
+                    return null;
                 }
                 return (
                     <button

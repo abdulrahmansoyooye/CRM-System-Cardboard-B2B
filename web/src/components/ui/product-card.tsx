@@ -32,6 +32,7 @@ export function ProductCard({
           alt={title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-primary/10 transition-colors group-hover:bg-transparent" />
       </div>

@@ -63,6 +63,7 @@ export function HeroSection({ settings }: { settings?: TSettings }) {
           fill
           className="object-cover opacity-20 grayscale saturate-0 contrast-150"
           priority
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0A0F1A] via-transparent to-[#0A0F1A]/50" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,183,77,0.05),transparent_70%)]" />

@@ -6,8 +6,10 @@ import NotificationPanel from "./NotificationPanel";
 import CommandPalette from "./CommandPalette";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSession } from "next-auth/react";
 
 export default function Topbar() {
+  const { data: session } = useSession();
   const [notifOpen, setNotifOpen] = useState(false);
   const [cmdOpen, setCmdOpen] = useState(false);
 
@@ -78,7 +80,7 @@ export default function Topbar() {
             className="flex items-center gap-3 px-1 py-1 bg-slate-50 rounded-2xl border border-slate-100"
           >
             <div className="w-9 h-9 rounded-xl bg-slate-900 flex items-center justify-center text-[10px] font-black text-white shadow-xl shadow-slate-950/20 border-b-2 border-accent-500">
-              AD
+              {(session?.user?.name || session?.user?.email || "U").charAt(0).toUpperCase()}
             </div>
           </motion.div>
         </div>

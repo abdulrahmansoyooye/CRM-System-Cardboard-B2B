@@ -71,6 +71,7 @@ export function Testimonials({ testimonials }: { testimonials: TTestimonial[] })
                     alt={t.name}
                     fill
                     className="object-cover grayscale group-hover:grayscale-0 transition-all"
+                    sizes="56px"
                   />
                 </div>
                 <div>

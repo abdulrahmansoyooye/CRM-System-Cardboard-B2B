@@ -87,6 +87,7 @@ export default function GalleryPage() {
                 alt={`Gallery Image ${item.cat}`}
                 fill
                 className="object-cover grayscale hover:grayscale-0 transition-all duration-700 cursor-zoom-in"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
 
               <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center p-6">

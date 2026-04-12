@@ -88,6 +88,7 @@ export function InfrastructurePreview() {
                 alt="Corrugated Production Line"
                 fill
                 className="object-cover grayscale saturate-50 hover:grayscale-0 transition-all duration-1000 group-hover:scale-110 contrast-125"
+                sizes="(max-width: 1024px) 100vw, 40vw"
               />
               <div className="absolute inset-0 bg-linear-to-t from-[#0A0F1A] via-transparent to-transparent opacity-60" />
             </motion.div>
@@ -105,6 +106,7 @@ export function InfrastructurePreview() {
                 alt="Stacked Corrugated Boxes"
                 fill
                 className="object-cover grayscale saturate-50 hover:grayscale-0 transition-all duration-1000 group-hover:scale-110 contrast-125"
+                sizes="(max-width: 1024px) 100vw, 30vw"
               />
               <div className="absolute inset-0 bg-linear-to-t from-[#0A0F1A] via-transparent to-transparent opacity-40" />
             </motion.div>

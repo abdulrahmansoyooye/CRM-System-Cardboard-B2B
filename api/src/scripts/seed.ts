@@ -155,7 +155,7 @@ const seedData = async () => {
         moq: 1000,
         deliveryTimeline: '14-16 Working Days',
         isFeatured: true,
-        images: ['https://images.unsplash.com/photo-1520004434532-668416a0860d?auto=format&fit=crop&q=80'],
+        images: ['https://images.unsplash.com/photo-1607157591031-63b758814781?auto=format&fit=crop&q=80'],
         isActive: true,
       },
       {

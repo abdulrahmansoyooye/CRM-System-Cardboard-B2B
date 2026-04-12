@@ -81,7 +81,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
           {/* Left: Image Gallery */}
           <div className="flex flex-col gap-4">
             <div className="relative aspect-square bg-secondary rounded-sm overflow-hidden border border-border group">
-              <Image src={image} alt={name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000 contrast-125" />
+              <Image src={image} alt={name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000 contrast-125" sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
             {/* Thumbnails */}
             {product.images?.length > 1 && (
@@ -96,6 +96,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                       alt={`${name} view ${idx}`}
                       fill
                       className="object-cover grayscale hover:grayscale-0"
+                      sizes="100px"
                     />
                   </div>
                 ))}

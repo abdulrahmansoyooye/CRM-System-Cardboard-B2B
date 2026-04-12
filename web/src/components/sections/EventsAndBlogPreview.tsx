@@ -72,6 +72,7 @@ export function EventsAndBlogPreview({ blogs: initialBlogs, events: initialEvent
                   alt={post.title}
                   fill
                   className="object-cover transition-all duration-1000 group-hover:scale-110 grayscale brightness-110 group-hover:grayscale-0 contrast-125"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
                 />
                 <div className="absolute top-8 left-8 bg-accent text-accent-foreground text-[10px] font-black px-5 py-2 uppercase tracking-[0.3em] rounded-none z-20 shadow-2xl border-r-4 border-white">
                   {post.category || "Insight"}
@@ -148,6 +149,7 @@ export function EventsAndBlogPreview({ blogs: initialBlogs, events: initialEvent
                       alt={event.title}
                       fill
                       className="object-cover grayscale group-hover:grayscale-0 transition-all opacity-50 group-hover:opacity-100"
+                      sizes="80px"
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-accent/20 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Calendar className="w-6 h-6 text-white" />

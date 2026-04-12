@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, Factory, Globe2, Truck, CheckCircle2 } from "lucide-react";
+import { Building2, Factory, Globe2, Truck } from "lucide-react";
 import Image from "next/image";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
@@ -69,6 +69,7 @@ export function CompanyOverview({ settings }: { settings?: TSettings }) {
                   alt="Corrugated Box Manufacturing Plant"
                   fill
                   className="object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 saturate-50 contrast-125"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
                 />
               </motion.div>
               

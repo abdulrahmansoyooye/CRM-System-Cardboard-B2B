@@ -77,6 +77,7 @@ export default function ProcessPage() {
                     alt={step.title}
                     fill
                     className="object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                   <div className="absolute top-0 right-0 bg-accent text-accent-foreground px-4 py-2 font-black text-2xl tracking-tighter">
                     {step.step}

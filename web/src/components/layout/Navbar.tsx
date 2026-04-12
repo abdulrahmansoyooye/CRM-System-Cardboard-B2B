@@ -109,9 +109,9 @@ export function Navbar({
     <>
     <header 
       className={cn(
-        "fixed top-0 w-full bg-background/90 backdrop-blur-2xl border-b border-border/50 py-2 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)] transition-all duration-500",
+        "fixed top-0 w-full bg-background/60 backdrop-blur-3xl border-b border-border/40 py-2 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.05)] transition-all duration-500",
         isMobileMenuOpen ? "z-[120] bg-transparent border-none shadow-none" : "z-[100]",
-        scrolled ? "py-2" : "py-3"
+        scrolled ? "py-2 bg-background/80" : "py-3"
       )}
     >
         <div className="container mx-auto px-6 lg:px-12 flex items-center justify-between">
@@ -230,7 +230,12 @@ export function Navbar({
                   className="px-4 py-3 text-[10px] font-black tracking-[0.2em] uppercase text-primary/70 hover:text-primary transition-all relative group"
                 >
                   <span className="relative z-10">{link.label}</span>
-                  <span className="absolute bottom-0 left-4 right-4 h-0.5 bg-accent scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                  <motion.div 
+                    className="absolute bottom-1.5 left-4 right-4 h-0.5 bg-accent origin-left"
+                    initial={{ scaleX: 0 }}
+                    whileHover={{ scaleX: 1 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                  />
                 </Link>
               );
             })}

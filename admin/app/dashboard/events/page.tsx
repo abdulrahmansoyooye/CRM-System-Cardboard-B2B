@@ -173,7 +173,7 @@ export default function EventsPage() {
         {[
           { label: "Tracked Events", value: events.length, icon: CalendarDays, color: "text-brand-600", bg: "bg-brand-50" },
           { label: "High Level Engagements", value: events.filter((e: any) => e.isFeatured).length, icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
-          { label: "Active Pipelines", value: events.length, icon: CheckCircle2, color: "text-emerald-600", bg: "bg-emerald-50" }, // Mocked icon
+          { label: "Active Pipelines", value: events.length, icon: CalendarDays, color: "text-emerald-600", bg: "bg-emerald-50" }, // Using CalendarDays instead of broken mock
           { label: "Market Interest", value: "84%", icon: Plus, color: "text-sky-600", bg: "bg-sky-50" }, // Mocked
         ].map((s) => (
           <div key={s.label} className="premium-card p-6 flex items-center justify-between group">
@@ -184,7 +184,7 @@ export default function EventsPage() {
               </h3>
             </div>
             <div className={cn("w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border border-slate-100/50 transition-all group-hover:scale-110", s.bg, s.color)}>
-              {(s.icon as any)({ className: "w-5 h-5" })}
+              <s.icon className="w-5 h-5" />
             </div>
           </div>
         ))}
@@ -204,7 +204,4 @@ export default function EventsPage() {
   );
 }
 
-// Helper for mocked icons in stats
-function CheckCircle2(props: any) {
-    return <Plus {...props} /> // Fallback
-}
+// End of file

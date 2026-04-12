@@ -60,7 +60,7 @@
 
   /* Simplified Sidebar */
   .sidebar-container {
-    @apply w-[280px] bg-white border-r border-slate-100 flex flex-col h-screen fixed left-0 top-0 z-50;
+    @apply w-[280px] bg-white border-r border-slate-100 flex flex-col h-full;
   }
   
   .nav-item {
