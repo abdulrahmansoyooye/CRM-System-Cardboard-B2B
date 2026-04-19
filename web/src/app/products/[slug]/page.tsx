@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const product = await getProductBySlug(slug);
     return {
       title: `${product.name} | CARDBOX Industrial`,
-      description: product.shortDescription || product.description,
+      description: product.shortDescription || product.fullDescription,
     };
   } catch {
     return {
@@ -84,7 +84,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
               <Image src={image} alt={name} fill className="object-cover group-hover:scale-105 transition-transform duration-1000 contrast-125" sizes="(max-width: 1024px) 100vw, 50vw" />
             </div>
             {/* Thumbnails */}
-            {product.images?.length > 1 && (
+            {product.images && product.images.length > 1 && (
               <div className="grid grid-cols-4 gap-4">
                 {product.images.map((img: string, idx: number) => (
                   <div
@@ -144,12 +144,16 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed py-4 px-1">
                   <ul className="space-y-4">
-                    {product.specifications?.map((spec: string, i: number) => (
-                      <li key={i} className="flex gap-4 items-start">
-                        <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />{" "}
-                        <span className="font-bold text-primary/80 uppercase text-xs tracking-widest">{spec}</span>
-                      </li>
-                    )) || <li className="text-sm italic">Standard industrial specification applies.</li>}
+                    {product.specifications && product.specifications.length > 0 ? (
+                      product.specifications.map((spec: string, i: number) => (
+                        <li key={i} className="flex gap-4 items-start">
+                          <CheckCircle2 className="w-5 h-5 text-accent shrink-0 mt-0.5" />{" "}
+                          <span className="font-bold text-primary/80 uppercase text-xs tracking-widest">{spec}</span>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-sm italic">Standard industrial specification applies.</li>
+                    )}
                   </ul>
                 </AccordionContent>
               </AccordionItem>
@@ -158,7 +162,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                   Application Context
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground leading-relaxed py-4 px-1 font-medium">
-                   {product.description || "Detailed technical documentation available upon authorized request."}
+                   {product.fullDescription || "Detailed technical documentation available upon authorized request."}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

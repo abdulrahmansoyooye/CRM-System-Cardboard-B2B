@@ -15,7 +15,7 @@ export interface TProduct {
   _id: string;
   name: string;
   slug: string;
-  description?: string;
+  fullDescription?: string;
   shortDescription?: string;
   ply?: string;
   categoryId?: { _id: string; name: string };

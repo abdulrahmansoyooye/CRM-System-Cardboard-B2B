@@ -8,15 +8,7 @@ import { motion, Variants } from "framer-motion";
 import { useEffect, useState } from "react";
 import { getProducts } from "@/lib/api";
 import { getPlaceholderImage } from "@/lib/utils";
-
-type Product = {
-  _id: string;
-  name: string;
-  slug: string;
-  shortDescription: string;
-  images: string[];
-  specifications: string[];
-};
+import { TProduct } from "@/types";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -39,8 +31,8 @@ const itemVariants: Variants = {
   },
 };
 
-export function ProductsOverview({ products: initialProducts }: { products?: Product[] }) {
-  const [products, setProducts] = useState<Product[]>(initialProducts || []);
+export function ProductsOverview({ products: initialProducts }: { products?: TProduct[] }) {
+  const [products, setProducts] = useState<TProduct[]>(initialProducts || []);
   const [isLoading, setIsLoading] = useState(!initialProducts);
 
   useEffect(() => {
@@ -133,7 +125,7 @@ export function ProductsOverview({ products: initialProducts }: { products?: Pro
                 
                 <div className="relative aspect-4/5 w-full overflow-hidden">
                   <Image
-                    src={prod.images[0] || getPlaceholderImage('box')}
+                    src={prod.images?.[0] || getPlaceholderImage('box')}
                     alt={prod.name}
                     fill
                     className="object-cover grayscale saturate-50 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000 contrast-125"
@@ -182,4 +174,3 @@ export function ProductsOverview({ products: initialProducts }: { products?: Pro
     </section>
   );
 }
-

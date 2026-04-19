@@ -1,4 +1,5 @@
-import { TBlog, TSettings } from "@/types";
+import { TBlog, TSettings, TProduct, TCategory, TIndustry, TEvent, TJob, TTestimonial } from "@/types";
+
 
 export const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -10,16 +11,30 @@ export const API_BASE_URL =
 const ISR_60 = { next: { revalidate: 60 } };
 const ISR_300 = { next: { revalidate: 300 } };
 
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function buildQueryString(query?: Record<string, string | number | boolean | undefined | null>): string {
+  if (!query) return "";
+  const entries = Object.entries(query)
+    .filter(([_, v]) => v !== "" && v !== undefined && v !== null)
+    .map(([k, v]) => [k, String(v)]);
+
+  return entries.length > 0
+    ? "?" + new URLSearchParams(Object.fromEntries(entries)).toString()
+    : "";
+}
+
 // ─── PRODUCTS ────────────────────────────────────────────────────────────────
-export async function getProducts(query?: Record<string, string>) {
-  const queryString = query ? "?" + new URLSearchParams(query).toString() : "";
+export async function getProducts(
+  query?: Record<string, string | number | boolean | undefined | null>
+): Promise<TProduct[]> {
+  const queryString = buildQueryString(query);
   const res = await fetch(`${API_BASE_URL}/products${queryString}`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch products");
   const data = await res.json();
   return data.data ?? [];
 }
 
-export async function getProductBySlug(slug: string) {
+export async function getProductBySlug(slug: string): Promise<TProduct> {
   const res = await fetch(`${API_BASE_URL}/products/${slug}`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch product");
   const data = await res.json();
@@ -27,7 +42,7 @@ export async function getProductBySlug(slug: string) {
 }
 
 // ─── CATEGORIES ──────────────────────────────────────────────────────────────
-export async function getCategories() {
+export async function getCategories(): Promise<TCategory[]> {
   const res = await fetch(`${API_BASE_URL}/categories`, ISR_300);
   if (!res.ok) throw new Error("Failed to fetch categories");
   const data = await res.json();
@@ -35,14 +50,14 @@ export async function getCategories() {
 }
 
 // ─── INDUSTRIES ──────────────────────────────────────────────────────────────
-export async function getIndustries() {
+export async function getIndustries(): Promise<TIndustry[]> {
   const res = await fetch(`${API_BASE_URL}/industries`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch industries");
   const data = await res.json();
   return data.data ?? [];
 }
 
-export async function getIndustryBySlug(slug: string) {
+export async function getIndustryBySlug(slug: string): Promise<TIndustry> {
   const res = await fetch(`${API_BASE_URL}/industries/${slug}`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch industry");
   const data = await res.json();
@@ -50,8 +65,10 @@ export async function getIndustryBySlug(slug: string) {
 }
 
 // ─── BLOGS ───────────────────────────────────────────────────────────────────
-export async function getBlogs(query?: Record<string, string>): Promise<TBlog[]> {
-  const queryString = query ? "?" + new URLSearchParams(query).toString() : "";
+export async function getBlogs(
+  query?: Record<string, string | number | boolean | undefined | null>
+): Promise<TBlog[]> {
+  const queryString = buildQueryString(query);
   const res = await fetch(`${API_BASE_URL}/blogs${queryString}`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch blogs");
   const data = await res.json();
@@ -66,15 +83,17 @@ export async function getBlogBySlug(slug: string): Promise<TBlog> {
 }
 
 // ─── EVENTS ──────────────────────────────────────────────────────────────────
-export async function getEvents(query?: Record<string, string>) {
-  const queryString = query ? "?" + new URLSearchParams(query).toString() : "";
+export async function getEvents(
+  query?: Record<string, string | number | boolean | undefined | null>
+): Promise<TEvent[]> {
+  const queryString = buildQueryString(query);
   const res = await fetch(`${API_BASE_URL}/events${queryString}`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch events");
   const data = await res.json();
   return data.data ?? [];
 }
 
-export async function getEventById(id: string) {
+export async function getEventById(id: string): Promise<TEvent> {
   const res = await fetch(`${API_BASE_URL}/events/${id}`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch event");
   const data = await res.json();
@@ -82,14 +101,14 @@ export async function getEventById(id: string) {
 }
 
 // ─── JOBS ─────────────────────────────────────────────────────────────────────
-export async function getJobs() {
+export async function getJobs(): Promise<TJob[]> {
   const res = await fetch(`${API_BASE_URL}/jobs`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch jobs");
   const data = await res.json();
   return data.data ?? [];
 }
 
-export async function getJobById(id: string) {
+export async function getJobById(id: string): Promise<TJob> {
   const res = await fetch(`${API_BASE_URL}/jobs/${id}`, ISR_60);
   if (!res.ok) throw new Error("Failed to fetch job");
   const data = await res.json();
@@ -97,12 +116,13 @@ export async function getJobById(id: string) {
 }
 
 // ─── TESTIMONIALS ────────────────────────────────────────────────────────────
-export async function getTestimonials() {
+export async function getTestimonials(): Promise<TTestimonial[]> {
   const res = await fetch(`${API_BASE_URL}/testimonials`, ISR_300);
   if (!res.ok) throw new Error("Failed to fetch testimonials");
   const data = await res.json();
   return data.data ?? [];
 }
+
 
 // ─── SETTINGS ────────────────────────────────────────────────────────────────
 export async function getSettings(): Promise<TSettings[]> {
