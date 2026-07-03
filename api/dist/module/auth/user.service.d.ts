@@ -1,4 +1,5 @@
-export declare const createUser: (data: any) => Promise<{
+import { CreateUserDTO, LoginPayloadDTO, UpdateUserDTO } from "../../types/dtos";
+export declare const createUser: (data: CreateUserDTO) => Promise<{
     user: import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
         _id: import("mongoose").Types.ObjectId;
     } & {
@@ -8,12 +9,8 @@ export declare const createUser: (data: any) => Promise<{
     };
     token: string;
 }>;
-export declare const loginUser: (payload: any) => Promise<{
-    user: import("./user.model").TUser & {
-        _id: import("mongoose").Types.ObjectId;
-    } & {
-        __v: number;
-    };
+export declare const loginUser: (payload: LoginPayloadDTO) => Promise<{
+    user: Record<string, unknown>;
     token: string;
 }>;
 export declare const getUsers: () => Promise<(import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
@@ -30,7 +27,7 @@ export declare const getUserById: (id: string) => Promise<import("mongoose").Doc
 } & {
     id: string;
 }>;
-export declare const updateUser: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
+export declare const updateUser: (id: string, data: UpdateUserDTO) => Promise<import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
     _id: import("mongoose").Types.ObjectId;
 } & {
     __v: number;
@@ -48,7 +45,7 @@ export declare const logoutUser: () => Promise<{
     success: boolean;
 }>;
 export declare const UserService: {
-    createUser: (data: any) => Promise<{
+    createUser: (data: CreateUserDTO) => Promise<{
         user: import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
             _id: import("mongoose").Types.ObjectId;
         } & {
@@ -58,12 +55,8 @@ export declare const UserService: {
         };
         token: string;
     }>;
-    loginUser: (payload: any) => Promise<{
-        user: import("./user.model").TUser & {
-            _id: import("mongoose").Types.ObjectId;
-        } & {
-            __v: number;
-        };
+    loginUser: (payload: LoginPayloadDTO) => Promise<{
+        user: Record<string, unknown>;
         token: string;
     }>;
     getUsers: () => Promise<(import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
@@ -80,7 +73,7 @@ export declare const UserService: {
     } & {
         id: string;
     }>;
-    updateUser: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
+    updateUser: (id: string, data: UpdateUserDTO) => Promise<import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
         _id: import("mongoose").Types.ObjectId;
     } & {
         __v: number;

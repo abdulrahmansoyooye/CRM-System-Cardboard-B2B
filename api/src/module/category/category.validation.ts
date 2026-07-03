@@ -9,9 +9,9 @@ const createCategorySchema = z.object({
     seo: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     isActive: z.boolean().optional(),
-  }),
+  }).strict(),
 });
 
 const updateCategorySchema = z.object({
@@ -23,9 +23,9 @@ const updateCategorySchema = z.object({
     seo: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     isActive: z.boolean().optional(),
-  }),
+  }).strict(),
 });
 
 export const CategoryValidation = {

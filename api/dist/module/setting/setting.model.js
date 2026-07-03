@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Setting = exports.settingSchema = void 0;
 const mongoose_1 = require("mongoose");
 exports.settingSchema = new mongoose_1.Schema({
+    companyName: { type: String },
+    tagline: { type: String },
     logo: { type: String },
     favicon: { type: String },
     contactEmail: { type: String },

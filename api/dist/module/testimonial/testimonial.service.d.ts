@@ -1,4 +1,5 @@
-export declare const createTestimonial: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateTestimonialDTO, UpdateTestimonialDTO } from '../../types/dtos';
+export declare const createTestimonial: (data: CreateTestimonialDTO) => Promise<import("mongoose").Document<unknown, {}, {
     clientName: string;
     feedback: string;
     isPublished: boolean;
@@ -67,7 +68,7 @@ export declare const getTestimonialById: (id: string) => Promise<import("mongoos
 }, "id"> & {
     id: string;
 }>;
-export declare const updateTestimonial: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateTestimonial: (id: string, data: UpdateTestimonialDTO) => Promise<import("mongoose").Document<unknown, {}, {
     clientName: string;
     feedback: string;
     isPublished: boolean;
@@ -114,7 +115,7 @@ export declare const deleteTestimonial: (id: string) => Promise<import("mongoose
     id: string;
 }>;
 export declare const TestimonialService: {
-    createTestimonial: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createTestimonial: (data: CreateTestimonialDTO) => Promise<import("mongoose").Document<unknown, {}, {
         clientName: string;
         feedback: string;
         isPublished: boolean;
@@ -183,7 +184,7 @@ export declare const TestimonialService: {
     }, "id"> & {
         id: string;
     }>;
-    updateTestimonial: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateTestimonial: (id: string, data: UpdateTestimonialDTO) => Promise<import("mongoose").Document<unknown, {}, {
         clientName: string;
         feedback: string;
         isPublished: boolean;

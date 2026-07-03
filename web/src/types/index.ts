@@ -25,6 +25,7 @@ export interface TProduct {
   isActive?: boolean;
   isFeatured?: boolean;
   createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface TCategory {
@@ -42,6 +43,8 @@ export interface TIndustry {
   description?: string;
   images?: string[];
   relatedProducts?: TProduct[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface TEvent {
@@ -65,6 +68,7 @@ export interface TJob {
   requirements?: string[];
   isActive?: boolean;
   createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface TTestimonial {

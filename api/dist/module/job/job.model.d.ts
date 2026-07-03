@@ -4,7 +4,7 @@ export declare const jobSchema: Schema<any, import("mongoose").Model<any, any, a
 }, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -13,7 +13,7 @@ export declare const jobSchema: Schema<any, import("mongoose").Model<any, any, a
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -26,7 +26,7 @@ export declare const jobSchema: Schema<any, import("mongoose").Model<any, any, a
 }>> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -41,7 +41,7 @@ export declare const jobSchema: Schema<any, import("mongoose").Model<any, any, a
 }, unknown, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -57,7 +57,7 @@ export declare const jobSchema: Schema<any, import("mongoose").Model<any, any, a
 export declare const Job: import("mongoose").Model<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -68,7 +68,7 @@ export declare const Job: import("mongoose").Model<{
 }, import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -81,7 +81,7 @@ export declare const Job: import("mongoose").Model<{
 }> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -98,7 +98,7 @@ export declare const Job: import("mongoose").Model<{
 }, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -107,7 +107,7 @@ export declare const Job: import("mongoose").Model<{
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -120,7 +120,7 @@ export declare const Job: import("mongoose").Model<{
 }>> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -135,7 +135,7 @@ export declare const Job: import("mongoose").Model<{
 }, unknown, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -150,7 +150,7 @@ export declare const Job: import("mongoose").Model<{
 }>, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;

@@ -120,8 +120,16 @@
   * {
     @apply border-border outline-ring/50 selection:bg-accent selection:text-accent-foreground;
   }
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground antialiased overflow-x-hidden;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-[var(--focus-ring)];
   }
 
   /* Custom Scrollbar */

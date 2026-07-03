@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormLayout, FormSection, FormInput, FormTextarea } from "@/components/dashboard/shared/FormLayout";
+import { ICategory } from "@/types/index";
 import { cn } from "@/lib/utils";
 
 const categorySchema = z.object({
@@ -24,7 +25,7 @@ interface CategoryFormValues {
 }
 
 interface CategoryFormProps {
-  initialData?: any;
+  initialData?: ICategory;
   onSubmit: (data: CategoryFormValues) => void;
   isSubmitting: boolean;
 }

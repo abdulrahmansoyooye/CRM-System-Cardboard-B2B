@@ -2,6 +2,8 @@ import { Schema } from 'mongoose';
 export declare const settingSchema: Schema<any, import("mongoose").Model<any, any, any, any, any, any, any>, {}, {}, {}, {}, {
     timestamps: true;
 }, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -13,6 +15,8 @@ export declare const settingSchema: Schema<any, import("mongoose").Model<any, an
     ctaBanner?: any;
     analyticsId?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -28,6 +32,8 @@ export declare const settingSchema: Schema<any, import("mongoose").Model<any, an
 }, import("mongoose").MergeType<import("mongoose").DefaultSchemaOptions, {
     timestamps: true;
 }>> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -45,6 +51,8 @@ export declare const settingSchema: Schema<any, import("mongoose").Model<any, an
 }, "id"> & {
     id: string;
 }, unknown, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -63,6 +71,8 @@ export declare const settingSchema: Schema<any, import("mongoose").Model<any, an
     __v: number;
 }>;
 export declare const Setting: import("mongoose").Model<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -76,6 +86,8 @@ export declare const Setting: import("mongoose").Model<{
 } & import("mongoose").DefaultTimestampProps, {}, {}, {
     id: string;
 }, import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -91,6 +103,8 @@ export declare const Setting: import("mongoose").Model<{
 }, {
     timestamps: true;
 }> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -110,6 +124,8 @@ export declare const Setting: import("mongoose").Model<{
 }, Schema<any, import("mongoose").Model<any, any, any, any, any, any, any>, {}, {}, {}, {}, {
     timestamps: true;
 }, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -121,6 +137,8 @@ export declare const Setting: import("mongoose").Model<{
     ctaBanner?: any;
     analyticsId?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -136,6 +154,8 @@ export declare const Setting: import("mongoose").Model<{
 }, import("mongoose").MergeType<import("mongoose").DefaultSchemaOptions, {
     timestamps: true;
 }>> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -153,6 +173,8 @@ export declare const Setting: import("mongoose").Model<{
 }, "id"> & {
     id: string;
 }, unknown, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -170,6 +192,8 @@ export declare const Setting: import("mongoose").Model<{
 } & {
     __v: number;
 }>, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;

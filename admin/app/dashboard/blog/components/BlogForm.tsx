@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormLayout, FormSection, FormInput, FormSelect, FormTextarea } from "@/components/dashboard/shared/FormLayout";
-import { Blog } from "@/types/dashboard";
+import { IBlog } from "@/types/index";
 import { cn } from "@/lib/utils";
 
 const blogSchema = z.object({
@@ -31,7 +31,7 @@ interface BlogFormValues {
 }
 
 interface BlogFormProps {
-  initialData?: any;
+  initialData?: IBlog;
   onSubmit: (data: BlogFormValues) => void;
   isSubmitting: boolean;
 }
@@ -51,9 +51,9 @@ export function BlogForm({ initialData, onSubmit, isSubmitting }: BlogFormProps)
       category: initialData?.category || "Industrial",
       content: initialData?.content || "",
       author: initialData?.author || "Admin",
-      isPublished: !!(initialData as any)?.isPublished || (initialData as any)?.status === "published",
-      excerpt: (initialData as any)?.excerpt || "",
-      tags: (initialData as any)?.tags || [],
+      isPublished: !!initialData?.isPublished || initialData?.status === "published",
+      excerpt: initialData?.excerpt || "",
+      tags: initialData?.tags || [],
     },
   });
 

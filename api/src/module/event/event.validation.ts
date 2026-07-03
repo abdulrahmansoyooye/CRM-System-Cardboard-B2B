@@ -7,7 +7,7 @@ export const createEventSchema = z.object({
     eventDate: z.string().optional(),
     images: z.array(z.string()).optional(),
     isFeatured: z.boolean().default(false),
-  }),
+  }).strict(),
 });
 
 export const updateEventSchema = z.object({
@@ -17,7 +17,7 @@ export const updateEventSchema = z.object({
     eventDate: z.string().optional(),
     images: z.array(z.string()).optional(),
     isFeatured: z.boolean().optional(),
-  }),
+  }).strict(),
 });
 
 export const EventValidation = {

@@ -1,7 +1,8 @@
-export declare const createJob: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateJobDTO, UpdateJobDTO } from '../../types/dtos';
+export declare const createJob: (data: CreateJobDTO) => Promise<import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -14,7 +15,7 @@ export declare const createJob: (data: any) => Promise<import("mongoose").Docume
 }> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -30,7 +31,7 @@ export declare const createJob: (data: any) => Promise<import("mongoose").Docume
 export declare const getAllJobs: () => Promise<(import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -43,7 +44,7 @@ export declare const getAllJobs: () => Promise<(import("mongoose").Document<unkn
 }> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -59,7 +60,7 @@ export declare const getAllJobs: () => Promise<(import("mongoose").Document<unkn
 export declare const getJobById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -72,7 +73,7 @@ export declare const getJobById: (id: string) => Promise<import("mongoose").Docu
 }> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -85,10 +86,10 @@ export declare const getJobById: (id: string) => Promise<import("mongoose").Docu
 }, "id"> & {
     id: string;
 }>;
-export declare const updateJob: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateJob: (id: string, data: UpdateJobDTO) => Promise<import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -101,7 +102,7 @@ export declare const updateJob: (id: string, data: any) => Promise<import("mongo
 }> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -117,7 +118,7 @@ export declare const updateJob: (id: string, data: any) => Promise<import("mongo
 export declare const deleteJob: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -130,7 +131,7 @@ export declare const deleteJob: (id: string) => Promise<import("mongoose").Docum
 }> & Omit<{
     type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
     title: string;
-    status: "open" | "closed";
+    status: "closed" | "open";
     description?: string | null | undefined;
     department?: string | null | undefined;
     experience?: string | null | undefined;
@@ -144,10 +145,10 @@ export declare const deleteJob: (id: string) => Promise<import("mongoose").Docum
     id: string;
 }>;
 export declare const JobService: {
-    createJob: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createJob: (data: CreateJobDTO) => Promise<import("mongoose").Document<unknown, {}, {
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -160,7 +161,7 @@ export declare const JobService: {
     }> & Omit<{
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -176,7 +177,7 @@ export declare const JobService: {
     getAllJobs: () => Promise<(import("mongoose").Document<unknown, {}, {
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -189,7 +190,7 @@ export declare const JobService: {
     }> & Omit<{
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -205,7 +206,7 @@ export declare const JobService: {
     getJobById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -218,7 +219,7 @@ export declare const JobService: {
     }> & Omit<{
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -231,10 +232,10 @@ export declare const JobService: {
     }, "id"> & {
         id: string;
     }>;
-    updateJob: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateJob: (id: string, data: UpdateJobDTO) => Promise<import("mongoose").Document<unknown, {}, {
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -247,7 +248,7 @@ export declare const JobService: {
     }> & Omit<{
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -263,7 +264,7 @@ export declare const JobService: {
     deleteJob: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;
@@ -276,7 +277,7 @@ export declare const JobService: {
     }> & Omit<{
         type: "Full-Time" | "Part-Time" | "Shift Basis" | "Contract";
         title: string;
-        status: "open" | "closed";
+        status: "closed" | "open";
         description?: string | null | undefined;
         department?: string | null | undefined;
         experience?: string | null | undefined;

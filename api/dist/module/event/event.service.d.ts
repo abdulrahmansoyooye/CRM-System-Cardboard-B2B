@@ -1,4 +1,5 @@
-export declare const createEvent: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateEventDTO, UpdateEventDTO } from '../../types/dtos';
+export declare const createEvent: (data: CreateEventDTO) => Promise<import("mongoose").Document<unknown, {}, {
     isFeatured: boolean;
     images: string[];
     title: string;
@@ -67,7 +68,7 @@ export declare const getEventById: (id: string) => Promise<import("mongoose").Do
 }, "id"> & {
     id: string;
 }>;
-export declare const updateEvent: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateEvent: (id: string, data: UpdateEventDTO) => Promise<import("mongoose").Document<unknown, {}, {
     isFeatured: boolean;
     images: string[];
     title: string;
@@ -114,7 +115,7 @@ export declare const deleteEvent: (id: string) => Promise<import("mongoose").Doc
     id: string;
 }>;
 export declare const EventService: {
-    createEvent: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createEvent: (data: CreateEventDTO) => Promise<import("mongoose").Document<unknown, {}, {
         isFeatured: boolean;
         images: string[];
         title: string;
@@ -183,7 +184,7 @@ export declare const EventService: {
     }, "id"> & {
         id: string;
     }>;
-    updateEvent: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateEvent: (id: string, data: UpdateEventDTO) => Promise<import("mongoose").Document<unknown, {}, {
         isFeatured: boolean;
         images: string[];
         title: string;

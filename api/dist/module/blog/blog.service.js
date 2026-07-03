@@ -2,8 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BlogService = exports.deleteBlog = exports.updateBlog = exports.getBlogBySlug = exports.getAllBlogs = exports.createBlog = void 0;
 const AppError_1 = require("../../core/errors/AppError");
+const slug_1 = require("../../utils/slug");
+const sanitize_1 = require("../../utils/sanitize");
 const blog_model_1 = require("./blog.model");
-const createBlog = async (data) => { return await blog_model_1.Blog.create(data); };
+const createBlog = async (data) => {
+    const sanitized = (0, sanitize_1.sanitizeContentData)(data);
+    if (sanitized.title)
+        sanitized.slug = (0, slug_1.generateSlug)(sanitized.title);
+    if (sanitized.status === 'published' && !sanitized.publishedAt)
+        sanitized.publishedAt = new Date();
+    return await blog_model_1.Blog.create(sanitized);
+};
 exports.createBlog = createBlog;
 const getAllBlogs = async () => { return await blog_model_1.Blog.find(); };
 exports.getAllBlogs = getAllBlogs;
@@ -15,7 +24,12 @@ const getBlogBySlug = async (slug) => {
 };
 exports.getBlogBySlug = getBlogBySlug;
 const updateBlog = async (id, data) => {
-    const doc = await blog_model_1.Blog.findByIdAndUpdate(id, data, { new: true, runValidators: true });
+    const sanitized = (0, sanitize_1.sanitizeContentData)(data);
+    if (sanitized.title)
+        sanitized.slug = (0, slug_1.generateSlug)(sanitized.title);
+    if (sanitized.status === 'published' && !sanitized.publishedAt)
+        sanitized.publishedAt = new Date();
+    const doc = await blog_model_1.Blog.findByIdAndUpdate(id, sanitized, { new: true, runValidators: true });
     if (!doc)
         throw new AppError_1.AppError('Not found', 404);
     return doc;

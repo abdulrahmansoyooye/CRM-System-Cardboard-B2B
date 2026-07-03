@@ -16,6 +16,29 @@ export function Footer({ settings }: { settings?: TSettings }) {
   const companyName = settings?.companyName || "CARDBOX";
   const social = settings?.socialLinks;
 
+  const socialLinks = [
+    {
+      href: social?.facebook,
+      label: "Visit our Facebook page",
+      icon: Facebook,
+    },
+    {
+      href: social?.twitter,
+      label: "Visit our X page",
+      icon: Twitter,
+    },
+    {
+      href: social?.linkedin,
+      label: "Visit our LinkedIn page",
+      icon: Linkedin,
+    },
+    {
+      href: social?.instagram,
+      label: "Visit our Instagram page",
+      icon: Instagram,
+    },
+  ].filter((item) => Boolean(item.href));
+
   return (
     <footer className="bg-primary text-primary-foreground pt-16 pb-8 border-t-4 border-accent">
       <div className="container mx-auto px-4 lg:px-8">
@@ -35,31 +58,22 @@ export function Footer({ settings }: { settings?: TSettings }) {
             <p className="text-secondary/80 text-sm leading-relaxed mb-6">
               {settings?.tagline || "Leading the packaging industry with heavy-duty, custom corrugated cardboard solutions for manufacturing and export needs."}
             </p>
-            <div className="flex gap-4">
-              <Link
-                href={social?.facebook || "#"}
-                className="w-10 h-10 rounded bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
-              >
-                <Facebook className="w-5 h-5" />
-              </Link>
-              <Link
-                href={social?.twitter || "#"}
-                className="w-10 h-10 rounded bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
-              >
-                <Twitter className="w-5 h-5" />
-              </Link>
-              <Link
-                href={social?.linkedin || "#"}
-                className="w-10 h-10 rounded bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-              </Link>
-              <Link
-                href={social?.instagram || "#"}
-                className="w-10 h-10 rounded bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
-              >
-                <Instagram className="w-5 h-5" />
-              </Link>
+            <div className="flex gap-4" aria-label="Social links">
+              {socialLinks.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.label}
+                    className="w-10 h-10 rounded bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-primary transition-colors"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </Link>
+                );
+              })}
             </div>
           </div>
 

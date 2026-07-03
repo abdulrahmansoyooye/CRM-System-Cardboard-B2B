@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormLayout, FormSection, FormInput, FormTextarea } from "@/components/dashboard/shared/FormLayout";
-import { Event } from "@/types/dashboard";
+import { IEvent } from "@/types/index";
 import { cn } from "@/lib/utils";
 
 const eventSchema = z.object({
@@ -23,7 +23,7 @@ interface EventFormValues {
 }
 
 interface EventFormProps {
-  initialData?: any;
+  initialData?: IEvent;
   onSubmit: (data: EventFormValues) => void;
   isSubmitting: boolean;
 }

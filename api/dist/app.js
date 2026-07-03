@@ -7,18 +7,38 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
+const xss_clean_1 = __importDefault(require("xss-clean"));
 const error_middleware_1 = __importDefault(require("./middleware/error.middleware"));
 const morgan_middleware_1 = __importDefault(require("./middleware/morgan.middleware"));
+const cache_middleware_1 = require("./middleware/cache.middleware");
 const routes_1 = __importDefault(require("./routes"));
 const app = (0, express_1.default)();
+const allowedOrigins = process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
+    : ['http://localhost:3000', 'http://localhost:3001'];
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin) {
+            return callback(null, true);
+        }
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        }
+        return callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+};
 // Request logging
 app.use(morgan_middleware_1.default);
 // Secure headers
 app.use((0, helmet_1.default)());
 // Performance & security
-app.use((0, cors_1.default)());
+app.use(corsOptions ? (0, cors_1.default)(corsOptions) : (0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+app.use((0, xss_clean_1.default)());
+// Caching headers for public resources
+app.use('/api/v1', cache_middleware_1.cacheMiddleware);
 // Rate limiting
 app.use((0, express_rate_limit_1.default)({
     windowMs: 15 * 60 * 1000,

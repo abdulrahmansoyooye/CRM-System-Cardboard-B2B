@@ -10,7 +10,7 @@ const createUser = async (data) => {
         throw new AppError_1.AppError('User already exists', 400);
     }
     const user = await user_model_1.User.create(data);
-    const token = (0, jwt_1.generateToken)({ id: user._id, email: user.email, role: user.role });
+    const token = (0, jwt_1.generateToken)({ id: user._id.toString(), email: user.email, role: user.role });
     return { user, token };
 };
 exports.createUser = createUser;
@@ -26,7 +26,8 @@ const loginUser = async (payload) => {
     if (!user.isActive) {
         throw new AppError_1.AppError('This user is inactive!', 403);
     }
-    const token = (0, jwt_1.generateToken)({ id: user._id, email: user.email, role: user.role });
+    await user_model_1.User.findByIdAndUpdate(user._id, { lastLogin: new Date() }, { new: true });
+    const token = (0, jwt_1.generateToken)({ id: user._id.toString(), email: user.email, role: user.role });
     // Remote password from the user object for the response
     const userObj = user.toObject();
     delete userObj.password;
@@ -63,8 +64,6 @@ const deactivateUser = async (id) => {
 };
 exports.deactivateUser = deactivateUser;
 const logoutUser = async () => {
-    // Logic for blacklist token or removing refresh token from DB if needed.
-    // For now returning success as JWT is stateless by default.
     return { success: true };
 };
 exports.logoutUser = logoutUser;

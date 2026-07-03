@@ -7,9 +7,9 @@ export declare const blogSchema: Schema<any, import("mongoose").Model<any, any, 
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
@@ -18,9 +18,9 @@ export declare const blogSchema: Schema<any, import("mongoose").Model<any, any, 
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -33,9 +33,9 @@ export declare const blogSchema: Schema<any, import("mongoose").Model<any, any, 
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -50,9 +50,9 @@ export declare const blogSchema: Schema<any, import("mongoose").Model<any, any, 
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
     createdAt: NativeDate;
@@ -68,9 +68,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {}, {}, {
@@ -81,9 +81,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -96,9 +96,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -115,9 +115,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
@@ -126,9 +126,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -141,9 +141,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -158,9 +158,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
     createdAt: NativeDate;
@@ -175,9 +175,9 @@ export declare const Blog: import("mongoose").Model<{
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
     createdAt: NativeDate;

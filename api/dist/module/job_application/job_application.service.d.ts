@@ -1,4 +1,5 @@
-export declare const createJobApplication: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateJobApplicationDTO, UpdateJobApplicationDTO } from '../../types/dtos';
+export declare const createJobApplication: (data: CreateJobApplicationDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     email: string;
     status: "new" | "reviewed" | "shortlisted" | "rejected";
@@ -79,7 +80,7 @@ export declare const getJobApplicationById: (id: string) => Promise<import("mong
 }, "id"> & {
     id: string;
 }>;
-export declare const updateJobApplication: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateJobApplication: (id: string, data: UpdateJobApplicationDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     email: string;
     status: "new" | "reviewed" | "shortlisted" | "rejected";
@@ -134,7 +135,7 @@ export declare const deleteJobApplication: (id: string) => Promise<import("mongo
     id: string;
 }>;
 export declare const JobApplicationService: {
-    createJobApplication: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createJobApplication: (data: CreateJobApplicationDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         email: string;
         status: "new" | "reviewed" | "shortlisted" | "rejected";
@@ -215,7 +216,7 @@ export declare const JobApplicationService: {
     }, "id"> & {
         id: string;
     }>;
-    updateJobApplication: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateJobApplication: (id: string, data: UpdateJobApplicationDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         email: string;
         status: "new" | "reviewed" | "shortlisted" | "rejected";

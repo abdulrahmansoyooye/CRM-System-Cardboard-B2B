@@ -1,4 +1,7 @@
-export declare const createSetting: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateSettingDTO, UpdateSettingDTO } from '../../types/dtos';
+export declare const createSetting: (data: CreateSettingDTO) => Promise<import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -14,6 +17,8 @@ export declare const createSetting: (data: any) => Promise<import("mongoose").Do
 }, {
     timestamps: true;
 }> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -32,6 +37,8 @@ export declare const createSetting: (data: any) => Promise<import("mongoose").Do
     id: string;
 }>;
 export declare const getAllSettings: () => Promise<(import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -47,6 +54,8 @@ export declare const getAllSettings: () => Promise<(import("mongoose").Document<
 }, {
     timestamps: true;
 }> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -65,6 +74,8 @@ export declare const getAllSettings: () => Promise<(import("mongoose").Document<
     id: string;
 })[]>;
 export declare const getSettingById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -80,6 +91,8 @@ export declare const getSettingById: (id: string) => Promise<import("mongoose").
 }, {
     timestamps: true;
 }> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -97,7 +110,9 @@ export declare const getSettingById: (id: string) => Promise<import("mongoose").
 }, "id"> & {
     id: string;
 }>;
-export declare const updateSetting: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateSetting: (id: string, data: UpdateSettingDTO) => Promise<import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -113,6 +128,8 @@ export declare const updateSetting: (id: string, data: any) => Promise<import("m
 }, {
     timestamps: true;
 }> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -131,6 +148,8 @@ export declare const updateSetting: (id: string, data: any) => Promise<import("m
     id: string;
 }>;
 export declare const deleteSetting: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -146,6 +165,8 @@ export declare const deleteSetting: (id: string) => Promise<import("mongoose").D
 }, {
     timestamps: true;
 }> & Omit<{
+    companyName?: string | null | undefined;
+    tagline?: string | null | undefined;
     logo?: string | null | undefined;
     favicon?: string | null | undefined;
     contactEmail?: string | null | undefined;
@@ -164,7 +185,9 @@ export declare const deleteSetting: (id: string) => Promise<import("mongoose").D
     id: string;
 }>;
 export declare const SettingService: {
-    createSetting: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createSetting: (data: CreateSettingDTO) => Promise<import("mongoose").Document<unknown, {}, {
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -180,6 +203,8 @@ export declare const SettingService: {
     }, {
         timestamps: true;
     }> & Omit<{
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -198,6 +223,8 @@ export declare const SettingService: {
         id: string;
     }>;
     getAllSettings: () => Promise<(import("mongoose").Document<unknown, {}, {
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -213,6 +240,8 @@ export declare const SettingService: {
     }, {
         timestamps: true;
     }> & Omit<{
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -231,6 +260,8 @@ export declare const SettingService: {
         id: string;
     })[]>;
     getSettingById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -246,6 +277,8 @@ export declare const SettingService: {
     }, {
         timestamps: true;
     }> & Omit<{
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -263,7 +296,9 @@ export declare const SettingService: {
     }, "id"> & {
         id: string;
     }>;
-    updateSetting: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateSetting: (id: string, data: UpdateSettingDTO) => Promise<import("mongoose").Document<unknown, {}, {
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -279,6 +314,8 @@ export declare const SettingService: {
     }, {
         timestamps: true;
     }> & Omit<{
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -297,6 +334,8 @@ export declare const SettingService: {
         id: string;
     }>;
     deleteSetting: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;
@@ -312,6 +351,8 @@ export declare const SettingService: {
     }, {
         timestamps: true;
     }> & Omit<{
+        companyName?: string | null | undefined;
+        tagline?: string | null | undefined;
         logo?: string | null | undefined;
         favicon?: string | null | undefined;
         contactEmail?: string | null | undefined;

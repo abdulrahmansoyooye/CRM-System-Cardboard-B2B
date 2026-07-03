@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormLayout, FormSection, FormInput, FormSelect, FormTextarea } from "@/components/dashboard/shared/FormLayout";
-import { Product, Category } from "@/types/dashboard";
+import { IProduct, ICategory } from "@/types/index";
 import { cn } from "@/lib/utils";
 
 const productSchema = z.object({
@@ -33,8 +33,8 @@ interface ProductFormValues {
 }
 
 interface ProductFormProps {
-  initialData?: any;
-  categories: Category[];
+  initialData?: IProduct;
+  categories: ICategory[];
   onSubmit: (data: ProductFormValues) => void;
   isSubmitting: boolean;
 }
@@ -50,7 +50,7 @@ export function ProductForm({ initialData, categories, onSubmit, isSubmitting }:
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: initialData?.name || "",
-      categoryId: (initialData?.categoryId as any)?._id || initialData?.categoryId || "",
+      categoryId: typeof initialData?.categoryId === 'object' && initialData?.categoryId ? (initialData.categoryId as { _id: string })._id : initialData?.categoryId || "",
       moq: initialData?.moq || 1,
       deliveryTimeline: initialData?.deliveryTimeline || "",
       isFeatured: initialData?.isFeatured || false,

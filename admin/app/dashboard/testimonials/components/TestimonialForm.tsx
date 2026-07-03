@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormLayout, FormSection, FormInput, FormSelect, FormTextarea } from "@/components/dashboard/shared/FormLayout";
+import { ITestimonial } from "@/types/index";
 import { cn } from "@/lib/utils";
 
 const testimonialSchema = z.object({
@@ -24,7 +25,7 @@ interface TestimonialFormValues {
 }
 
 interface TestimonialFormProps {
-  initialData?: any;
+  initialData?: ITestimonial;
   onSubmit: (data: TestimonialFormValues) => void;
   isSubmitting: boolean;
 }

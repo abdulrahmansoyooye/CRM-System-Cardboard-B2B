@@ -31,7 +31,14 @@ export function ContactForm() {
     setIsLoading(true);
     setError(null);
     try {
-      await submitInquiry(formData);
+      await submitInquiry({
+        name: formData.name,
+        company: formData.companyName,
+        email: formData.email,
+        phone: formData.phone,
+        productInterested: formData.inquiryType,
+        message: formData.message,
+      });
       setIsSubmitted(true);
     } catch (err) {
       setError("Failed to send your message. Please try again or contact us directly.");

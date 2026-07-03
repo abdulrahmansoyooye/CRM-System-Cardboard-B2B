@@ -18,10 +18,10 @@ const createProductSchema = z.object({
       .object({
         metaTitle: z.string().optional(),
         metaDescription: z.string().optional(),
-      })
+      }).strict()
       .optional(),
     isActive: z.boolean().default(true),
-  }),
+  }).strict(),
 });
 
 const updateProductSchema = z.object({
@@ -42,10 +42,10 @@ const updateProductSchema = z.object({
       .object({
         metaTitle: z.string().optional(),
         metaDescription: z.string().optional(),
-      })
+      }).strict()
       .optional(),
     isActive: z.boolean().optional(),
-  }),
+  }).strict(),
 });
 
 export const ProductValidation = {

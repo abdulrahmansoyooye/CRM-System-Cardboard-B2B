@@ -4,19 +4,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AssetController = exports.deleteDoc = exports.getAll = exports.create = void 0;
+const sendResponse_1 = __importDefault(require("../../core/response/sendResponse"));
 const asyncHandler_1 = __importDefault(require("../../utils/asyncHandler"));
 const asset_service_1 = require("./asset.service");
 exports.create = (0, asyncHandler_1.default)(async (req, res, next) => {
     const doc = await asset_service_1.AssetService.createAsset(req.body);
-    res.status(201).json({ success: true, message: 'Asset registered successfully', data: doc });
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: 'Asset registered successfully',
+        data: doc
+    });
 });
 exports.getAll = (0, asyncHandler_1.default)(async (req, res, next) => {
     const docs = await asset_service_1.AssetService.getAllAssets();
-    res.status(200).json({ success: true, data: docs });
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Success',
+        data: docs
+    });
 });
 exports.deleteDoc = (0, asyncHandler_1.default)(async (req, res, next) => {
     const doc = await asset_service_1.AssetService.deleteAsset(req.params.id);
-    res.status(200).json({ success: true, message: 'Asset deleted permanently', data: doc });
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Asset deleted permanently',
+        data: doc
+    });
 });
 exports.AssetController = {
     create: exports.create,

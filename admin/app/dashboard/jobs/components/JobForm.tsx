@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormLayout, FormSection, FormInput, FormSelect, FormTextarea } from "@/components/dashboard/shared/FormLayout";
-import { Job } from "@/types/dashboard";
+import { IJob } from "@/types/index";
 import { cn } from "@/lib/utils";
 
 const jobSchema = z.object({
@@ -22,7 +22,7 @@ const jobSchema = z.object({
 type JobFormValues = z.infer<typeof jobSchema>;
 
 interface JobFormProps {
-  initialData?: any;
+  initialData?: IJob;
   onSubmit: (data: JobFormValues) => void;
   isSubmitting: boolean;
 }

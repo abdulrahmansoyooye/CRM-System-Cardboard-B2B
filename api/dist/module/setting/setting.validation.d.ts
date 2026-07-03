@@ -1,16 +1,124 @@
 import { z } from 'zod';
 export declare const createSettingSchema: z.ZodObject<{
-    body: z.ZodObject<{}, z.core.$strip>;
+    body: z.ZodObject<{
+        logo: z.ZodOptional<z.ZodString>;
+        favicon: z.ZodOptional<z.ZodString>;
+        contactEmail: z.ZodOptional<z.ZodString>;
+        contactPhone: z.ZodOptional<z.ZodString>;
+        address: z.ZodOptional<z.ZodString>;
+        socialLinks: z.ZodOptional<z.ZodObject<{
+            facebook: z.ZodOptional<z.ZodString>;
+            twitter: z.ZodOptional<z.ZodString>;
+            linkedin: z.ZodOptional<z.ZodString>;
+            instagram: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        defaultSEO: z.ZodOptional<z.ZodObject<{
+            metaTitle: z.ZodOptional<z.ZodString>;
+            metaDescription: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        homepageHero: z.ZodOptional<z.ZodObject<{
+            title: z.ZodOptional<z.ZodString>;
+            subtitle: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        ctaBanner: z.ZodOptional<z.ZodObject<{
+            title: z.ZodOptional<z.ZodString>;
+            buttonText: z.ZodOptional<z.ZodString>;
+            buttonLink: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        analyticsId: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>;
 }, z.core.$strip>;
 export declare const updateSettingSchema: z.ZodObject<{
-    body: z.ZodObject<{}, z.core.$strip>;
+    body: z.ZodObject<{
+        logo: z.ZodOptional<z.ZodString>;
+        favicon: z.ZodOptional<z.ZodString>;
+        contactEmail: z.ZodOptional<z.ZodString>;
+        contactPhone: z.ZodOptional<z.ZodString>;
+        address: z.ZodOptional<z.ZodString>;
+        socialLinks: z.ZodOptional<z.ZodObject<{
+            facebook: z.ZodOptional<z.ZodString>;
+            twitter: z.ZodOptional<z.ZodString>;
+            linkedin: z.ZodOptional<z.ZodString>;
+            instagram: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        defaultSEO: z.ZodOptional<z.ZodObject<{
+            metaTitle: z.ZodOptional<z.ZodString>;
+            metaDescription: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        homepageHero: z.ZodOptional<z.ZodObject<{
+            title: z.ZodOptional<z.ZodString>;
+            subtitle: z.ZodOptional<z.ZodString>;
+            image: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        ctaBanner: z.ZodOptional<z.ZodObject<{
+            title: z.ZodOptional<z.ZodString>;
+            buttonText: z.ZodOptional<z.ZodString>;
+            buttonLink: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>>;
+        analyticsId: z.ZodOptional<z.ZodString>;
+    }, z.core.$strict>;
 }, z.core.$strip>;
 export declare const SettingValidation: {
     createSettingSchema: z.ZodObject<{
-        body: z.ZodObject<{}, z.core.$strip>;
+        body: z.ZodObject<{
+            logo: z.ZodOptional<z.ZodString>;
+            favicon: z.ZodOptional<z.ZodString>;
+            contactEmail: z.ZodOptional<z.ZodString>;
+            contactPhone: z.ZodOptional<z.ZodString>;
+            address: z.ZodOptional<z.ZodString>;
+            socialLinks: z.ZodOptional<z.ZodObject<{
+                facebook: z.ZodOptional<z.ZodString>;
+                twitter: z.ZodOptional<z.ZodString>;
+                linkedin: z.ZodOptional<z.ZodString>;
+                instagram: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            defaultSEO: z.ZodOptional<z.ZodObject<{
+                metaTitle: z.ZodOptional<z.ZodString>;
+                metaDescription: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            homepageHero: z.ZodOptional<z.ZodObject<{
+                title: z.ZodOptional<z.ZodString>;
+                subtitle: z.ZodOptional<z.ZodString>;
+                image: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            ctaBanner: z.ZodOptional<z.ZodObject<{
+                title: z.ZodOptional<z.ZodString>;
+                buttonText: z.ZodOptional<z.ZodString>;
+                buttonLink: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            analyticsId: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>;
     }, z.core.$strip>;
     updateSettingSchema: z.ZodObject<{
-        body: z.ZodObject<{}, z.core.$strip>;
+        body: z.ZodObject<{
+            logo: z.ZodOptional<z.ZodString>;
+            favicon: z.ZodOptional<z.ZodString>;
+            contactEmail: z.ZodOptional<z.ZodString>;
+            contactPhone: z.ZodOptional<z.ZodString>;
+            address: z.ZodOptional<z.ZodString>;
+            socialLinks: z.ZodOptional<z.ZodObject<{
+                facebook: z.ZodOptional<z.ZodString>;
+                twitter: z.ZodOptional<z.ZodString>;
+                linkedin: z.ZodOptional<z.ZodString>;
+                instagram: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            defaultSEO: z.ZodOptional<z.ZodObject<{
+                metaTitle: z.ZodOptional<z.ZodString>;
+                metaDescription: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            homepageHero: z.ZodOptional<z.ZodObject<{
+                title: z.ZodOptional<z.ZodString>;
+                subtitle: z.ZodOptional<z.ZodString>;
+                image: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            ctaBanner: z.ZodOptional<z.ZodObject<{
+                title: z.ZodOptional<z.ZodString>;
+                buttonText: z.ZodOptional<z.ZodString>;
+                buttonLink: z.ZodOptional<z.ZodString>;
+            }, z.core.$strict>>;
+            analyticsId: z.ZodOptional<z.ZodString>;
+        }, z.core.$strict>;
     }, z.core.$strip>;
 };
 //# sourceMappingURL=setting.validation.d.ts.map

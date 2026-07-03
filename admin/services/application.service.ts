@@ -1,18 +1,19 @@
 import { api } from "@/lib/api";
+import { ApiResponse, IJobApplication } from "@/types/index";
 
-export const getApplications = async () => {
-  return api("/admin/applications");
+export const getApplications = async (): Promise<ApiResponse<IJobApplication[]>> => {
+  return api<ApiResponse<IJobApplication[]>>("/admin/applications");
 };
 
-export const updateApplication = async (id: string, data: any) => {
-  return api(`/admin/applications/${id}`, {
+export const updateApplication = async (id: string, data: Partial<IJobApplication>): Promise<ApiResponse<IJobApplication>> => {
+  return api<ApiResponse<IJobApplication>>(`/admin/applications/${id}`, {
     method: "PUT",
     body: JSON.stringify(data),
   });
 };
 
-export const deleteApplication = async (id: string) => {
-  return api(`/admin/applications/${id}`, {
+export const deleteApplication = async (id: string): Promise<ApiResponse<null>> => {
+  return api<ApiResponse<null>>(`/admin/applications/${id}`, {
     method: "DELETE",
   });
 };

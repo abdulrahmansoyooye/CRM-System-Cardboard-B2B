@@ -8,7 +8,7 @@ export const createInquirySchema = z.object({
     email: z.string({ message: 'Email is required' }).email(),
     message: z.string().optional(),
     productInterested: z.string().optional(),
-  }),
+  }).strict(),
 });
 
 export const updateInquirySchema = z.object({
@@ -21,7 +21,7 @@ export const updateInquirySchema = z.object({
     status: z.enum(['new', 'contacted', 'quoted', 'closed']).optional(),
     notes: z.string().optional(),
     assignedTo: z.string().optional(),
-  }),
+  }).strict(),
 });
 
 export const InquiryValidation = {

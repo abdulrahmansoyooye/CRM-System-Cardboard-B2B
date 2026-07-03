@@ -7,7 +7,7 @@ export const createTestimonialSchema = z.object({
     feedback: z.string({ message: 'Feedback is required' }),
     rating: z.number().min(1).max(5).optional(),
     isPublished: z.boolean().default(false),
-  }),
+  }).strict(),
 });
 
 export const updateTestimonialSchema = z.object({
@@ -17,7 +17,7 @@ export const updateTestimonialSchema = z.object({
     feedback: z.string().optional(),
     rating: z.number().min(1).max(5).optional(),
     isPublished: z.boolean().optional(),
-  }),
+  }).strict(),
 });
 
 export const TestimonialValidation = {

@@ -1,4 +1,5 @@
-export declare const createIndustry: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateIndustryDTO, UpdateIndustryDTO } from '../../types/dtos';
+export declare const createIndustry: (data: CreateIndustryDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     slug: string;
     images: string[];
@@ -79,7 +80,7 @@ export declare const getIndustryBySlug: (slug: string) => Promise<import("mongoo
 }, "id"> & {
     id: string;
 }>;
-export declare const updateIndustry: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateIndustry: (id: string, data: UpdateIndustryDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     slug: string;
     images: string[];
@@ -134,7 +135,7 @@ export declare const deleteIndustry: (id: string) => Promise<import("mongoose").
     id: string;
 }>;
 export declare const IndustryService: {
-    createIndustry: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createIndustry: (data: CreateIndustryDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         slug: string;
         images: string[];
@@ -215,7 +216,7 @@ export declare const IndustryService: {
     }, "id"> & {
         id: string;
     }>;
-    updateIndustry: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateIndustry: (id: string, data: UpdateIndustryDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         slug: string;
         images: string[];

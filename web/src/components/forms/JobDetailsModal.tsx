@@ -53,7 +53,19 @@ export function JobDetailsModal({ job }: { job: TJob }) {
     setIsLoading(true);
     setError(null);
     try {
-      await submitApplication(formData);
+      await submitApplication({
+        jobId: formData.jobId,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        resumeFile: formData.resume,
+        notes: [
+          formData.linkedin ? `LinkedIn: ${formData.linkedin}` : null,
+          formData.message ? `Cover Letter: ${formData.message}` : null,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      });
       setIsSubmitted(true);
     } catch (err) {
       setError("Protocal failure in transmission. Please try again.");

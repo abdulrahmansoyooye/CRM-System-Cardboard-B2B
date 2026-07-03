@@ -2,11 +2,32 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import xss from 'xss-clean';
 import globalErrorHandler from './middleware/error.middleware';
 import morganMiddleware from './middleware/morgan.middleware';
+import { cacheMiddleware } from './middleware/cache.middleware';
 import router from './routes';
 
 const app: Application = express();
+
+const allowedOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
+  : ['http://localhost:3000', 'http://localhost:3001'];
+
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+};
 
 // Request logging
 app.use(morganMiddleware);
@@ -15,9 +36,13 @@ app.use(morganMiddleware);
 app.use(helmet());
 
 // Performance & security
-app.use(cors());
+app.use(corsOptions ? cors(corsOptions) : cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(xss());
+
+// Caching headers for public resources
+app.use('/api/v1', cacheMiddleware);
 
 // Rate limiting
 app.use(
@@ -56,4 +81,4 @@ app.use((req: Request, res: Response) => {
   });
 });
 
-export default app;
+export default app;

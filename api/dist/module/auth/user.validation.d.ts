@@ -1,7 +1,7 @@
 import { z } from "zod";
 export declare const createUserSchema: z.ZodObject<{
     name: z.ZodString;
-    email: z.ZodEmail;
+    email: z.ZodString;
     password: z.ZodString;
     role: z.ZodEnum<{
         super_admin: "super_admin";
@@ -10,5 +10,5 @@ export declare const createUserSchema: z.ZodObject<{
         hr_manager: "hr_manager";
         sales_manager: "sales_manager";
     }>;
-}, z.core.$strip>;
+}, z.core.$strict>;
 //# sourceMappingURL=user.validation.d.ts.map

@@ -1,4 +1,5 @@
-export declare const createInquiry: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateInquiryDTO, UpdateInquiryDTO } from '../../types/dtos';
+export declare const createInquiry: (data: CreateInquiryDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     email: string;
     status: "new" | "closed" | "contacted" | "quoted";
@@ -91,7 +92,7 @@ export declare const getInquiryById: (id: string) => Promise<import("mongoose").
 }, "id"> & {
     id: string;
 }>;
-export declare const updateInquiry: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateInquiry: (id: string, data: UpdateInquiryDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     email: string;
     status: "new" | "closed" | "contacted" | "quoted";
@@ -154,7 +155,7 @@ export declare const deleteInquiry: (id: string) => Promise<import("mongoose").D
     id: string;
 }>;
 export declare const InquiryService: {
-    createInquiry: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createInquiry: (data: CreateInquiryDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         email: string;
         status: "new" | "closed" | "contacted" | "quoted";
@@ -247,7 +248,7 @@ export declare const InquiryService: {
     }, "id"> & {
         id: string;
     }>;
-    updateInquiry: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateInquiry: (id: string, data: UpdateInquiryDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         email: string;
         status: "new" | "closed" | "contacted" | "quoted";

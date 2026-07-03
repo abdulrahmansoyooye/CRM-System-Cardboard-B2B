@@ -1,8 +1,8 @@
 declare const _default: {
     NODE_ENV: string | undefined;
-    port: string | number;
-    database_url: string | undefined;
-    bcrypt_salt_rounds: string | number;
+    port: number;
+    database_url: string;
+    bcrypt_salt_rounds: number;
     jwt_access_secret: string;
     jwt_access_expires_in: string;
     jwt_refresh_secret: string;

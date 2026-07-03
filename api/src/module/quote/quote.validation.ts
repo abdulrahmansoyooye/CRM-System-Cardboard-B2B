@@ -9,7 +9,8 @@ export const createQuoteSchema = z.object({
     name: z.string({ message: 'Name is required' }),
     phone: z.string().optional(),
     email: z.string({ message: 'Email is required' }).email(),
-  }),
+    notes: z.string().optional(),
+  }).strict(),
 });
 
 export const updateQuoteSchema = z.object({
@@ -23,7 +24,7 @@ export const updateQuoteSchema = z.object({
     email: z.string().email().optional(),
     status: z.string().optional(),
     notes: z.string().optional(),
-  }),
+  }).strict(),
 });
 
 export const QuoteValidation = {

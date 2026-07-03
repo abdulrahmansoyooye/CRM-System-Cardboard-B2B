@@ -1,4 +1,5 @@
-export declare const createQuote: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateQuoteDTO, UpdateQuoteDTO } from '../../types/dtos';
+export declare const createQuote: (data: CreateQuoteDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     email: string;
     status: string;
@@ -91,7 +92,7 @@ export declare const getQuoteById: (id: string) => Promise<import("mongoose").Do
 }, "id"> & {
     id: string;
 }>;
-export declare const updateQuote: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateQuote: (id: string, data: UpdateQuoteDTO) => Promise<import("mongoose").Document<unknown, {}, {
     name: string;
     email: string;
     status: string;
@@ -154,7 +155,7 @@ export declare const deleteQuote: (id: string) => Promise<import("mongoose").Doc
     id: string;
 }>;
 export declare const QuoteService: {
-    createQuote: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createQuote: (data: CreateQuoteDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         email: string;
         status: string;
@@ -247,7 +248,7 @@ export declare const QuoteService: {
     }, "id"> & {
         id: string;
     }>;
-    updateQuote: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateQuote: (id: string, data: UpdateQuoteDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         email: string;
         status: string;

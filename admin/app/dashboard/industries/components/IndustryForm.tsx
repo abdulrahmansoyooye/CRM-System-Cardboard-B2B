@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { FormLayout, FormSection, FormInput, FormTextarea } from "@/components/dashboard/shared/FormLayout";
-import { Industry } from "@/types/dashboard";
+import { IIndustry } from "@/types/index";
 import { cn } from "@/lib/utils";
 
 const industrySchema = z.object({
@@ -23,7 +23,7 @@ interface IndustryFormValues {
 }
 
 interface IndustryFormProps {
-  initialData?: any;
+  initialData?: IIndustry;
   onSubmit: (data: IndustryFormValues) => void;
   isSubmitting: boolean;
 }
@@ -40,7 +40,7 @@ export function IndustryForm({ initialData, onSubmit, isSubmitting }: IndustryFo
     defaultValues: {
       name: initialData?.name || "",
       slug: initialData?.slug || "",
-      overview: (initialData as any)?.overview || "",
+      overview: initialData?.overview || "",
       isActive: initialData?.isActive ?? true,
     },
   });

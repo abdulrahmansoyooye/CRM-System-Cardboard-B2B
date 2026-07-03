@@ -7,6 +7,8 @@ export type TProduct = {
     fullDescription?: string;
     specifications?: string[];
     materialDetails?: string;
+    strengthDetails?: string;
+    availableSizes?: string[];
     moq: number;
     deliveryTimeline: string;
     isFeatured: boolean;

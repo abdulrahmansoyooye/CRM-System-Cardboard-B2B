@@ -15,6 +15,8 @@ const productSchema = new mongoose_1.Schema({
     fullDescription: { type: String },
     specifications: [{ type: String }],
     materialDetails: { type: String },
+    strengthDetails: { type: String },
+    availableSizes: [{ type: String }],
     moq: { type: Number, default: 1 },
     deliveryTimeline: { type: String },
     isFeatured: { type: Boolean, default: false, index: true },

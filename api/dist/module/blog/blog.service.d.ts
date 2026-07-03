@@ -1,12 +1,13 @@
-export declare const createBlog: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+import { CreateBlogDTO, UpdateBlogDTO } from '../../types/dtos';
+export declare const createBlog: (data: CreateBlogDTO) => Promise<import("mongoose").Document<unknown, {}, {
     slug: string;
     title: string;
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -19,9 +20,9 @@ export declare const createBlog: (data: any) => Promise<import("mongoose").Docum
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -37,9 +38,9 @@ export declare const getAllBlogs: () => Promise<(import("mongoose").Document<unk
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -52,9 +53,9 @@ export declare const getAllBlogs: () => Promise<(import("mongoose").Document<unk
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -70,9 +71,9 @@ export declare const getBlogBySlug: (slug: string) => Promise<import("mongoose")
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -85,9 +86,9 @@ export declare const getBlogBySlug: (slug: string) => Promise<import("mongoose")
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -97,15 +98,15 @@ export declare const getBlogBySlug: (slug: string) => Promise<import("mongoose")
 }, "id"> & {
     id: string;
 }>;
-export declare const updateBlog: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+export declare const updateBlog: (id: string, data: UpdateBlogDTO) => Promise<import("mongoose").Document<unknown, {}, {
     slug: string;
     title: string;
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -118,9 +119,9 @@ export declare const updateBlog: (id: string, data: any) => Promise<import("mong
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -136,9 +137,9 @@ export declare const deleteBlog: (id: string) => Promise<import("mongoose").Docu
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -151,9 +152,9 @@ export declare const deleteBlog: (id: string) => Promise<import("mongoose").Docu
     tags: string[];
     status: "draft" | "published";
     seo?: any;
-    category?: string | null | undefined;
-    excerpt?: string | null | undefined;
     content?: string | null | undefined;
+    excerpt?: string | null | undefined;
+    category?: string | null | undefined;
     featuredImage?: string | null | undefined;
     publishedAt?: NativeDate | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -164,15 +165,15 @@ export declare const deleteBlog: (id: string) => Promise<import("mongoose").Docu
     id: string;
 }>;
 export declare const BlogService: {
-    createBlog: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createBlog: (data: CreateBlogDTO) => Promise<import("mongoose").Document<unknown, {}, {
         slug: string;
         title: string;
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
@@ -185,9 +186,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {
@@ -203,9 +204,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
@@ -218,9 +219,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {
@@ -236,9 +237,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
@@ -251,9 +252,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {
@@ -263,15 +264,15 @@ export declare const BlogService: {
     }, "id"> & {
         id: string;
     }>;
-    updateBlog: (id: string, data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    updateBlog: (id: string, data: UpdateBlogDTO) => Promise<import("mongoose").Document<unknown, {}, {
         slug: string;
         title: string;
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
@@ -284,9 +285,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {
@@ -302,9 +303,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
@@ -317,9 +318,9 @@ export declare const BlogService: {
         tags: string[];
         status: "draft" | "published";
         seo?: any;
-        category?: string | null | undefined;
-        excerpt?: string | null | undefined;
         content?: string | null | undefined;
+        excerpt?: string | null | undefined;
+        category?: string | null | undefined;
         featuredImage?: string | null | undefined;
         publishedAt?: NativeDate | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {

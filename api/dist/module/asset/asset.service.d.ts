@@ -1,5 +1,6 @@
+import { CreateAssetDTO } from '../../types/dtos';
 export declare const AssetService: {
-    createAsset: (data: any) => Promise<import("mongoose").Document<unknown, {}, {
+    createAsset: (data: CreateAssetDTO) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         category: string;
         url: string;

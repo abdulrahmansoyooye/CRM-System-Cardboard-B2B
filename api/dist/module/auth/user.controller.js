@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = exports.logout = exports.deactivate = exports.update = exports.getById = exports.getAll = exports.login = exports.create = void 0;
+const sendResponse_1 = __importDefault(require("../../core/response/sendResponse"));
 const asyncHandler_1 = __importDefault(require("../../utils/asyncHandler"));
 const user_service_1 = require("./user.service");
 exports.create = (0, asyncHandler_1.default)(async (req, res, next) => {
@@ -16,11 +17,21 @@ exports.login = (0, asyncHandler_1.default)(async (req, res, next) => {
 });
 exports.getAll = (0, asyncHandler_1.default)(async (req, res, next) => {
     const users = await user_service_1.UserService.getUsers();
-    res.status(200).json({ success: true, data: users });
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Success',
+        data: users
+    });
 });
 exports.getById = (0, asyncHandler_1.default)(async (req, res, next) => {
     const user = await user_service_1.UserService.getUserById(req.params.id);
-    res.status(200).json({ success: true, data: user });
+    (0, sendResponse_1.default)(res, {
+        statusCode: 200,
+        success: true,
+        message: 'Success',
+        data: user
+    });
 });
 exports.update = (0, asyncHandler_1.default)(async (req, res, next) => {
     const user = await user_service_1.UserService.updateUser(req.params.id, req.body);

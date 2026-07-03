@@ -7,13 +7,13 @@ interface ModalState {
   title: string;
   subtitle?: string;
   size: "sm" | "md" | "lg" | "xl";
-  data: any;
+  data: unknown;
   openModal: (options: {
     view: ReactNode;
     title: string;
     subtitle?: string;
     size?: "sm" | "md" | "lg" | "xl";
-    data?: any;
+    data?: unknown;
   }) => void;
   closeModal: () => void;
 }

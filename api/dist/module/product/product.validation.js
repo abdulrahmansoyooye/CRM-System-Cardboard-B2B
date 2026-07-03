@@ -10,6 +10,8 @@ const createProductSchema = zod_1.z.object({
         fullDescription: zod_1.z.string().optional(),
         specifications: zod_1.z.array(zod_1.z.string()).optional(),
         materialDetails: zod_1.z.string().optional(),
+        strengthDetails: zod_1.z.string().optional(),
+        availableSizes: zod_1.z.array(zod_1.z.string()).optional(),
         moq: zod_1.z.number().min(1).default(1),
         deliveryTimeline: zod_1.z.string().optional(),
         isFeatured: zod_1.z.boolean().default(false),
@@ -18,10 +20,10 @@ const createProductSchema = zod_1.z.object({
             .object({
             metaTitle: zod_1.z.string().optional(),
             metaDescription: zod_1.z.string().optional(),
-        })
+        }).strict()
             .optional(),
         isActive: zod_1.z.boolean().default(true),
-    }),
+    }).strict(),
 });
 const updateProductSchema = zod_1.z.object({
     body: zod_1.z.object({
@@ -31,6 +33,8 @@ const updateProductSchema = zod_1.z.object({
         fullDescription: zod_1.z.string().optional(),
         specifications: zod_1.z.array(zod_1.z.string()).optional(),
         materialDetails: zod_1.z.string().optional(),
+        strengthDetails: zod_1.z.string().optional(),
+        availableSizes: zod_1.z.array(zod_1.z.string()).optional(),
         moq: zod_1.z.number().min(1).optional(),
         deliveryTimeline: zod_1.z.string().optional(),
         isFeatured: zod_1.z.boolean().optional(),
@@ -39,10 +43,10 @@ const updateProductSchema = zod_1.z.object({
             .object({
             metaTitle: zod_1.z.string().optional(),
             metaDescription: zod_1.z.string().optional(),
-        })
+        }).strict()
             .optional(),
         isActive: zod_1.z.boolean().optional(),
-    }),
+    }).strict(),
 });
 exports.ProductValidation = {
     createProductSchema,

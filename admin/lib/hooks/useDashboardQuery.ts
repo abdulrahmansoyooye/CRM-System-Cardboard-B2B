@@ -1,10 +1,25 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, type UseQueryOptions } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-export function useDashboardQuery<T>(
-  queryKey: string[],
-  fetchFn: () => Promise<any>,
-  options = {}
+const getErrorMessage = (error: unknown) => {
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (typeof error === "object" && error !== null && "message" in error) {
+    const message = (error as { message?: unknown }).message;
+    if (typeof message === "string") {
+      return message;
+    }
+  }
+
+  return "Operation failed";
+};
+
+export function useDashboardQuery<TQueryFnData, TData = TQueryFnData, TError = Error>(
+  queryKey: readonly string[],
+  fetchFn: () => Promise<TQueryFnData>,
+  options?: Omit<UseQueryOptions<TQueryFnData, TError, TData, readonly string[]>, "queryKey" | "queryFn">
 ) {
   return useQuery({
     queryKey,
@@ -13,8 +28,8 @@ export function useDashboardQuery<T>(
   });
 }
 
-export function useDashboardMutation<T>(
-  mutationFn: (data: T) => Promise<any>,
+export function useDashboardMutation<TVariables, TData = unknown, TError = unknown>(
+  mutationFn: (data: TVariables) => Promise<TData>,
   successMessage: string,
   queryKeyToInvalidate: string[][]
 ) {
@@ -28,8 +43,8 @@ export function useDashboardMutation<T>(
       });
       toast.success(successMessage);
     },
-    onError: (error: any) => {
-      toast.error(error.message || "Operation failed");
+    onError: (error: TError) => {
+      toast.error(getErrorMessage(error));
       console.error(error);
     },
   });

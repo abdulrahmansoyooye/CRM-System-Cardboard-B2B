@@ -8,7 +8,7 @@ export const createJobSchema = z.object({
     location: z.string().optional(),
     description: z.string().optional(),
     status: z.enum(['open', 'closed']).default('open'),
-  }),
+  }).strict(),
 });
 
 export const updateJobSchema = z.object({
@@ -19,7 +19,7 @@ export const updateJobSchema = z.object({
     location: z.string().optional(),
     description: z.string().optional(),
     status: z.enum(['open', 'closed']).optional(),
-  }),
+  }).strict(),
 });
 
 export const JobValidation = {

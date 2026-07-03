@@ -12,23 +12,23 @@ export const createSettingSchema = z.object({
       twitter: z.string().optional(),
       linkedin: z.string().optional(),
       instagram: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     defaultSEO: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     homepageHero: z.object({
       title: z.string().optional(),
       subtitle: z.string().optional(),
       image: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     ctaBanner: z.object({
       title: z.string().optional(),
       buttonText: z.string().optional(),
       buttonLink: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     analyticsId: z.string().optional(),
-  }),
+  }).strict(),
 });
 
 export const updateSettingSchema = z.object({
@@ -43,23 +43,23 @@ export const updateSettingSchema = z.object({
       twitter: z.string().optional(),
       linkedin: z.string().optional(),
       instagram: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     defaultSEO: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     homepageHero: z.object({
       title: z.string().optional(),
       subtitle: z.string().optional(),
       image: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     ctaBanner: z.object({
       title: z.string().optional(),
       buttonText: z.string().optional(),
       buttonLink: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     analyticsId: z.string().optional(),
-  }),
+  }).strict(),
 });
 
 export const SettingValidation = {

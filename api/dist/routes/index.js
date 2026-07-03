@@ -13,6 +13,7 @@ const quote_route_1 = require("../module/quote/quote.route");
 const setting_route_1 = require("../module/setting/setting.route");
 const testimonial_route_1 = require("../module/testimonial/testimonial.route");
 const asset_route_1 = require("../module/asset/asset.route");
+const event_route_1 = require("../module/event/event.route");
 const router = (0, express_1.Router)();
 const moduleRoutes = [
     { path: '/', route: product_route_1.ProductRoutes },
@@ -27,6 +28,7 @@ const moduleRoutes = [
     { path: '/', route: setting_route_1.SettingRoutes },
     { path: '/', route: testimonial_route_1.TestimonialRoutes },
     { path: '/', route: asset_route_1.AssetRoutes },
+    { path: '/', route: event_route_1.EventRoutes },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 exports.default = router;

@@ -5,7 +5,10 @@ const asset_model_1 = require("./asset.model");
 const AppError_1 = require("../../core/errors/AppError");
 exports.AssetService = {
     createAsset: async (data) => {
-        return await asset_model_1.Asset.create(data);
+        return await asset_model_1.Asset.create({
+            ...data,
+            size: data.size !== undefined ? String(data.size) : undefined,
+        });
     },
     getAllAssets: async () => {
         return await asset_model_1.Asset.find().sort({ createdAt: -1 });

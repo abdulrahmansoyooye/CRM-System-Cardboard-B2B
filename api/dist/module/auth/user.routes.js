@@ -7,7 +7,7 @@ const user_controller_1 = require("./user.controller");
 const router = (0, express_1.Router)();
 router.post("/login", user_controller_1.UserController.login);
 router.post("/logout", user_controller_1.UserController.logout);
-router.post("/create", (0, auth_middleware_1.authMiddleware)(["super_admin"]), user_controller_1.UserController.create);
+router.post("/create", (0, auth_middleware_1.authMiddleware)(["super_admin", "admin"]), user_controller_1.UserController.create);
 router.get("/all", (0, auth_middleware_1.authMiddleware)(["super_admin", "admin"]), user_controller_1.UserController.getAll);
 router.get("/:id/details", (0, auth_middleware_1.authMiddleware)(["super_admin", "admin"]), user_controller_1.UserController.getById);
 router.put("/:id/update", (0, auth_middleware_1.authMiddleware)(["super_admin", "admin"]), user_controller_1.UserController.update);

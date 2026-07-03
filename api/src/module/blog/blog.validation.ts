@@ -11,9 +11,9 @@ export const createBlogSchema = z.object({
     seo: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     status: z.enum(['draft', 'published']).default('draft'),
-  }),
+  }).strict(),
 });
 
 export const updateBlogSchema = z.object({
@@ -27,9 +27,9 @@ export const updateBlogSchema = z.object({
     seo: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     status: z.enum(['draft', 'published']).optional(),
-  }),
+  }).strict(),
 });
 
 export const BlogValidation = {

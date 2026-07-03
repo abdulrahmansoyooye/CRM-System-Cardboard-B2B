@@ -5,14 +5,13 @@ import { Send, CheckCircle2, ShieldCheck, Zap, Layers } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { submitQuote } from "@/lib/api";
 
 const QUOTE_FEATURES = [
   { icon: ShieldCheck, title: "MISSION CRITICAL PROTECTION" },
   { icon: Zap, title: "HIGH-VELOCITY DELIVERY" },
   { icon: Layers, title: "STRUCTURAL ENGINEERING" }
 ];
-
-import { submitQuote } from "@/lib/api";
 
 export default function RequestQuotePage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -27,6 +26,7 @@ export default function RequestQuotePage() {
     productId: "60f1b2b3e4b0c5a1d4f1a2b3", // Fallback ID for generic product
     quantity: 5000,
     deliveryLocation: "",
+    requiredTimeline: "",
     customizationDetails: ""
   });
 
@@ -35,7 +35,21 @@ export default function RequestQuotePage() {
     setIsLoading(true);
     setError(null);
     try {
-      await submitQuote(formData);
+      await submitQuote({
+        productId: formData.productId,
+        quantity: formData.quantity,
+        customizationDetails: formData.customizationDetails,
+        deliveryLocation: formData.deliveryLocation,
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        notes: [
+          formData.company ? `Company: ${formData.company}` : null,
+          formData.requiredTimeline ? `Required Timeline: ${formData.requiredTimeline}` : null,
+        ]
+          .filter(Boolean)
+          .join("\n"),
+      });
       setIsSubmitted(true);
     } catch (err) {
       setError("FAILED TO SYNC INQUIRY. PLEASE TRY AGAIN LATER.");
@@ -113,7 +127,14 @@ export default function RequestQuotePage() {
                   </div>
                   <div className="space-y-4">
                     <label className="text-[10px] font-black text-muted-foreground tracking-widest uppercase">Required Timeline</label>
-                    <input type="text" required placeholder="Q2 2026" className="w-full bg-secondary/50 border-2 border-border/50 h-16 px-8 text-sm font-black tracking-widest focus:border-accent outline-none transition-all uppercase italic" />
+                    <input
+                      type="text"
+                      required
+                      value={formData.requiredTimeline}
+                      onChange={(e) => setFormData({ ...formData, requiredTimeline: e.target.value })}
+                      placeholder="Q2 2026"
+                      className="w-full bg-secondary/50 border-2 border-border/50 h-16 px-8 text-sm font-black tracking-widest focus:border-accent outline-none transition-all uppercase italic"
+                    />
                   </div>
 
                   <div className="space-y-4 md:col-span-2">

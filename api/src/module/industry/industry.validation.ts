@@ -9,9 +9,9 @@ export const createIndustrySchema = z.object({
     seo: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     isActive: z.boolean().default(true),
-  }),
+  }).strict(),
 });
 
 export const updateIndustrySchema = z.object({
@@ -23,9 +23,9 @@ export const updateIndustrySchema = z.object({
     seo: z.object({
       metaTitle: z.string().optional(),
       metaDescription: z.string().optional(),
-    }).optional(),
+    }).strict().optional(),
     isActive: z.boolean().optional(),
-  }),
+  }).strict(),
 });
 
 export const IndustryValidation = {

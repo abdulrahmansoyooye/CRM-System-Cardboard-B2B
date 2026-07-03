@@ -7,8 +7,9 @@ export const createJob_applicationSchema = z.object({
     email: z.string({ message: 'Email is required' }).email(),
     phone: z.string().optional(),
     resumeFile: z.string().optional(),
+    notes: z.string().optional(),
     status: z.enum(['new', 'reviewed', 'shortlisted', 'rejected']).default('new'),
-  }),
+  }).strict(),
 });
 
 export const updateJob_applicationSchema = z.object({
@@ -20,7 +21,7 @@ export const updateJob_applicationSchema = z.object({
     resumeFile: z.string().optional(),
     status: z.enum(['new', 'reviewed', 'shortlisted', 'rejected']).optional(),
     notes: z.string().optional(),
-  }),
+  }).strict(),
 });
 
 export const Job_applicationValidation = {

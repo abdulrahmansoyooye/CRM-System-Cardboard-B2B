@@ -8,6 +8,8 @@ export declare const ProductValidation: {
             fullDescription: z.ZodOptional<z.ZodString>;
             specifications: z.ZodOptional<z.ZodArray<z.ZodString>>;
             materialDetails: z.ZodOptional<z.ZodString>;
+            strengthDetails: z.ZodOptional<z.ZodString>;
+            availableSizes: z.ZodOptional<z.ZodArray<z.ZodString>>;
             moq: z.ZodDefault<z.ZodNumber>;
             deliveryTimeline: z.ZodOptional<z.ZodString>;
             isFeatured: z.ZodDefault<z.ZodBoolean>;
@@ -15,9 +17,9 @@ export declare const ProductValidation: {
             seo: z.ZodOptional<z.ZodObject<{
                 metaTitle: z.ZodOptional<z.ZodString>;
                 metaDescription: z.ZodOptional<z.ZodString>;
-            }, z.core.$strip>>;
+            }, z.core.$strict>>;
             isActive: z.ZodDefault<z.ZodBoolean>;
-        }, z.core.$strip>;
+        }, z.core.$strict>;
     }, z.core.$strip>;
     updateProductSchema: z.ZodObject<{
         body: z.ZodObject<{
@@ -27,6 +29,8 @@ export declare const ProductValidation: {
             fullDescription: z.ZodOptional<z.ZodString>;
             specifications: z.ZodOptional<z.ZodArray<z.ZodString>>;
             materialDetails: z.ZodOptional<z.ZodString>;
+            strengthDetails: z.ZodOptional<z.ZodString>;
+            availableSizes: z.ZodOptional<z.ZodArray<z.ZodString>>;
             moq: z.ZodOptional<z.ZodNumber>;
             deliveryTimeline: z.ZodOptional<z.ZodString>;
             isFeatured: z.ZodOptional<z.ZodBoolean>;
@@ -34,9 +38,9 @@ export declare const ProductValidation: {
             seo: z.ZodOptional<z.ZodObject<{
                 metaTitle: z.ZodOptional<z.ZodString>;
                 metaDescription: z.ZodOptional<z.ZodString>;
-            }, z.core.$strip>>;
+            }, z.core.$strict>>;
             isActive: z.ZodOptional<z.ZodBoolean>;
-        }, z.core.$strip>;
+        }, z.core.$strict>;
     }, z.core.$strip>;
 };
 //# sourceMappingURL=product.validation.d.ts.map

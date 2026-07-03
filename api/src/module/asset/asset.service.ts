@@ -1,9 +1,13 @@
 import { Asset } from './asset.model';
 import { AppError } from '../../core/errors/AppError';
+import { CreateAssetDTO } from '../../types/dtos';
 
 export const AssetService = {
-  createAsset: async (data: any) => {
-    return await Asset.create(data);
+  createAsset: async (data: CreateAssetDTO) => {
+    return await Asset.create({
+      ...data,
+      size: data.size !== undefined ? String(data.size) : undefined,
+    });
   },
 
   getAllAssets: async () => {

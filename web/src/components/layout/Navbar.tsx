@@ -152,7 +152,7 @@ export function Navbar({
           </Link>
 
           {/* Desktop Navigation - Advanced Dropdowns */}
-          <nav className="hidden xl:flex items-center gap-1">
+          <nav className="hidden xl:flex items-center gap-1" aria-label="Primary navigation">
             {DYNAMIC_NAV.map((link) => {
               const Icon = link.icon;
               return link.children && link.children.length > 0 ? (
@@ -163,6 +163,10 @@ export function Navbar({
                   onMouseLeave={() => setOpenDropdown(null)}
                 >
                   <button
+                    type="button"
+                    aria-expanded={openDropdown === link.label}
+                    aria-haspopup="true"
+                    aria-label={`Open ${link.label} menu`}
                     className={cn(
                       "flex items-center gap-2 px-4 py-3 text-[10px] font-black tracking-[0.2em] uppercase cursor-pointer transition-all relative group",
                       openDropdown === link.label ? "text-accent" : "text-primary/70 hover:text-primary"
@@ -286,11 +290,13 @@ export function Navbar({
       {/* Mobile Command Center - Refactored */}
       <AnimatePresence mode="wait">
         {isMobileMenuOpen && (
-          <motion.div 
+          <motion.div
+            id="mobile-navigation-menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[110] flex overflow-hidden"
+            aria-label="Mobile navigation"
           >
             {/* Backdrop Shard */}
             <motion.div 
