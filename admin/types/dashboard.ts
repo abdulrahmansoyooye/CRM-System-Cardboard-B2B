@@ -1,3 +1,5 @@
+import type { IJobApplication } from "@/types/index";
+
 export interface BaseEntity {
   _id: string;
   createdAt?: string;
@@ -91,20 +93,19 @@ export interface Testimonial extends BaseEntity {
 
 export interface Setting extends BaseEntity {
   key: string;
-  value: any;
+  value: unknown;
   description?: string;
 }
 
-export interface Application extends BaseEntity {
+export type ApplicationStatus = "New" | "Reviewed" | "Shortlisted" | "Rejected" | "Hired";
+
+export interface Application extends Omit<IJobApplication, "firstName" | "lastName" | "jobId" | "status"> {
   name: string;
-  email: string;
-  phone: string;
   jobId: {
     _id: string;
     title: string;
   };
-  notes?: string;
-  status: string;
+  status: ApplicationStatus;
 }
 
 export interface Quote extends BaseEntity {

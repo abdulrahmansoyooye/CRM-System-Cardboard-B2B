@@ -9,9 +9,10 @@ import { ApplicationDetailView } from "./components/ApplicationDetailView";
 import { useModal } from "@/lib/store/useModalStore";
 import { Search, Eye, Download, Users, Mail, Phone, Calendar, Clock, ShieldCheck, User, Trash2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Application } from "@/types/dashboard";
+import { Application, type ApplicationStatus } from "@/types/dashboard";
+import { IJobApplication } from "@/types/index";
 
-type AppStatus = "New" | "Reviewed" | "Shortlisted" | "Rejected" | "Hired";
+type AppStatus = ApplicationStatus;
 
 const statusStyles: Record<AppStatus, string> = {
   New: "badge-neutral",
@@ -29,15 +30,20 @@ export default function ApplicationsPage() {
 
   const apps = useMemo(() => {
     if (!Array.isArray(apiData?.data)) return [];
-    return apiData.data.map((a: Application) => ({
+    return apiData.data.map((a: IJobApplication) => ({
       ...a,
-      status: a.status.charAt(0).toUpperCase() + a.status.slice(1) as AppStatus,
-    })) as (Application & { status: AppStatus })[];
+      name: `${a.firstName} ${a.lastName}`.trim(),
+      jobId:
+        typeof a.jobId === "string"
+          ? { _id: a.jobId, title: "General Operations" }
+          : a.jobId,
+      status: normalizeStatus(a.status),
+    })) as Application[];
   }, [apiData]);
 
   // Mutations
   const updateMutation = useDashboardMutation(
-    ({ id, data }: { id: string; data: any }) => updateApplication(id, data),
+    ({ id, data }: { id: string; data: Partial<IJobApplication> & { status?: string } }) => updateApplication(id, data),
     "Application status updated",
     [["applications"]]
   );
@@ -161,6 +167,15 @@ export default function ApplicationsPage() {
       ),
     },
   ];
+
+  function normalizeStatus(status?: string): AppStatus {
+    if (!status) return "New";
+
+    const normalized = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+    return (["New", "Reviewed", "Shortlisted", "Rejected", "Hired"] as const).includes(normalized as AppStatus)
+      ? (normalized as AppStatus)
+      : "New";
+  }
 
   return (
     <div className="space-y-8 animate-enter">

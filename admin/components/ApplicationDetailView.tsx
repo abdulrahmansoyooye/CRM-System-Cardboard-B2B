@@ -3,12 +3,13 @@
 import React from "react";
 import { User, Mail, Phone,Trash2, Building, Calendar, CheckCircle2, FileText, Download, ShieldCheck, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { Application, ApplicationStatus } from "@/types/dashboard";
 
 interface ApplicationDetailViewProps {
-  application: any;
+  application: Application;
   onUpdateStatus: (status: string) => void;
   onDelete: () => void;
-  statusStyles: any;
+  statusStyles: Record<ApplicationStatus, string>;
 }
 
 const ALL_STATUSES = ["New", "Reviewed", "Shortlisted", "Rejected", "Hired"];
