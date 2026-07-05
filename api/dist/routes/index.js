@@ -15,10 +15,38 @@ const testimonial_route_1 = require("../module/testimonial/testimonial.route");
 const asset_route_1 = require("../module/asset/asset.route");
 const event_route_1 = require("../module/event/event.route");
 const router = (0, express_1.Router)();
+/*
+ * All module route files define their own full path prefixes.
+ * The mount path for most is '/' because each router internally
+ * registers both public paths (e.g., /products, /blogs, /contact)
+ * and admin paths (e.g., /admin/products, /admin/blogs).
+ *
+ * Auth is the exception, mounted at /auth for logical separation.
+ *
+ * ┌──────────────┬─────────────────────────────────────────────┐
+ * │ Module       │ Public paths                                │
+ * ├──────────────┼─────────────────────────────────────────────┤
+ * │ Product      │ /products, /products/:slug                  │
+ * │ Category     │ /categories, /categories/:slug              │
+ * │ Blog         │ /blogs, /blogs/:slug                        │
+ * │ Industry     │ /industries, /industries/:slug              │
+ * │ Job          │ /jobs, /jobs/:id                            │
+ * │ JobApp       │ /jobs/apply                                 │
+ * │ Inquiry      │ /contact                                    │
+ * │ Quote        │ /quote                                      │
+ * │ Setting      │ /settings                                   │
+ * │ Testimonial  │ /testimonials, /testimonials/:id            │
+ * │ Asset        │ /assets                                     │
+ * │ Event        │ /events, /events/:id                        │
+ * │ Auth (mount) │ /auth/login, /auth/logout, /auth/create     │
+ * └──────────────┴─────────────────────────────────────────────┘
+ *
+ * Admin paths follow the pattern /admin/{resource} and are
+ * protected by authMiddleware(['admin', 'super_admin']).
+ */
 const moduleRoutes = [
     { path: '/', route: product_route_1.ProductRoutes },
-    { path: '/auth', route: user_routes_1.UserRoutes },
-    { path: "/", route: category_route_1.CategoryRoutes },
+    { path: '/', route: category_route_1.CategoryRoutes },
     { path: '/', route: blog_route_1.BlogRoutes },
     { path: '/', route: industry_route_1.IndustryRoutes },
     { path: '/', route: job_route_1.JobRoutes },
@@ -29,6 +57,8 @@ const moduleRoutes = [
     { path: '/', route: testimonial_route_1.TestimonialRoutes },
     { path: '/', route: asset_route_1.AssetRoutes },
     { path: '/', route: event_route_1.EventRoutes },
+    { path: '/', route: user_routes_1.AdminUserRoutes },
+    { path: '/auth', route: user_routes_1.AuthRoutes },
 ];
 moduleRoutes.forEach((route) => router.use(route.path, route.route));
 exports.default = router;

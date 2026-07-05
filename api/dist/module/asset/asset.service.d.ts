@@ -1,12 +1,13 @@
 import { CreateAssetDTO } from '../../types/dtos';
 export declare const AssetService: {
-    createAsset: (data: CreateAssetDTO) => Promise<import("mongoose").Document<unknown, {}, {
+    createAsset: (data: CreateAssetDTO, file?: Express.Multer.File) => Promise<import("mongoose").Document<unknown, {}, {
         name: string;
         category: string;
         url: string;
         type?: string | null | undefined;
         size?: string | null | undefined;
         dimensions?: string | null | undefined;
+        mimeType?: string | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
         id: string;
     }, {
@@ -18,6 +19,7 @@ export declare const AssetService: {
         type?: string | null | undefined;
         size?: string | null | undefined;
         dimensions?: string | null | undefined;
+        mimeType?: string | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {
         _id: import("mongoose").Types.ObjectId;
     } & {
@@ -32,6 +34,7 @@ export declare const AssetService: {
         type?: string | null | undefined;
         size?: string | null | undefined;
         dimensions?: string | null | undefined;
+        mimeType?: string | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
         id: string;
     }, {
@@ -43,6 +46,7 @@ export declare const AssetService: {
         type?: string | null | undefined;
         size?: string | null | undefined;
         dimensions?: string | null | undefined;
+        mimeType?: string | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {
         _id: import("mongoose").Types.ObjectId;
     } & {
@@ -57,6 +61,7 @@ export declare const AssetService: {
         type?: string | null | undefined;
         size?: string | null | undefined;
         dimensions?: string | null | undefined;
+        mimeType?: string | null | undefined;
     } & import("mongoose").DefaultTimestampProps, {
         id: string;
     }, {
@@ -68,6 +73,7 @@ export declare const AssetService: {
         type?: string | null | undefined;
         size?: string | null | undefined;
         dimensions?: string | null | undefined;
+        mimeType?: string | null | undefined;
     } & import("mongoose").DefaultTimestampProps & {
         _id: import("mongoose").Types.ObjectId;
     } & {

@@ -8,6 +8,7 @@ export declare const assetSchema: Schema<any, import("mongoose").Model<any, any,
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
     name: string;
     category: string;
@@ -15,6 +16,7 @@ export declare const assetSchema: Schema<any, import("mongoose").Model<any, any,
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
     id: string;
 }, import("mongoose").MergeType<import("mongoose").DefaultSchemaOptions, {
@@ -26,6 +28,7 @@ export declare const assetSchema: Schema<any, import("mongoose").Model<any, any,
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
     _id: import("mongoose").Types.ObjectId;
 } & {
@@ -39,6 +42,7 @@ export declare const assetSchema: Schema<any, import("mongoose").Model<any, any,
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
     createdAt: NativeDate;
     updatedAt: NativeDate;
 } & {
@@ -53,6 +57,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {}, {}, {
     id: string;
 }, import("mongoose").Document<unknown, {}, {
@@ -62,6 +67,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
     id: string;
 }, {
@@ -73,6 +79,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
     _id: import("mongoose").Types.ObjectId;
 } & {
@@ -88,6 +95,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
     name: string;
     category: string;
@@ -95,6 +103,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
     id: string;
 }, import("mongoose").MergeType<import("mongoose").DefaultSchemaOptions, {
@@ -106,6 +115,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
     _id: import("mongoose").Types.ObjectId;
 } & {
@@ -119,6 +129,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
     createdAt: NativeDate;
     updatedAt: NativeDate;
 } & {
@@ -132,6 +143,7 @@ export declare const Asset: import("mongoose").Model<{
     type?: string | null | undefined;
     size?: string | null | undefined;
     dimensions?: string | null | undefined;
+    mimeType?: string | null | undefined;
     createdAt: NativeDate;
     updatedAt: NativeDate;
 } & {

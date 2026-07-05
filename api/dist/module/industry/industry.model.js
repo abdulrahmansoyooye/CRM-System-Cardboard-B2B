@@ -11,5 +11,6 @@ exports.industrySchema = new mongoose_1.Schema({
     seo: { type: Object },
     isActive: { type: Boolean, default: true }
 }, { timestamps: true });
+exports.industrySchema.index({ isActive: 1, name: 1 });
 exports.Industry = (0, mongoose_1.model)('Industry', exports.industrySchema);
 //# sourceMappingURL=industry.model.js.map

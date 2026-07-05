@@ -14,5 +14,6 @@ exports.quoteSchema = new mongoose_1.Schema({
     notes: { type: String }
 }, { timestamps: true });
 exports.quoteSchema.index({ status: 1 });
+exports.quoteSchema.index({ productId: 1 });
 exports.Quote = (0, mongoose_1.model)('Quote', exports.quoteSchema);
 //# sourceMappingURL=quote.model.js.map

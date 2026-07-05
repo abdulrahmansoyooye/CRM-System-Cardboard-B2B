@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ProductRoutes } from '../module/product/product.route';
-import { AuthRoutes } from '../module/auth/user.routes';
+import { AuthRoutes, AdminUserRoutes } from '../module/auth/user.routes';
 import { CategoryRoutes } from '../module/category/category.route';
 import { BlogRoutes } from '../module/blog/blog.route';
 import { IndustryRoutes } from '../module/industry/industry.route';
@@ -57,6 +57,7 @@ const moduleRoutes = [
   { path: '/', route: TestimonialRoutes },
   { path: '/', route: AssetRoutes },
   { path: '/', route: EventRoutes },
+  { path: '/', route: AdminUserRoutes },
   { path: '/auth', route: AuthRoutes },
 ];
 

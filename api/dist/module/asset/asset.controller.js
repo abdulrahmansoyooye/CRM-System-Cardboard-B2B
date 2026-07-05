@@ -8,7 +8,9 @@ const sendResponse_1 = __importDefault(require("../../core/response/sendResponse
 const asyncHandler_1 = __importDefault(require("../../utils/asyncHandler"));
 const asset_service_1 = require("./asset.service");
 exports.create = (0, asyncHandler_1.default)(async (req, res, next) => {
-    const doc = await asset_service_1.AssetService.createAsset(req.body);
+    const file = req.file;
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const doc = await asset_service_1.AssetService.createAsset(body, file);
     (0, sendResponse_1.default)(res, {
         statusCode: 201,
         success: true,
@@ -34,9 +36,5 @@ exports.deleteDoc = (0, asyncHandler_1.default)(async (req, res, next) => {
         data: doc
     });
 });
-exports.AssetController = {
-    create: exports.create,
-    getAll: exports.getAll,
-    deleteDoc: exports.deleteDoc
-};
+exports.AssetController = { create: exports.create, getAll: exports.getAll, deleteDoc: exports.deleteDoc };
 //# sourceMappingURL=asset.controller.js.map

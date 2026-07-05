@@ -17,3 +17,13 @@ router.put("/:id/update", authMiddleware(["super_admin", "admin"]), UserControll
 router.patch("/:id/deactivate", authMiddleware(["super_admin", "admin"]), UserController.deactivate)
 
 export const AuthRoutes = router
+
+// Admin-friendly routes matching /admin/users pattern used by other modules.
+// The admin frontend calls these endpoints instead of /auth/*.
+const adminRouter = Router()
+adminRouter.get("/admin/users", authMiddleware(["super_admin", "admin"]), UserController.getAll)
+adminRouter.post("/admin/users", authMiddleware(["super_admin", "admin"]), validateRequest(createUserSchema), UserController.create)
+adminRouter.put("/admin/users/:id", authMiddleware(["super_admin", "admin"]), UserController.update)
+adminRouter.delete("/admin/users/:id", authMiddleware(["super_admin", "admin"]), UserController.deactivate)
+
+export const AdminUserRoutes = adminRouter

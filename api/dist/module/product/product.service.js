@@ -17,6 +17,11 @@ const getAllProducts = async (query) => {
     const queryObj = { ...query };
     const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
     excludeFields.forEach((el) => delete queryObj[el]);
+    // Strip MongoDB operators to prevent injection attacks
+    Object.keys(queryObj).forEach((key) => {
+        if (key.startsWith('$'))
+            delete queryObj[key];
+    });
     // SEARCHING
     let searchTerm = '';
     if (query?.searchTerm) {

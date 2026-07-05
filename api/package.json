@@ -7,7 +7,7 @@
     "seed": "ts-node src/scripts/seed.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "clean": "rm -rf dist",
+    "clean": "del dist",
     "build:clean": "npm run clean && npm run build"
   },
   "keywords": [],

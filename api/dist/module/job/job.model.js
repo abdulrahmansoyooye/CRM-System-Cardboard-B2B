@@ -13,5 +13,6 @@ exports.jobSchema = new mongoose_1.Schema({
     status: { type: String, enum: ['open', 'closed'], default: 'open' }
 }, { timestamps: true });
 exports.jobSchema.index({ status: 1 });
+exports.jobSchema.index({ department: 1, location: 1, type: 1 });
 exports.Job = (0, mongoose_1.model)('Job', exports.jobSchema);
 //# sourceMappingURL=job.model.js.map

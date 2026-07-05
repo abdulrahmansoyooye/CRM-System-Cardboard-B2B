@@ -12,6 +12,11 @@ export declare const createUser: (data: CreateUserDTO) => Promise<{
 export declare const loginUser: (payload: LoginPayloadDTO) => Promise<{
     user: Record<string, unknown>;
     token: string;
+    refreshToken: string;
+}>;
+export declare const refreshToken: (refreshTokenStr: string) => Promise<{
+    accessToken: string;
+    refreshToken: string;
 }>;
 export declare const getUsers: () => Promise<(import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
     _id: import("mongoose").Types.ObjectId;
@@ -41,7 +46,7 @@ export declare const deactivateUser: (id: string) => Promise<import("mongoose").
 } & {
     id: string;
 }>;
-export declare const logoutUser: () => Promise<{
+export declare const logoutUser: (token?: string) => Promise<{
     success: boolean;
 }>;
 export declare const UserService: {
@@ -58,6 +63,11 @@ export declare const UserService: {
     loginUser: (payload: LoginPayloadDTO) => Promise<{
         user: Record<string, unknown>;
         token: string;
+        refreshToken: string;
+    }>;
+    refreshToken: (refreshTokenStr: string) => Promise<{
+        accessToken: string;
+        refreshToken: string;
     }>;
     getUsers: () => Promise<(import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
         _id: import("mongoose").Types.ObjectId;
@@ -87,7 +97,7 @@ export declare const UserService: {
     } & {
         id: string;
     }>;
-    logoutUser: () => Promise<{
+    logoutUser: (token?: string) => Promise<{
         success: boolean;
     }>;
 };

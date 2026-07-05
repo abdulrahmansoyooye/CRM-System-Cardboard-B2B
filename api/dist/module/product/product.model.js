@@ -30,7 +30,8 @@ const productSchema = new mongoose_1.Schema({
     timestamps: true,
     versionKey: false,
 });
-// Add search index
+// Indexes
 productSchema.index({ name: 'text', shortDescription: 'text' });
+productSchema.index({ createdAt: -1 });
 exports.Product = (0, mongoose_1.model)('Product', productSchema);
 //# sourceMappingURL=product.model.js.map

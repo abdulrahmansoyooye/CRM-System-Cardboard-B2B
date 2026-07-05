@@ -1,1 +1,1 @@
-{"version":3,"file":"user.routes.d.ts","sourceRoot":"","sources":["../../../src/module/auth/user.routes.ts"],"names":[],"mappings":"AAeA,eAAO,MAAM,UAAU,4CAAS,CAAA"}
+{"version":3,"file":"user.routes.d.ts","sourceRoot":"","sources":["../../../src/module/auth/user.routes.ts"],"names":[],"mappings":"AAkBA,eAAO,MAAM,UAAU,4CAAS,CAAA;AAUhC,eAAO,MAAM,eAAe,4CAAc,CAAA"}

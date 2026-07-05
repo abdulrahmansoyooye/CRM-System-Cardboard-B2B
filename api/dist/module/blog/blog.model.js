@@ -15,5 +15,6 @@ exports.blogSchema = new mongoose_1.Schema({
     publishedAt: { type: Date }
 }, { timestamps: true });
 exports.blogSchema.index({ status: 1, publishedAt: 1 });
+exports.blogSchema.index({ createdAt: -1 });
 exports.Blog = (0, mongoose_1.model)('Blog', exports.blogSchema);
 //# sourceMappingURL=blog.model.js.map
