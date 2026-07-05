@@ -19,7 +19,7 @@ export default function ProductsPage() {
   const { data: apiData, isLoading } = useDashboardQuery(["products"], getProducts);
   const { data: catData } = useDashboardQuery(["categories"], getCategories);
 
-  const products = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
+  const products = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Product[], [apiData]);
   const categories = useMemo(() => (Array.isArray(catData?.data) ? catData.data : []), [catData]);
 
   // Mutations

@@ -50,7 +50,7 @@ export function ProductForm({ initialData, categories, onSubmit, isSubmitting }:
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: initialData?.name || "",
-      categoryId: typeof initialData?.categoryId === 'object' && initialData?.categoryId ? (initialData.categoryId as { _id: string })._id : initialData?.categoryId || "",
+      categoryId: (typeof initialData?.categoryId === 'object' && initialData?.categoryId ? (initialData.categoryId as { _id: string })._id : initialData?.categoryId || "") as string,
       moq: initialData?.moq || 1,
       deliveryTimeline: initialData?.deliveryTimeline || "",
       isFeatured: initialData?.isFeatured || false,

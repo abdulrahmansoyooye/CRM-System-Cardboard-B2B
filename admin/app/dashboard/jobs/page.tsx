@@ -17,7 +17,7 @@ export default function JobsPage() {
   // Queries
   const { data: apiData, isLoading } = useDashboardQuery(["jobs"], getJobs);
 
-  const jobs = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
+  const jobs = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Job[], [apiData]);
 
   // Mutations
   const createMutation = useDashboardMutation(

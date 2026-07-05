@@ -57,7 +57,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               accessToken: data.token,
             };
           }
-          throw new Error(data.message || "Invalid credentials");
+          throw new Error(!data.success ? (data.message || "Invalid credentials") : "Invalid credentials");
         } catch (error: unknown) {
           if (error instanceof CredentialsSignin) throw error;
           const message = error instanceof Error ? error.message : "Unknown error";

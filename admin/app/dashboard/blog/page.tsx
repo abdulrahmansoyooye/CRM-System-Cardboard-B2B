@@ -17,7 +17,7 @@ export default function BlogPage() {
   // Queries
   const { data: apiData, isLoading } = useDashboardQuery(["blogs"], getBlogs);
 
-  const blogs = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Blog[], [apiData]);
+  const blogs = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Blog[], [apiData]);
 
   // Mutations
   const createMutation = useDashboardMutation<any>(

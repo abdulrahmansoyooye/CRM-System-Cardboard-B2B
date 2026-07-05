@@ -17,7 +17,7 @@ export default function EventsPage() {
   // Queries
   const { data: apiData, isLoading } = useDashboardQuery(["events"], getEvents);
 
-  const events = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Event[], [apiData]);
+  const events = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Event[], [apiData]);
 
   // Mutations
   const createMutation = useDashboardMutation<any>(

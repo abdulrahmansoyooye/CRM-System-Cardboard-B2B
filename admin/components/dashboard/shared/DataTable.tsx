@@ -69,10 +69,10 @@ export function DataTable<T>({
 
     if (sortField) {
       result.sort((a, b) => {
-        const aValue = getNestedValue(a, sortField);
-        const bValue = getNestedValue(b, sortField);
+        const aValue = getNestedValue(a as unknown as Record<string, unknown>, sortField);
+        const bValue = getNestedValue(b as unknown as Record<string, unknown>, sortField);
 
-        if (aValue === undefined || bValue === undefined) return 0;
+        if (typeof aValue !== "number" || typeof bValue !== "number") return 0;
         if (aValue < bValue) return sortOrder === "asc" ? -1 : 1;
         if (aValue > bValue) return sortOrder === "asc" ? 1 : -1;
         return 0;
@@ -149,7 +149,7 @@ export function DataTable<T>({
                   <tr key={idx} className="hover:bg-slate-50/50 transition-colors group">
                     {columns.map((col, jdx) => (
                       <td key={jdx} className={cn("px-7 py-5", col.className)}>
-                        {col.cell ? col.cell(item) : (item as Record<string, unknown>)[col.accessorKey as string]}
+                        {col.cell ? col.cell(item) : String((item as Record<string, unknown>)[col.accessorKey as string] ?? "")}
                       </td>
                     ))}
                   </tr>

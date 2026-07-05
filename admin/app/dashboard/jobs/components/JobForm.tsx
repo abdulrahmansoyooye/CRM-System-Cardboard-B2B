@@ -40,10 +40,10 @@ export function JobForm({ initialData, onSubmit, isSubmitting }: JobFormProps) {
       title: initialData?.title || "",
       department: initialData?.department || "Operations",
       location: initialData?.location || "Sector 4 Plant",
-      type: initialData?.type || "Full-Time",
+      type: (initialData?.type || "Full-Time") as "Full-Time" | "Part-Time" | "Shift Basis" | "Contract",
       salary: initialData?.salary || "",
       description: initialData?.description || "",
-      status: initialData?.status || "open",
+      status: (initialData?.status || "open") as "open" | "closed",
       experience: initialData?.experience || "",
     },
   });

@@ -25,7 +25,7 @@ export default function InquiriesPage() {
   // Queries
   const { data: apiData, isLoading } = useDashboardQuery(["inquiries"], getInquiries);
 
-  const inquiries = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Inquiry[], [apiData]);
+  const inquiries = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Inquiry[], [apiData]);
 
   // Mutations
   const createMutation = useDashboardMutation(

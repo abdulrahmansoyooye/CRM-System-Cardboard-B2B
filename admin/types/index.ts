@@ -12,14 +12,20 @@
 export interface IProduct {
   _id: string;
   name: string;
-  slug: string;
+  slug?: string;
   shortDescription?: string;
   fullDescription?: string;
+  materialDetails?: string;
+  strengthDetails?: string;
+  availableSizes?: string[];
+  moq?: number;
+  deliveryTimeline?: string;
   ply?: string;
-  categoryId?: { _id: string; name: string };
+  categoryId?: { _id: string; name: string } | string;
   images?: string[];
   specifications?: string[];
   sizes?: string[];
+  seo?: { metaTitle?: string; metaDescription?: string };
   isActive?: boolean;
   isFeatured?: boolean;
   createdAt?: string;
@@ -110,6 +116,9 @@ export interface IJob {
   type?: string;
   description?: string;
   requirements?: string[];
+  salary?: string;
+  status?: string;
+  experience?: string;
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -173,13 +182,11 @@ export interface IQuote {
 
 export interface ITestimonial {
   _id: string;
-  name: string;
+  clientName: string;
   company?: string;
-  role?: string;
-  message: string;
+  feedback: string;
   rating?: number;
-  image?: string;
-  isActive?: boolean;
+  isPublished?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

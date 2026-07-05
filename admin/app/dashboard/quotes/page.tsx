@@ -10,6 +10,7 @@ import { useModal } from "@/lib/store/useModalStore";
 import { FileText, Eye, Trash2, Package, Clock, Truck, CheckCircle, XCircle, BarChart3, TrendingUp, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Quote } from "@/types/dashboard";
+import type { IQuote } from "@/types/index";
 
 export default function QuoteRequestsPage() {
   const { openModal, closeModal } = useModal();
@@ -19,14 +20,14 @@ export default function QuoteRequestsPage() {
   const { data: apiData, isLoading } = useDashboardQuery(["quotes"], () => quoteService.getAll());
 
   const quotes = useMemo(() => {
-    const raw = (Array.isArray(apiData?.data) ? apiData.data : []) as Quote[];
+    const raw = (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Quote[];
     if (filterStatus === "all") return raw;
     return raw.filter((q: any) => q.status === filterStatus);
   }, [apiData, filterStatus]);
 
   // Mutations
   const updateMutation = useDashboardMutation(
-    ({ id, status }: { id: string; status: string }) => quoteService.updateStatus(id, status),
+    ({ id, status }: { id: string; status: string }) => quoteService.updateStatus(id, status as NonNullable<IQuote["status"]>),
     "Quote status recalibrated",
     [["quotes"]]
   );

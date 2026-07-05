@@ -17,7 +17,7 @@ export default function IndustriesPage() {
   // Queries
   const { data: apiData, isLoading } = useDashboardQuery(["industries"], getIndustries);
 
-  const industries = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []), [apiData]);
+  const industries = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Industry[], [apiData]);
 
   // Mutations
   const createMutation = useDashboardMutation(
