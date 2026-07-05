@@ -105,6 +105,7 @@ export interface Application extends Omit<IJobApplication, "firstName" | "lastNa
     _id: string;
     title: string;
   };
+  notes?: string;
   status: ApplicationStatus;
 }
 

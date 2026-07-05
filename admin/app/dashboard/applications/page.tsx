@@ -7,6 +7,7 @@ import { DataTable } from "@/components/dashboard/shared/DataTable";
 import { ConfirmDialog } from "@/components/dashboard/shared/ConfirmDialog";
 import { ApplicationDetailView } from "./components/ApplicationDetailView";
 import { useModal } from "@/lib/store/useModalStore";
+import type { Column } from "@/components/dashboard/shared/DataTable";
 import { Search, Eye, Download, Users, Mail, Phone, Calendar, Clock, ShieldCheck, User, Trash2, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Application, type ApplicationStatus } from "@/types/dashboard";
@@ -43,7 +44,7 @@ export default function ApplicationsPage() {
 
   // Mutations
   const updateMutation = useDashboardMutation(
-    ({ id, data }: { id: string; data: Partial<IJobApplication> & { status?: string } }) => updateApplication(id, data),
+    ({ id, data }: { id: string; data: Omit<Partial<IJobApplication>, "status"> & { status?: string } }) => updateApplication(id, data),
     "Application status updated",
     [["applications"]]
   );
@@ -101,11 +102,11 @@ export default function ApplicationsPage() {
     });
   };
 
-  const columns = [
+  const columns: Column<Application>[] = [
     {
       header: "Candidate Signal",
       accessorKey: "name",
-      cell: (app: any) => (
+      cell: (app: Application) => (
         <div className="flex items-center gap-4 py-1">
           <div className="w-11 h-11 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-slate-400 font-black text-sm group-hover:bg-slate-900 group-hover:text-white transition-all shadow-sm">
             {app.name[0]}
@@ -120,11 +121,11 @@ export default function ApplicationsPage() {
     {
       header: "Target Sector",
       accessorKey: "jobId.title",
-      cell: (app: any) => (
+      cell: (app: Application) => (
         <div className="space-y-1">
           <span className="text-xs font-bold text-slate-700 block uppercase tracking-tight">{app.jobId?.title || "Ops Intelligence"}</span>
           <span className="text-[10px] text-slate-300 font-bold uppercase tracking-widest flex items-center gap-1">
-              <Clock className="w-3 h-3" /> {new Date(app.createdAt).toLocaleDateString()}
+              <Clock className="w-3 h-3" /> {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : "Unknown"}
           </span>
         </div>
       ),
@@ -132,7 +133,7 @@ export default function ApplicationsPage() {
     {
       header: "Transmission",
       accessorKey: "phone",
-      cell: (app: any) => (
+      cell: (app: Application) => (
         <span className="text-[11px] font-mono font-bold text-slate-500 uppercase tracking-tighter">
             {app.phone || "No signal"}
         </span>
@@ -141,7 +142,7 @@ export default function ApplicationsPage() {
     {
       header: "Pipeline Status",
       accessorKey: "status",
-      cell: (app: any) => (
+      cell: (app: Application) => (
         <span className={cn("status-badge text-[10px] font-black uppercase tracking-widest", statusStyles[app.status as AppStatus])}>
           {app.status === 'Hired' ? <ShieldCheck className="w-3.5 h-3.5" /> : <Users className="w-3.5 h-3.5" />}
           {app.status}
@@ -152,7 +153,7 @@ export default function ApplicationsPage() {
       header: "Actions",
       accessorKey: "actions",
       className: "text-right",
-      cell: (app: any) => (
+      cell: (app: Application) => (
         <div className="flex items-center justify-end gap-1">
           <button onClick={() => openDetailModal(app)} className="p-2.5 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-slate-900 transition-all">
             <Eye className="w-4 h-4" />

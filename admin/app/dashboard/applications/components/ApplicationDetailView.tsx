@@ -51,7 +51,9 @@ export function ApplicationDetailView({ application, onUpdateStatus, onDelete, s
                   </div>
                   <div>
                     <p className="text-[9px] font-black uppercase tracking-widest text-slate-400 mb-0.5">Transmission Date</p>
-                    <p className="text-sm font-bold text-slate-900">{new Date(application.createdAt).toLocaleDateString()}</p>
+                    <p className="text-sm font-bold text-slate-900">
+                      {application.createdAt ? new Date(application.createdAt).toLocaleDateString() : "Unknown"}
+                    </p>
                   </div>
                </div>
             </div>

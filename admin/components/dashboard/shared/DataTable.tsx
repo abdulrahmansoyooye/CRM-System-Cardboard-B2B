@@ -5,7 +5,7 @@ import { Search, ArrowUpDown, ChevronLeft, ChevronRight, PackageOpen } from "luc
 import { cn } from "@/lib/utils";
 import Skeleton from "@/components/Skeleton";
 
-interface Column<T> {
+export interface Column<T> {
   header: string;
   accessorKey: keyof T | string;
   cell?: (item: T) => React.ReactNode;
@@ -51,8 +51,13 @@ export function DataTable<T>({
   const filteredData = React.useMemo(() => {
     let result = [...data];
 
-    const getNestedValue = (obj: any, path: string) => {
-      return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    const getNestedValue = (obj: Record<string, unknown>, path: string): unknown => {
+      return path.split('.').reduce<unknown>((acc, part) => {
+        if (acc && typeof acc === "object" && part in acc) {
+          return (acc as Record<string, unknown>)[part];
+        }
+        return undefined;
+      }, obj);
     };
 
     if (search && searchKey) {
@@ -144,7 +149,7 @@ export function DataTable<T>({
                   <tr key={idx} className="hover:bg-slate-50/50 transition-colors group">
                     {columns.map((col, jdx) => (
                       <td key={jdx} className={cn("px-7 py-5", col.className)}>
-                        {col.cell ? col.cell(item) : (item as any)[col.accessorKey]}
+                        {col.cell ? col.cell(item) : (item as Record<string, unknown>)[col.accessorKey as string]}
                       </td>
                     ))}
                   </tr>

@@ -7,7 +7,7 @@ export const getApplications = async (): Promise<ApiResponse<IJobApplication[]>>
 
 export const updateApplication = async (
   id: string,
-  data: Partial<IJobApplication> & { status?: string }
+  data: Omit<Partial<IJobApplication>, "status"> & { status?: string }
 ): Promise<ApiResponse<IJobApplication>> => {
   return api<ApiResponse<IJobApplication>>(`/admin/applications/${id}`, {
     method: "PUT",
