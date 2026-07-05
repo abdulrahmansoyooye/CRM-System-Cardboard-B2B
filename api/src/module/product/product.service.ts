@@ -20,6 +20,11 @@ const getAllProducts = async (query: Record<string, unknown>) => {
 
   excludeFields.forEach((el) => delete queryObj[el]);
 
+  // Strip MongoDB operators to prevent injection attacks
+  Object.keys(queryObj).forEach((key) => {
+    if (key.startsWith('$')) delete queryObj[key];
+  });
+
   // SEARCHING
   let searchTerm = '';
   if (query?.searchTerm) {

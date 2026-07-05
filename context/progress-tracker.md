@@ -16,14 +16,14 @@
 
 ## Current Phase
 
-**Production Refactor & Hardening**
+**Production Audit Remediation**
 
 Current objective:
 
-* Transform the existing application into a production-ready system.
-* Preserve existing business functionality.
-* Improve architecture, maintainability, security, accessibility, scalability, performance, and code quality.
-* Eliminate technical debt without introducing regressions.
+* Execute the prioritized remediation plan from the production readiness audit.
+* Start with Critical security issues, then High, then Medium.
+* Preserve existing business functionality at every step.
+* Verify all three builds after every phase.
 
 ---
 
@@ -31,21 +31,7 @@ Current objective:
 
 Current implementation target:
 
-> Architecture & Route Cleanup
-
-The immediate goal should always represent the active feature, module, or subsystem currently being worked on.
-
-Examples:
-
-* Product Module Refactor
-* Authentication Improvements
-* SEO Optimization
-* Performance Optimization
-* Admin Dashboard Cleanup
-* API Validation
-* Accessibility Improvements
-
-Only one primary goal should be active at any time.
+> Phase 7.1: Critical Security Hardening (MongoDB injection, err leak, Asset/Auth validation)
 
 ---
 
@@ -60,13 +46,14 @@ Only one primary goal should be active at any time.
 | Admin Dashboard          | Existing    |
 | Backend APIs             | Existing    |
 | Database Models          | Existing    |
-| Production Refactor      | Complete   |
-| Performance Optimization | Pending     |
-| Accessibility Review     | Pending     |
-| SEO Audit                | Pending     |
-| Security Hardening       | Complete    |
-| Testing & Verification   | Pending     |
-| Deployment Readiness     | Pending     |
+| Production Refactor         | Complete   |
+| Performance Optimization    | Pending     |
+| Accessibility Review        | Pending     |
+| SEO Audit                   | Pending     |
+| Security Hardening          | Complete    |
+| Production Audit Remediation | In Progress |
+| Testing & Verification      | Pending     |
+| Deployment Readiness        | Pending     |
 
 ---
 
@@ -453,10 +440,47 @@ Validation:
 
 # Next Up
 
-Ordered implementation queue.
+Ordered implementation queue — Production Audit Remediation.
 
-1. Production Testing
-2. Deployment Preparation
+## Phase 7.1: Critical Security Hardening (LOW RISK)
+- C3: Prevent MongoDB operator injection (product.service.ts)
+- C2: Remove raw `err` object from error middleware response
+- C5: Add Zod validation to Asset POST route
+- C4: Add Zod validation to auth login/refresh-token routes
+
+## Phase 7.2: Admin Route Alignment
+- C1: Fix admin user management routes (frontend calls `/admin/users`, API has `/auth/*`)
+
+## Phase 7.3: Output Security
+- C8: Replace `dangerouslySetInnerHTML` blog rendering with DOMPurify
+- C7: Remove abandoned `xss-clean` package
+
+## Phase 7.4: CSRF Protection
+- C6: Install and configure `csrf-csrf` middleware
+
+## Phase 7.5: Cache & Performance
+- P7: Add pagination to all list endpoints
+- P12: Set `gcTime` higher than `staleTime` in TanStack Query
+- P38: Add compression middleware
+- P39: Add fetch timeout to admin API client
+
+## Phase 7.6: Accessibility
+- A1: Add `htmlFor`/`id` to all form inputs
+- A2: Focus trapping on mobile menu
+- A3: Focus trapping on admin modals
+- A4: `prefers-reduced-motion` support
+- A5: Fix hardcoded dark color and contrast
+
+## Phase 7.7: SEO
+- SE1: Add metadata to client-component pages
+- SE2: Dynamic canonical URLs
+- SE3: Fix heading hierarchy
+
+## Phase 7.8: Code Quality & Technical Debt
+- Any types remediation
+- Dead code removal
+- Silent `.catch(() => [])` replacement
+- Component consolidation
 
 Always keep this list prioritized.
 
