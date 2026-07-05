@@ -4,7 +4,10 @@ import asyncHandler from '../../utils/asyncHandler';
 import { AssetService } from './asset.service';
 
 export const create = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const doc = await AssetService.createAsset(req.body);
+  const file = req.file;
+  const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+
+  const doc = await AssetService.createAsset(body, file);
   sendResponse(res, {
     statusCode: 201,
     success: true,
@@ -33,8 +36,4 @@ export const deleteDoc = asyncHandler(async (req: Request, res: Response, next: 
   });
 });
 
-export const AssetController = {
-  create,
-  getAll,
-  deleteDoc
-};
+export const AssetController = { create, getAll, deleteDoc };

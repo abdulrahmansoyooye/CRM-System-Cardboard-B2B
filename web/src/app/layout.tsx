@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { getSettings, getCategories, getIndustries } from "@/lib/api";
 import { TSettings, TCategory, TIndustry } from "@/types";
+import { organizationJsonLd, localBusinessJsonLd } from "@/lib/json-ld";
 
 const inter = Inter({
   variable: "--font-sans",
@@ -26,6 +27,7 @@ export async function generateMetadata(): Promise<Metadata> {
     const tagline = config?.tagline || "Industrial Packaging";
     const title = `${companyName} | ${tagline}`;
     const description = config?.defaultSEO?.metaDesc || "Enterprise-grade manufacturing of heavy duty corrugated boxes.";
+    const ogImage = config?.defaultSEO?.ogImage;
 
     return {
       metadataBase: new URL(siteUrl),
@@ -41,11 +43,13 @@ export async function generateMetadata(): Promise<Metadata> {
         siteName: companyName,
         locale: "en_US",
         type: "website",
+        ...(ogImage && { images: [{ url: ogImage, width: 1200, height: 630 }] }),
       },
       twitter: {
         card: "summary_large_image",
         title,
         description,
+        ...(ogImage && { images: [ogImage] }),
       },
       robots: {
         index: true,
@@ -90,11 +94,28 @@ export default async function RootLayout({
     // Fallback handled by settingsData being undefined
   }
 
+  const companyName = settingsData?.companyName || "CARDBOX";
+  const tagline = settingsData?.tagline || "Industrial Packaging";
+  const logo = settingsData?.logo;
+  const address = settingsData?.address;
+  const phone = settingsData?.contactPhone;
+
+  const organizationSchema = organizationJsonLd(companyName, tagline, logo);
+  const localBusinessSchema = localBusinessJsonLd(companyName, tagline, address, phone, logo);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${robotoMono.variable} antialiased min-h-screen flex flex-col font-sans relative`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-md focus:bg-accent focus:px-4 focus:py-2 focus:text-white"

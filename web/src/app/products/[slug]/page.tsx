@@ -11,7 +11,8 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Metadata } from 'next';
-import { getProductBySlug, getProducts } from "@/lib/api";
+import { getProductBySlug, getProducts, getSettings } from "@/lib/api";
+import { productJsonLd, breadcrumbJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 60;
 
@@ -28,9 +29,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const { slug } = await params;
     const product = await getProductBySlug(slug);
+    const settings = await getSettings().catch(() => []);
+    const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = product.images?.[0] || config?.defaultSEO?.ogImage;
     return {
       title: `${product.name} | CARDBOX Industrial`,
-      description: product.shortDescription || product.fullDescription,
+      description: product.shortDescription || product.fullDescription || "Industrial packaging solution",
+      openGraph: {
+        title: `${product.name} | CARDBOX`,
+        description: product.shortDescription || "Industrial packaging solution",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 1200 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${product.name} | CARDBOX`,
+        description: product.shortDescription || "Industrial packaging solution",
+        images: ogImage ? [ogImage] : [],
+      },
     };
   } catch {
     return {
@@ -61,8 +76,22 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const name = product.name;
   const image = product.images?.[0] || getPlaceholderImage('box');
 
+  const productSchema = productJsonLd(name, slug, product.shortDescription, product.images?.[0], product.categoryId?.name);
+  const breadcrumbSchema = breadcrumbJsonLd([
+    { name: "Products", url: "/products" },
+    { name, url: `/products/${slug}` },
+  ]);
+
   return (
     <div className="bg-background">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <div className="bg-primary/5 border-b border-border text-sm font-medium py-3">
         <div className="container mx-auto px-4 lg:px-8 flex items-center gap-2 text-muted-foreground">
           <Link

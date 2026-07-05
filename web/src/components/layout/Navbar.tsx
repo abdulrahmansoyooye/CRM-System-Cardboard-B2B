@@ -53,6 +53,44 @@ export function Navbar({
     }
   }, [isMobileMenuOpen]);
 
+  const [focusedDropdownIndex, setFocusedDropdownIndex] = useState<Record<string, number>>({});
+
+  const handleDropdownKeyDown = (e: React.KeyboardEvent, linkLabel: string, childrenCount: number) => {
+    const isOpen = openDropdown === linkLabel;
+    switch (e.key) {
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        setOpenDropdown(isOpen ? null : linkLabel);
+        if (!isOpen) setFocusedDropdownIndex(prev => ({ ...prev, [linkLabel]: -1 }));
+        break;
+      case "Escape":
+        e.preventDefault();
+        setOpenDropdown(null);
+        break;
+      case "ArrowDown":
+        if (isOpen) {
+          e.preventDefault();
+          setFocusedDropdownIndex(prev => ({
+            ...prev,
+            [linkLabel]: Math.min((prev[linkLabel] ?? -1) + 1, childrenCount - 1),
+          }));
+        }
+        break;
+      case "ArrowUp":
+        if (isOpen) {
+          e.preventDefault();
+          setFocusedDropdownIndex(prev => ({
+            ...prev,
+            [linkLabel]: Math.max((prev[linkLabel] ?? 0) - 1, -1),
+          }));
+        }
+        break;
+    }
+  };
+
+  const closeDropdown = () => setOpenDropdown(null);
+
   const DYNAMIC_NAV: NavItem[] = [
     {
       label: "Products",
@@ -152,7 +190,7 @@ export function Navbar({
           </Link>
 
           {/* Desktop Navigation - Advanced Dropdowns */}
-          <nav className="hidden xl:flex items-center gap-1" aria-label="Primary navigation">
+          <nav className="hidden xl:flex items-center gap-1" aria-label="Primary navigation" role="navigation">
             {DYNAMIC_NAV.map((link) => {
               const Icon = link.icon;
               return link.children && link.children.length > 0 ? (
@@ -160,13 +198,21 @@ export function Navbar({
                   key={link.label}
                   className="relative"
                   onMouseEnter={() => setOpenDropdown(link.label)}
-                  onMouseLeave={() => setOpenDropdown(null)}
+                  onMouseLeave={closeDropdown}
+                  onFocus={() => setOpenDropdown(link.label)}
+                  onBlur={(e) => {
+                    if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                      closeDropdown();
+                    }
+                  }}
                 >
                   <button
                     type="button"
                     aria-expanded={openDropdown === link.label}
                     aria-haspopup="true"
                     aria-label={`Open ${link.label} menu`}
+                    aria-controls={`dropdown-${link.label}`}
+                    onKeyDown={(e) => handleDropdownKeyDown(e, link.label, link.children?.length ?? 0)}
                     className={cn(
                       "flex items-center gap-2 px-4 py-3 text-[10px] font-black tracking-[0.2em] uppercase cursor-pointer transition-all relative group",
                       openDropdown === link.label ? "text-accent" : "text-primary/70 hover:text-primary"
@@ -182,6 +228,9 @@ export function Navbar({
                   <AnimatePresence>
                     {openDropdown === link.label && (
                       <motion.div 
+                        id={`dropdown-${link.label}`}
+                        role="menu"
+                        aria-label={`${link.label} submenu`}
                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 10 }}
@@ -189,7 +238,7 @@ export function Navbar({
                         className="absolute top-full left-1/2 -translate-x-1/2 min-w-[500px] bg-white border border-border shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] p-0 z-50 overflow-hidden mt-1"
                       >
                         <div className="grid grid-cols-2">
-                            <div className="p-8 bg-slate-50 border-r border-border">
+                            <div className="p-8 bg-slate-50 border-r border-border" aria-hidden="true">
                                 <div className="p-4 bg-primary text-white w-12 h-12 flex items-center justify-center mb-6">
                                     {Icon && <Icon className="w-6 h-6" />}
                                 </div>
@@ -204,13 +253,25 @@ export function Navbar({
                                 </div>
                             </div>
                             <div className="p-4 flex flex-col gap-1">
-                                {link.children.map((child) => {
+                                {link.children.map((child, childIdx) => {
                                     const ChildIcon = child.icon;
+                                    const isFocused = focusedDropdownIndex[link.label] === childIdx;
                                     return (
                                         <Link
                                             key={child.href}
                                             href={child.href}
-                                            className="flex items-center gap-4 p-4 hover:bg-slate-50 transition-all group/item"
+                                            role="menuitem"
+                                            tabIndex={isFocused ? 0 : -1}
+                                            ref={(el) => {
+                                              if (isFocused && el) {
+                                                setTimeout(() => el.focus(), 0);
+                                              }
+                                            }}
+                                            onKeyDown={(e) => handleDropdownKeyDown(e, link.label, link.children?.length ?? 0)}
+                                            className={cn(
+                                              "flex items-center gap-4 p-4 hover:bg-slate-50 transition-all group/item",
+                                              isFocused && "bg-slate-50"
+                                            )}
                                         >
                                             <div className="w-8 h-8 rounded-none border border-border flex items-center justify-center text-primary group-hover/item:border-accent group-hover/item:bg-accent group-hover/item:text-white transition-all">
                                                 {ChildIcon ? <ChildIcon className="w-4 h-4" /> : <Box className="w-4 h-4" />}
@@ -247,8 +308,8 @@ export function Navbar({
 
           {/* Action Group */}
           <div className="hidden lg:flex items-center gap-4">
-            <button className="p-3 text-primary/40 hover:text-accent transition-colors flex items-center justify-center">
-              <Search className="w-5 h-5" />
+            <button aria-label="Search" className="p-3 text-primary/40 hover:text-accent transition-colors flex items-center justify-center">
+              <Search className="w-5 h-5" aria-hidden="true" />
             </button>
             <div className="w-px h-8 bg-border/40 mx-2" />
             <Link href="/request-quote" className="group relative">
@@ -263,12 +324,15 @@ export function Navbar({
           <div className="flex items-center gap-4 xl:hidden relative z-[110]">
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation-menu"
+              aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
               className={cn(
                 "w-12 h-12 flex items-center justify-center transition-all duration-500",
                 isMobileMenuOpen ? "bg-white text-primary" : "bg-primary text-white"
               )}
             >
-              <div className="relative w-6 h-5">
+              <div className="relative w-6 h-5" aria-hidden="true">
                 <span className={cn(
                     "absolute h-0.5 w-6 bg-current transition-all duration-500",
                     isMobileMenuOpen ? "top-[9px] rotate-45" : "top-[2px]"
@@ -292,23 +356,29 @@ export function Navbar({
         {isMobileMenuOpen && (
           <motion.div
             id="mobile-navigation-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile navigation menu"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[110] flex overflow-hidden"
-            aria-label="Mobile navigation"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setIsMobileMenuOpen(false);
+              }
+            }}
           >
             {/* Backdrop Shard */}
             <motion.div 
+              aria-hidden="true"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               exit={{ scaleY: 0 }}
               transition={{ duration: 0.8, ease: [0.85, 0, 0.15, 1] }}
               className="absolute inset-0 bg-primary origin-top"
-            />
-
-            {/* Grid Pattern Overlay */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ 
+            />{/* Grid Pattern Overlay */}
+            <div aria-hidden="true" className="absolute inset-0 opacity-10 pointer-events-none" style={{ 
                 backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
                 backgroundSize: '40px 40px'
             }} />

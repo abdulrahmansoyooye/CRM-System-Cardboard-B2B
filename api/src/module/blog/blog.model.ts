@@ -12,4 +12,5 @@ export const blogSchema = new Schema({
   publishedAt: { type: Date }
 }, { timestamps: true });
 blogSchema.index({ status: 1, publishedAt: 1 });
+blogSchema.index({ createdAt: -1 });
 export const Blog = model('Blog', blogSchema);

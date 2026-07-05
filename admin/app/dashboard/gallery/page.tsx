@@ -16,9 +16,9 @@ export default function GalleryPage() {
   const [view, setView] = useState<"grid" | "list">("grid");
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery<{ data: Gallery[] }>(["assets"], getAssets);
+  const { data: apiData, isLoading } = useDashboardQuery(["assets"], getAssets);
 
-  const assets = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Gallery[], [apiData]);
+  const assets = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as unknown as Gallery[], [apiData]);
 
   // Mutations
   const createMutation = useDashboardMutation<any>(

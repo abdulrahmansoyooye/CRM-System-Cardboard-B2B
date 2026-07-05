@@ -3,6 +3,31 @@ import { CTABanner } from "@/components/sections/CTABanner";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { getPlaceholderImage } from "@/lib/utils";
+import { getSettings } from "@/lib/api";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const settings = await getSettings();
+    const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = config?.defaultSEO?.ogImage;
+    return {
+      title: `Gallery | ${config?.companyName || "CARDBOX"}`,
+      description: "Visual asset gallery showcasing our state-of-the-art manufacturing facility, machinery, and product applications.",
+      openGraph: {
+        title: `Gallery | ${config?.companyName || "CARDBOX"}`,
+        description: "Visual asset gallery showcasing our manufacturing facility and products.",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        images: ogImage ? [ogImage] : [],
+      },
+    };
+  } catch {
+    return { title: "Gallery | CARDBOX" };
+  }
+}
 
 const MEDIA = [
   {

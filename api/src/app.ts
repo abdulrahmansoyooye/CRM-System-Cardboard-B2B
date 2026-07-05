@@ -2,11 +2,15 @@ import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import MongoStore from 'rate-limit-mongo';
 import xss from 'xss-clean';
+import mongoose from 'mongoose';
 import globalErrorHandler from './middleware/error.middleware';
 import morganMiddleware from './middleware/morgan.middleware';
 import { cacheMiddleware } from './middleware/cache.middleware';
+import { requestIdMiddleware } from './middleware/requestId.middleware';
 import router from './routes';
+import config from './config';
 
 const app: Application = express();
 
@@ -29,6 +33,9 @@ const corsOptions = {
   credentials: true,
 };
 
+// Request ID for tracing
+app.use(requestIdMiddleware);
+
 // Request logging
 app.use(morganMiddleware);
 
@@ -41,23 +48,62 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 
+// Serve uploaded files statically
+app.use('/uploads', express.static('uploads'));
+
 // Caching headers for public resources
 app.use('/api/v1', cacheMiddleware);
 
-// Rate limiting
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    limit: 100, // Limit each IP to 100 requests per `window`
-    message: 'Too many requests from this IP, please try again after 15 minutes',
-  })
-);
+// Distributed rate limiting using MongoDB store
+const rateLimitStore = new MongoStore({
+  uri: config.database_url,
+  collectionName: 'rateLimits',
+  expireTimeMs: 15 * 60 * 1000,
+  errorHandler: (err: Error) => {
+    console.error('Rate limit store error:', err);
+  },
+});
+
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many requests from this IP, please try again after 15 minutes',
+  store: rateLimitStore,
+});
+
+app.use(globalLimiter);
+
+// Stricter rate limit for auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: 'Too many authentication attempts, please try again after 15 minutes',
+  store: rateLimitStore,
+});
+
+app.use('/api/v1/auth', authLimiter);
 
 // Health check
 app.get('/', (req: Request, res: Response) => {
-  res.status(200).json({
-    success: true,
-    message: 'Cardbox B2B API is running',
+  const dbState = mongoose.connection.readyState;
+  const dbLabels: Record<number, string> = { 0: 'disconnected', 1: 'connected', 2: 'connecting', 3: 'disconnecting' };
+  const dbStatus = dbLabels[dbState] || 'unknown';
+  const healthy = dbState === 1;
+
+  res.status(healthy ? 200 : 503).json({
+    success: healthy,
+    message: healthy ? 'Cardbox B2B API is running' : 'API is degraded',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+    requestId: req.requestId,
+    checks: {
+      database: dbStatus,
+      server: 'healthy',
+    },
   });
 });
 

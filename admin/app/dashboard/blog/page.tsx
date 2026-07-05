@@ -15,7 +15,7 @@ export default function BlogPage() {
   const { openModal, closeModal } = useModal();
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery<{ data: Blog[] }>(["blogs"], getBlogs);
+  const { data: apiData, isLoading } = useDashboardQuery(["blogs"], getBlogs);
 
   const blogs = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Blog[], [apiData]);
 

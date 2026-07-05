@@ -7,6 +7,9 @@ export const assetSchema = new Schema({
   size: { type: String },
   dimensions: { type: String },
   type: { type: String }, // e.g., JPEG, PNG, SVG
+  mimeType: { type: String },
 }, { timestamps: true });
+assetSchema.index({ category: 1, type: 1 });
+assetSchema.index({ createdAt: -1 });
 
 export const Asset = model('Asset', assetSchema);

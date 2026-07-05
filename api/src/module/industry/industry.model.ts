@@ -8,4 +8,5 @@ export const industrySchema = new Schema({
   seo: { type: Object },
   isActive: { type: Boolean, default: true }
 }, { timestamps: true });
+industrySchema.index({ isActive: 1, name: 1 });
 export const Industry = model('Industry', industrySchema);

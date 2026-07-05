@@ -11,9 +11,19 @@ export async function generateMetadata(): Promise<Metadata> {
   try {
     const settings = await getSettings();
     const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = config?.defaultSEO?.ogImage;
     return {
       title: `Industrial Sectors | ${config?.companyName || 'CARDBOX'}`,
       description: "Explore the diverse industrial sectors we empower with structural corrugated engineering.",
+      openGraph: {
+        title: `Industrial Sectors | ${config?.companyName || 'CARDBOX'}`,
+        description: "Explore the diverse industrial sectors we empower.",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        images: ogImage ? [ogImage] : [],
+      },
     };
   } catch {
     return { title: "Industries | CARDBOX" };

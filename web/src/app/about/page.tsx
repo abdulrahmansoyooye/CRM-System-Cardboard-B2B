@@ -1,6 +1,31 @@
 import { PageHeader } from "@/components/layout/PageHeader";
 import { CTABanner } from "@/components/sections/CTABanner";
 import Image from "next/image";
+import { getSettings } from "@/lib/api";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const settings = await getSettings();
+    const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = config?.defaultSEO?.ogImage;
+    return {
+      title: `About | ${config?.companyName || "CARDBOX"}`,
+      description: "Trusted industrial corrugated packaging manufacturer with 500K sq.ft facility and global export reach since 2000.",
+      openGraph: {
+        title: `About | ${config?.companyName || "CARDBOX"}`,
+        description: "Trusted industrial corrugated packaging manufacturer with global export reach.",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        images: ogImage ? [ogImage] : [],
+      },
+    };
+  } catch {
+    return { title: "About | CARDBOX" };
+  }
+}
 
 const TIMELINE = [
   {

@@ -19,9 +19,19 @@ export async function generateMetadata(): Promise<Metadata> {
   try {
     const settings = await getSettings();
     const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = config?.defaultSEO?.ogImage;
     return {
       title: `Industrial Careers | ${config?.companyName || 'CARDBOX'}`,
       description: "Join the leading workforce in structural packaging engineering and industrial manufacturing.",
+      openGraph: {
+        title: `Industrial Careers | ${config?.companyName || 'CARDBOX'}`,
+        description: "Join the leading workforce in structural packaging engineering.",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        images: ogImage ? [ogImage] : [],
+      },
     };
   } catch {
     return { title: "Careers | CARDBOX" };

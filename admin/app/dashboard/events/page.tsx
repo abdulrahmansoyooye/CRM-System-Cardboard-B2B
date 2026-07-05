@@ -15,7 +15,7 @@ export default function EventsPage() {
   const { openModal, closeModal } = useModal();
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery<{ data: Event[] }>(["events"], getEvents);
+  const { data: apiData, isLoading } = useDashboardQuery(["events"], getEvents);
 
   const events = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Event[], [apiData]);
 

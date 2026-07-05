@@ -34,6 +34,7 @@ export interface IBlog {
   _id: string;
   title: string;
   slug: string;
+  author?: string;
   category?: string;
   excerpt?: string;
   content: string;
@@ -41,6 +42,7 @@ export interface IBlog {
   tags?: string[];
   seo?: Record<string, unknown>;
   status?: 'draft' | 'published';
+  isPublished?: boolean;
   publishedAt?: string | Date;
   createdAt?: string;
   updatedAt?: string;
@@ -55,6 +57,7 @@ export interface ICategory {
   name: string;
   slug: string;
   description?: string;
+  coverImage?: string;
   image?: string;
   isActive?: boolean;
   createdAt?: string;
@@ -90,6 +93,7 @@ export interface IIndustry {
   description?: string;
   images?: string[];
   relatedProducts?: IProduct[];
+  isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

@@ -23,7 +23,7 @@ export default function InquiriesPage() {
   const { openModal, closeModal } = useModal();
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery<{ data: Inquiry[] }>(["inquiries"], getInquiries);
+  const { data: apiData, isLoading } = useDashboardQuery(["inquiries"], getInquiries);
 
   const inquiries = useMemo(() => (Array.isArray(apiData?.data) ? apiData.data : []) as Inquiry[], [apiData]);
 

@@ -2,6 +2,31 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { CTABanner } from "@/components/sections/CTABanner";
 import Image from "next/image";
 import { getPlaceholderImage } from "@/lib/utils";
+import { getSettings } from "@/lib/api";
+import { Metadata } from "next";
+
+export async function generateMetadata(): Promise<Metadata> {
+  try {
+    const settings = await getSettings();
+    const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = config?.defaultSEO?.ogImage;
+    return {
+      title: `Manufacturing Process | ${config?.companyName || "CARDBOX"}`,
+      description: "End-to-end corrugation process from raw kraft procurement to precision die-cutting and quality testing.",
+      openGraph: {
+        title: `Manufacturing Process | ${config?.companyName || "CARDBOX"}`,
+        description: "End-to-end corrugation process from raw kraft procurement to precision die-cutting.",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        images: ogImage ? [ogImage] : [],
+      },
+    };
+  } catch {
+    return { title: "Manufacturing Process | CARDBOX" };
+  }
+}
 
 const PROCESS_STEPS = [
   {

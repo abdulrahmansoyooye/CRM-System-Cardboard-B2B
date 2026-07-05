@@ -11,10 +11,20 @@ export async function generateMetadata(): Promise<Metadata> {
   try {
     const settings = await getSettings();
     const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = config?.defaultSEO?.ogImage;
     return {
       title: `Contact | ${config?.companyName || "CARDBOX"}`,
       description:
         "Direct routing to our sales, engineering, and logistics teams. Send an inquiry or request a quote.",
+      openGraph: {
+        title: `Contact | ${config?.companyName || "CARDBOX"}`,
+        description: "Direct routing to our sales, engineering, and logistics teams.",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        images: ogImage ? [ogImage] : [],
+      },
     };
   } catch {
     return { title: "Contact | CARDBOX" };

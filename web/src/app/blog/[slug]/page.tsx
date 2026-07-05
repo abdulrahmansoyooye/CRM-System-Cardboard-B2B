@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
 import { getBlogBySlug } from "@/lib/api";
 import { Metadata } from 'next';
+import { blogPostingJsonLd, breadcrumbJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 60;
 
@@ -13,9 +14,23 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const { slug } = await params;
     const post = await getBlogBySlug(slug);
+    const ogImage = post.coverImage;
     return {
       title: `${post.title} | CARDBOX Industrial Blog`,
       description: post.excerpt || "Industrial packaging insights and corrugated engineering protocols.",
+      openGraph: {
+        title: `${post.title} | CARDBOX Blog`,
+        description: post.excerpt || "Industrial packaging insights.",
+        type: "article",
+        publishedTime: post.createdAt,
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${post.title} | CARDBOX Blog`,
+        description: post.excerpt || "Industrial packaging insights.",
+        images: ogImage ? [ogImage] : [],
+      },
     };
   } catch {
     return { title: "Blog Post | CARDBOX" };
@@ -41,8 +56,22 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
     );
   }
 
+  const blogPostSchema = blogPostingJsonLd(post.title, slug, post.excerpt, post.createdAt, post.coverImage, post.author);
+  const breadcrumbSchema = breadcrumbJsonLd([
+    { name: "Blog", url: "/blog" },
+    { name: post.title, url: `/blog/${slug}` },
+  ]);
+
   return (
     <div className="bg-background font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Breadcrumb */}
       <div className="bg-secondary/40 border-b border-border text-[10px] font-black uppercase tracking-[0.2em] py-4">
         <div className="container mx-auto px-4 lg:px-12 flex items-center gap-4 text-muted-foreground">

@@ -4,6 +4,11 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { getPlaceholderImage } from "@/lib/utils";
 import { Factory, Cog, Layers, Truck, ShieldCheck, Zap } from "lucide-react";
+import { getSettings } from "@/lib/api";
+
+// metadata export in a client component won't work,
+// so we export metadata from a separate server component pattern.
+// This page is client-rendered; the root layout provides fallback metadata.
 
 const MACHINERY = [
   {

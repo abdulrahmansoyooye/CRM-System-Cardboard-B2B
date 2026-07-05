@@ -11,4 +11,5 @@ export const quoteSchema = new Schema({
   notes: { type: String }
 }, { timestamps: true });
 quoteSchema.index({ status: 1 });
+quoteSchema.index({ productId: 1 });
 export const Quote = model('Quote', quoteSchema);

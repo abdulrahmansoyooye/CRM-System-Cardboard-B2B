@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { AssetController } from './asset.controller';
 import { authMiddleware } from '../../middleware/auth.middleware';
+import { uploadSingle } from '../../middleware/upload.middleware';
 
 const router = Router();
 
@@ -8,7 +9,7 @@ const router = Router();
 router.get('/assets', AssetController.getAll);
 
 // Admin Routes
-router.post('/admin/assets', authMiddleware(['admin', 'super_admin']), AssetController.create);
+router.post('/admin/assets', authMiddleware(['admin', 'super_admin']), uploadSingle, AssetController.create);
 router.delete('/admin/assets/:id', authMiddleware(['admin', 'super_admin']), AssetController.deleteDoc);
 
 export const AssetRoutes = router;

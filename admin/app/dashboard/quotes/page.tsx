@@ -16,7 +16,7 @@ export default function QuoteRequestsPage() {
   const [filterStatus, setFilterStatus] = useState("all");
 
   // Queries
-  const { data: apiData, isLoading } = useDashboardQuery<{ data: Quote[] }>(["quotes"], () => quoteService.getAll());
+  const { data: apiData, isLoading } = useDashboardQuery(["quotes"], () => quoteService.getAll());
 
   const quotes = useMemo(() => {
     const raw = (Array.isArray(apiData?.data) ? apiData.data : []) as Quote[];

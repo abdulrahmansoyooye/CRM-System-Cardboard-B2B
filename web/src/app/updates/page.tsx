@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   try {
     const settings = await getSettings();
     const config = Array.isArray(settings) ? settings[0] : settings;
+    const ogImage = config?.defaultSEO?.ogImage;
     return {
       title: `Events & Updates | ${config?.companyName || "CARDBOX"}`,
       description:
@@ -20,6 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
       openGraph: {
         title: `Events & Updates | ${config?.companyName || "CARDBOX"}`,
         description: "Corporate events and industrial updates.",
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        description: "Corporate events and industrial updates.",
+        images: ogImage ? [ogImage] : [],
       },
     };
   } catch {

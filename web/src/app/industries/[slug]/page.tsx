@@ -7,6 +7,7 @@ import { CTABanner } from "@/components/sections/CTABanner";
 import { ArrowRight, ChevronLeft } from "lucide-react";
 import { Metadata } from "next";
 import { TProduct } from "@/types";
+import { breadcrumbJsonLd } from "@/lib/json-ld";
 
 export const revalidate = 60;
 
@@ -28,6 +29,7 @@ export async function generateMetadata({
   try {
     const { slug } = await params;
     const industry = await getIndustryBySlug(slug);
+    const ogImage = industry.images?.[0];
     return {
       title: `${industry.name} | CARDBOX Industrial`,
       description:
@@ -36,7 +38,13 @@ export async function generateMetadata({
       openGraph: {
         title: `${industry.name} | CARDBOX`,
         description: industry.overview || "",
-        images: industry.images?.[0] ? [industry.images[0]] : [],
+        images: ogImage ? [{ url: ogImage, width: 1200, height: 630 }] : [],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${industry.name} | CARDBOX`,
+        description: industry.overview || "",
+        images: ogImage ? [ogImage] : [],
       },
     };
   } catch {
@@ -62,8 +70,17 @@ export default async function IndustryDetailPage({
 
   const relatedProducts: TProduct[] = industry.relatedProducts || [];
 
+  const breadcrumbSchema = breadcrumbJsonLd([
+    { name: "Industries", url: "/industries" },
+    { name: industry.name, url: `/industries/${slug}` },
+  ]);
+
   return (
     <div className="bg-background font-sans">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Breadcrumb */}
       <div className="bg-secondary/40 border-b border-border text-[10px] font-black uppercase tracking-[0.2em] py-4">
         <div className="container mx-auto px-4 lg:px-12 flex items-center gap-4 text-muted-foreground">

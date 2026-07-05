@@ -12,5 +12,6 @@ export const jobSchema = new Schema({
 }, { timestamps: true });
 
 jobSchema.index({ status: 1 });
+jobSchema.index({ department: 1, location: 1, type: 1 });
 
 export const Job = model('Job', jobSchema);

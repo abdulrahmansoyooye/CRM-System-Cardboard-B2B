@@ -16,8 +16,8 @@ const userSchema = new Schema<TUser>(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, select: false }, // Don't return password by default
     role: { type: String, enum: ['super_admin', 'admin', 'content_manager',"hr_manager","sales_manager"], default: 'admin' ,index:true},
-    isActive: { type: Boolean, default: true },
-    lastLogin: { type: Date, default: Date.now },
+  isActive: { type: Boolean, default: true, index: true },
+  lastLogin: { type: Date, default: Date.now },
   },
   {
     timestamps: true,

@@ -53,7 +53,8 @@ const productSchema = new Schema<TProduct>(
   }
 );
 
-// Add search index
+// Indexes
 productSchema.index({ name: 'text', shortDescription: 'text' });
+productSchema.index({ createdAt: -1 });
 
 export const Product = model<TProduct>('Product', productSchema);
