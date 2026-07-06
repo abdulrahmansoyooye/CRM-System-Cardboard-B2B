@@ -8,7 +8,6 @@ const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const rate_limit_mongo_1 = __importDefault(require("rate-limit-mongo"));
-const xss_clean_1 = __importDefault(require("xss-clean"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const error_middleware_1 = __importDefault(require("./middleware/error.middleware"));
 const morgan_middleware_1 = __importDefault(require("./middleware/morgan.middleware"));
@@ -42,7 +41,6 @@ app.use((0, helmet_1.default)());
 app.use(corsOptions ? (0, cors_1.default)(corsOptions) : (0, cors_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.use((0, xss_clean_1.default)());
 // Serve uploaded files statically
 app.use('/uploads', express_1.default.static('uploads'));
 // Caching headers for public resources
