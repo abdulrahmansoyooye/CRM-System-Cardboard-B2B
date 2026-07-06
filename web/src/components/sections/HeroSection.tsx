@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Box, MoveRight, ShieldCheck, Zap } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion, useScroll, useTransform, useSpring, useMotionValue } from "framer-motion";
 import { useRef, useEffect, useState } from "react";
 import { getPlaceholderImage } from "@/lib/utils";
@@ -135,24 +136,28 @@ export function HeroSection({ settings }: { settings?: TSettings }) {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-6 md:gap-8"
           >
-            <Button
-              size="lg"
-              className="bg-accent text-accent-foreground hover:bg-white hover:text-[#0A0F1A] h-16 md:h-20 px-8 md:px-12 text-[10px] md:text-xs tracking-[0.3em] font-black group transition-all duration-700 rounded-none shadow-[15px_15px_0px_rgba(255,183,77,0.15)] relative overflow-hidden"
-            >
-              <span className="relative z-10">REQUEST QUOTE</span>
-              <MoveRight className="w-5 h-5 md:w-6 md:h-6 ml-3 group-hover:translate-x-4 transition-transform duration-700 relative z-10" />
-              <motion.div 
-                className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-700"
-              />
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="h-16 md:h-20 px-8 md:px-12 bg-transparent border-2 border-white/10 text-white hover:border-accent text-[10px] md:text-xs tracking-[0.3em] font-black rounded-none group transition-all duration-700 flex items-center justify-center gap-4"
-            >
-              <Zap className="w-4 h-4 md:w-5 md:h-5 text-accent hover:text-white" />
-              EXPLORE SOLUTIONS
-            </Button>
+            <Link href="/request-quote">
+              <Button
+                size="lg"
+                className="bg-accent text-accent-foreground hover:bg-white hover:text-[#0A0F1A] h-16 md:h-20 px-8 md:px-12 text-[10px] md:text-xs tracking-[0.3em] font-black group transition-all duration-700 rounded-none shadow-[15px_15px_0px_rgba(255,183,77,0.15)] relative overflow-hidden"
+              >
+                <span className="relative z-10">REQUEST QUOTE</span>
+                <MoveRight className="w-5 h-5 md:w-6 md:h-6 ml-3 group-hover:translate-x-4 transition-transform duration-700 relative z-10" />
+                <motion.div 
+                  className="absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-700"
+                />
+              </Button>
+            </Link>
+            <Link href="/products">
+              <Button
+                size="lg"
+                variant="outline"
+                className="h-16 md:h-20 px-8 md:px-12 bg-transparent border-2 border-white/10 text-white hover:border-accent text-[10px] md:text-xs tracking-[0.3em] font-black rounded-none group transition-all duration-700 flex items-center justify-center gap-4"
+              >
+                <Zap className="w-4 h-4 md:w-5 md:h-5 text-accent hover:text-white" />
+                EXPLORE SOLUTIONS
+              </Button>
+            </Link>
           </motion.div>
 
           {/* Real-time metrics */}

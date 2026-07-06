@@ -1,12 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { 
   Menu, Search, X, ChevronDown, MoveRight, 
   Mail, Phone, MapPin, Globe, ShieldCheck, 
   ArrowUpRight, LayoutGrid, Box, Factory, 
   Newspaper, Info, Briefcase, MessageSquare,
+  Linkedin, Twitter, Instagram,
   LucideIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,8 @@ export function Navbar({
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -118,7 +121,7 @@ export function Navbar({
     },
     {
       label: "Solutions",
-      href: "#",
+      href: "/process",
       icon: Factory,
       description: "Our end-to-end operational capacity",
       children: [
@@ -130,7 +133,7 @@ export function Navbar({
     },
     {
       label: "Intelligence",
-      href: "#",
+      href: "/blog",
       icon: Newspaper,
       description: "Thought leadership and corporate updates",
       children: [
@@ -308,9 +311,35 @@ export function Navbar({
 
           {/* Action Group */}
           <div className="hidden lg:flex items-center gap-4">
-            <button aria-label="Search" className="p-3 text-primary/40 hover:text-accent transition-colors flex items-center justify-center">
+            <button
+              aria-label="Search"
+              onClick={() => { setSearchOpen(!searchOpen); setTimeout(() => searchRef.current?.focus(), 100); }}
+              className="p-3 text-primary/40 hover:text-accent transition-colors flex items-center justify-center"
+            >
               <Search className="w-5 h-5" aria-hidden="true" />
             </button>
+            {searchOpen && (
+              <div className="absolute top-full left-0 right-0 bg-white border-b border-border shadow-xl p-4 z-50">
+                <div className="container mx-auto flex items-center gap-4">
+                  <Search className="w-5 h-5 text-muted-foreground shrink-0" />
+                  <input
+                    ref={searchRef}
+                    type="text"
+                    placeholder="Search products, industries, articles..."
+                    className="w-full bg-transparent border-none outline-none text-lg font-bold text-primary placeholder:text-muted-foreground/50"
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                        window.location.href = `/products?searchTerm=${encodeURIComponent(e.currentTarget.value.trim())}`;
+                      }
+                      if (e.key === 'Escape') setSearchOpen(false);
+                    }}
+                  />
+                  <button onClick={() => setSearchOpen(false)} className="text-muted-foreground hover:text-primary">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            )}
             <div className="w-px h-8 bg-border/40 mx-2" />
             <Link href="/request-quote" className="group relative">
                <div className="absolute inset-0 bg-accent translate-x-1 translate-y-1 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-300" />
@@ -363,7 +392,7 @@ export function Navbar({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[110] flex overflow-hidden"
-            onKeyDown={(e) => {
+            onKeyDown={(e: React.KeyboardEvent) => {
               if (e.key === "Escape") {
                 setIsMobileMenuOpen(false);
               }
@@ -466,11 +495,18 @@ export function Navbar({
                             </div>
 
                             <div className="flex gap-4">
-                                {['LinkedIn', 'X-Platform', 'Instagram', 'YouTube'].map(social => (
-                                    <button key={social} className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:border-accent transition-all">
-                                        <ArrowUpRight className="w-5 h-5" />
-                                    </button>
-                                ))}
+                                <Link href={settings?.socialLinks?.linkedin || '#'} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:border-accent transition-all">
+                                  <Linkedin className="w-5 h-5" />
+                                </Link>
+                                <Link href={settings?.socialLinks?.twitter || '#'} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:border-accent transition-all">
+                                  <Twitter className="w-5 h-5" />
+                                </Link>
+                                <Link href={settings?.socialLinks?.instagram || '#'} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:border-accent transition-all">
+                                  <Instagram className="w-5 h-5" />
+                                </Link>
+                                <Link href={settings?.socialLinks?.facebook || '#'} target="_blank" rel="noopener noreferrer" className="w-12 h-12 bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-accent hover:border-accent transition-all">
+                                  <Globe className="w-5 h-5" />
+                                </Link>
                             </div>
                         </div>
 

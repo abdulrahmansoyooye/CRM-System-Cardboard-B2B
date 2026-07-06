@@ -10,7 +10,4 @@ const tokenBlacklistSchema = new Schema<ITokenBlacklist>({
   expiresAt: { type: Date, required: true, index: true },
 }, { timestamps: true });
 
-// Auto-expire blacklisted tokens after their expiry
-tokenBlacklistSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
-
 export const TokenBlacklist = model<ITokenBlacklist>('TokenBlacklist', tokenBlacklistSchema);

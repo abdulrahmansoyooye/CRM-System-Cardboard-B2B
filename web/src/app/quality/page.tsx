@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
 import { ShieldCheck, ClipboardCheck, Microscope, Ruler, FileText, CheckCircle, Award } from "lucide-react";
 
@@ -139,7 +140,9 @@ export default function QualityPage() {
            <div className="mt-32 max-w-2xl mx-auto">
              <h4 className="text-2xl font-black uppercase mb-6">Download Quality Reports</h4>
              <p className="text-muted-foreground mb-10 font-bold uppercase tracking-tight text-sm">Access our monthly compliance certificates and audit summaries.</p>
-             <button className="btn-primary px-12 h-16 rounded-none tracking-[0.3em] font-black text-xs">DOWNLOAD ISO CERTIFICATES</button>
+             <Link href="/contact">
+               <button className="btn-primary px-12 h-16 rounded-none tracking-[0.3em] font-black text-xs">DOWNLOAD ISO CERTIFICATES</button>
+             </Link>
            </div>
         </div>
       </section>

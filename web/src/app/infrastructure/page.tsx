@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { getPlaceholderImage } from "@/lib/utils";
 import { Factory, Cog, Layers, Truck, ShieldCheck, Zap } from "lucide-react";
 import { getSettings } from "@/lib/api";
@@ -150,9 +151,11 @@ export default function InfrastructurePage() {
            <p className="text-xl text-white/60 max-w-2xl mx-auto mb-12 font-bold leading-tight uppercase tracking-tight">
              Our infrastructure is ready to scale with your business demands, ensuring 100% supply chain continuity even during peak industrial cycles.
            </p>
-           <button className="bg-accent text-accent-foreground px-12 py-5 font-black text-xs tracking-[0.3em] uppercase hover:bg-white hover:text-primary transition-all">
-             GET DETAILED FACILITY SPECS
-           </button>
+           <Link href="/contact">
+             <button className="bg-accent text-accent-foreground px-12 py-5 font-black text-xs tracking-[0.3em] uppercase hover:bg-white hover:text-primary transition-all">
+               GET DETAILED FACILITY SPECS
+             </button>
+           </Link>
         </div>
       </section>
     </main>

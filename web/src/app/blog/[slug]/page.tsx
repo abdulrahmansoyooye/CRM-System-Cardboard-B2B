@@ -1,5 +1,6 @@
 import { CTABanner } from "@/components/sections/CTABanner";
 import { Button } from "@/components/ui/button";
+import { SanitizedHtml } from "@/components/SanitizedHtml";
 import { ArrowLeft, ArrowRight, Calendar, Tag, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -129,9 +130,9 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
 
         {/* Article Content */}
         <article className="prose prose-invert prose-lg max-w-none mb-32">
-          <div 
-             className="text-primary font-medium leading-relaxed space-y-10 text-lg selection:bg-accent selection:text-white"
-             dangerouslySetInnerHTML={{ __html: post.content }}
+          <SanitizedHtml
+            html={post.content}
+            className="text-primary font-medium leading-relaxed space-y-10 text-lg selection:bg-accent selection:text-white"
           />
         </article>
 

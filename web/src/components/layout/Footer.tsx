@@ -136,7 +136,7 @@ export function Footer({ settings }: { settings?: TSettings }) {
             <ul className="space-y-3 text-sm text-secondary/80 font-medium">
               <li>
                 <Link
-                  href="/products/corrugated"
+                  href="/products"
                   className="hover:text-accent transition-colors"
                 >
                   Corrugated Boxes
@@ -144,7 +144,7 @@ export function Footer({ settings }: { settings?: TSettings }) {
               </li>
               <li>
                 <Link
-                  href="/products/heavy-duty"
+                  href="/products"
                   className="hover:text-accent transition-colors"
                 >
                   Heavy Duty Packaging
@@ -152,7 +152,7 @@ export function Footer({ settings }: { settings?: TSettings }) {
               </li>
               <li>
                 <Link
-                  href="/products/custom"
+                  href="/products"
                   className="hover:text-accent transition-colors"
                 >
                   Custom Printed Boxes
@@ -160,7 +160,7 @@ export function Footer({ settings }: { settings?: TSettings }) {
               </li>
               <li>
                 <Link
-                  href="/industries/fmcg"
+                  href="/industries"
                   className="hover:text-accent transition-colors"
                 >
                   FMCG Packaging
@@ -168,7 +168,7 @@ export function Footer({ settings }: { settings?: TSettings }) {
               </li>
               <li>
                 <Link
-                  href="/industries/ecommerce"
+                  href="/industries"
                   className="hover:text-accent transition-colors"
                 >
                   E-commerce Solutions

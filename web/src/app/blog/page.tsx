@@ -52,22 +52,25 @@ export default async function BlogPage() {
         <div className="flex flex-col md:flex-row gap-10 justify-between items-center mb-20">
           {/* Category Filters */}
           <div className="flex flex-wrap gap-3">
-             <Button
-                variant="default"
-                size="sm"
-                className="bg-primary text-primary-foreground font-black tracking-[0.2em] rounded-none uppercase text-[10px] h-12 px-8 shadow-lg"
-              >
-                All Protocols
-              </Button>
-              {Array.from(new Set(blogs.map((b: TBlog) => b.category))).filter(Boolean).map((cat) => (
-                <Button
-                  key={cat}
-                  variant="outline"
+             <Link href="/blog">
+               <Button
+                  variant="default"
                   size="sm"
-                  className="text-primary rounded-none tracking-[0.2em] font-black uppercase text-[10px] h-12 px-8 border-border hover:border-accent transition-all"
+                  className="bg-primary text-primary-foreground font-black tracking-[0.2em] rounded-none uppercase text-[10px] h-12 px-8 shadow-lg"
                 >
-                  {cat}
+                  All Protocols
                 </Button>
+             </Link>
+              {Array.from(new Set(blogs.map((b: TBlog) => b.category))).filter(Boolean).map((cat) => (
+                <Link key={cat} href={`/blog?category=${encodeURIComponent(cat!)}`}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-primary rounded-none tracking-[0.2em] font-black uppercase text-[10px] h-12 px-8 border-border hover:border-accent transition-all"
+                  >
+                    {cat}
+                  </Button>
+                </Link>
               ))}
           </div>
 

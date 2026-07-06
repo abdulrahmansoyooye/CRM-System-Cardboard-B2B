@@ -2,6 +2,7 @@
 
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { getPlaceholderImage } from "@/lib/utils";
 
@@ -64,13 +65,15 @@ export function CTABanner() {
           className="flex flex-col sm:flex-row gap-8 items-center w-full justify-center"
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button
-              size="lg"
-              className="bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all duration-500 text-[10px] tracking-[0.3em] h-20 px-12 rounded-none font-black w-full sm:w-auto shadow-[15px_15px_0px_rgba(255,183,77,0.1)] uppercase"
-            >
-              GET A QUOTE
-              <ArrowRight className="w-6 h-6 ml-3" />
-            </Button>
+            <Link href="/request-quote">
+              <Button
+                size="lg"
+                className="bg-accent text-accent-foreground hover:bg-white hover:text-primary transition-all duration-500 text-[10px] tracking-[0.3em] h-20 px-12 rounded-none font-black w-full sm:w-auto shadow-[15px_15px_0px_rgba(255,183,77,0.1)] uppercase"
+              >
+                GET A QUOTE
+                <ArrowRight className="w-6 h-6 ml-3" />
+              </Button>
+            </Link>
           </motion.div>
 
           <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 mt-6 sm:mt-0 text-primary-foreground">
