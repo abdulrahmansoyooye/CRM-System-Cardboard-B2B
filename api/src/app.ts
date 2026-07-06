@@ -12,6 +12,7 @@ import router from './routes';
 import config from './config';
 
 const app: Application = express();
+app.set('trust proxy', 1);
 
 const allowedOrigins = process.env.CORS_ORIGINS
   ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
