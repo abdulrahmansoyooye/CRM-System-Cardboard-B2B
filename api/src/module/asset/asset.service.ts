@@ -2,6 +2,7 @@ import { Asset } from './asset.model';
 import { AppError } from '../../core/errors/AppError';
 import { CreateAssetDTO } from '../../types/dtos';
 import { ensureUploadDir, getPublicUrl, getFileSize, deleteFile } from '../../utils/storage';
+import { getPaginationParams } from '../../utils/pagination';
 
 export const AssetService = {
   createAsset: async (data: CreateAssetDTO, file?: Express.Multer.File) => {
@@ -28,8 +29,13 @@ export const AssetService = {
     });
   },
 
-  getAllAssets: async () => {
-    return await Asset.find().sort({ createdAt: -1 });
+  getAllAssets: async (query: Record<string, unknown>) => {
+    const { page, limit, skip } = getPaginationParams(query);
+    const [result, total] = await Promise.all([
+      Asset.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Asset.countDocuments(),
+    ]);
+    return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
   },
 
   deleteAsset: async (id: string) => {

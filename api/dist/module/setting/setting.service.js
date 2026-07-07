@@ -3,9 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SettingService = exports.deleteSetting = exports.updateSetting = exports.getSettingById = exports.getAllSettings = exports.createSetting = void 0;
 const AppError_1 = require("../../core/errors/AppError");
 const setting_model_1 = require("./setting.model");
+const pagination_1 = require("../../utils/pagination");
 const createSetting = async (data) => { return await setting_model_1.Setting.create(data); };
 exports.createSetting = createSetting;
-const getAllSettings = async () => { return await setting_model_1.Setting.find(); };
+const getAllSettings = async (query) => {
+    const { page, limit, skip } = (0, pagination_1.getPaginationParams)(query);
+    const [result, total] = await Promise.all([
+        setting_model_1.Setting.find().skip(skip).limit(limit),
+        setting_model_1.Setting.countDocuments(),
+    ]);
+    return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
+};
 exports.getAllSettings = getAllSettings;
 const getSettingById = async (id) => {
     const doc = await setting_model_1.Setting.findById(id);

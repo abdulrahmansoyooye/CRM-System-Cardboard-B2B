@@ -18,13 +18,21 @@ export declare const refreshToken: (refreshTokenStr: string) => Promise<{
     accessToken: string;
     refreshToken: string;
 }>;
-export declare const getUsers: () => Promise<(import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
-    _id: import("mongoose").Types.ObjectId;
-} & {
-    __v: number;
-} & {
-    id: string;
-})[]>;
+export declare const getUsers: (query: Record<string, unknown>) => Promise<{
+    result: (import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    } & {
+        id: string;
+    })[];
+    meta: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPage: number;
+    };
+}>;
 export declare const getUserById: (id: string) => Promise<import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
     _id: import("mongoose").Types.ObjectId;
 } & {
@@ -69,13 +77,21 @@ export declare const UserService: {
         accessToken: string;
         refreshToken: string;
     }>;
-    getUsers: () => Promise<(import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
-        _id: import("mongoose").Types.ObjectId;
-    } & {
-        __v: number;
-    } & {
-        id: string;
-    })[]>;
+    getUsers: (query: Record<string, unknown>) => Promise<{
+        result: (import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
+            _id: import("mongoose").Types.ObjectId;
+        } & {
+            __v: number;
+        } & {
+            id: string;
+        })[];
+        meta: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPage: number;
+        };
+    }>;
     getUserById: (id: string) => Promise<import("mongoose").Document<unknown, {}, import("./user.model").TUser, {}, import("mongoose").DefaultSchemaOptions> & import("./user.model").TUser & {
         _id: import("mongoose").Types.ObjectId;
     } & {

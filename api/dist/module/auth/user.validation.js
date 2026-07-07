@@ -9,16 +9,16 @@ exports.createUserSchema = zod_1.z.object({
         password: zod_1.z.string().min(6, 'Password must be at least 6 characters long'),
         role: zod_1.z.enum(['super_admin', 'admin', 'content_manager', 'hr_manager', 'sales_manager']),
     }).strict(),
-}).strict();
+});
 exports.loginSchema = zod_1.z.object({
     body: zod_1.z.object({
         email: zod_1.z.string().email('Invalid email address'),
         password: zod_1.z.string().min(1, 'Password is required'),
     }).strict(),
-}).strict();
+});
 exports.refreshTokenSchema = zod_1.z.object({
     body: zod_1.z.object({
         refreshToken: zod_1.z.string().min(1, 'Refresh token is required'),
     }).strict(),
-}).strict();
+});
 //# sourceMappingURL=user.validation.js.map

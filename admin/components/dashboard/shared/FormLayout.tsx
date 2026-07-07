@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useId } from "react";
 import { cn } from "@/lib/utils";
 
 interface FormLayoutProps {
@@ -26,7 +26,7 @@ export function FormLayout({
         {children}
       </div>
 
-      <div className="flex items-center gap-4 pt-4 border-t border-slate-100">
+      <div className="flex items-center gap-4 pt-4 border-t border-border">
         {secondaryAction}
         <button
           type="submit"
@@ -68,12 +68,14 @@ export function FormInput({
   className, 
   ...props 
 }: React.InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string }) {
+  const id = useId();
   return (
     <div className={cn("space-y-2", className)}>
-      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">
+      <label htmlFor={id} className="text-[10px] font-black uppercase tracking-widest text-brand-500 block px-1">
         {label}
       </label>
       <input
+        id={id}
         {...props}
         className={cn(
           "w-full glass-input",
@@ -93,12 +95,14 @@ export function FormSelect({
     className, 
     ...props 
   }: React.SelectHTMLAttributes<HTMLSelectElement> & { label: string; error?: string }) {
+    const id = useId();
     return (
       <div className={cn("space-y-2", className)}>
-        <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">
+        <label htmlFor={id} className="text-[10px] font-black uppercase tracking-widest text-brand-500 block px-1">
           {label}
         </label>
         <select
+          id={id}
           {...props}
           className={cn(
             "w-full glass-input appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%2364748b%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22m6%208%204%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.25rem_1.25rem] bg-[right_1rem_center] bg-no-repeat pr-10",
@@ -119,12 +123,14 @@ export function FormTextarea({
   className, 
   ...props 
 }: React.TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string; error?: string }) {
+  const id = useId();
   return (
     <div className={cn("space-y-2", className)}>
-      <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 block px-1">
+      <label htmlFor={id} className="text-[10px] font-black uppercase tracking-widest text-brand-500 block px-1">
         {label}
       </label>
       <textarea
+        id={id}
         {...props}
         className={cn(
           "w-full glass-input min-h-[120px] resize-none",

@@ -1,5 +1,6 @@
 import express, { Application, Request, Response } from 'express';
 import cors from 'cors';
+import compression from 'compression';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import MongoStore from 'rate-limit-mongo';
@@ -8,6 +9,7 @@ import globalErrorHandler from './middleware/error.middleware';
 import morganMiddleware from './middleware/morgan.middleware';
 import { cacheMiddleware } from './middleware/cache.middleware';
 import { requestIdMiddleware } from './middleware/requestId.middleware';
+import { generateCsrfToken } from './middleware/csrf.middleware';
 import router from './routes';
 import config from './config';
 
@@ -39,8 +41,9 @@ app.use(requestIdMiddleware);
 // Request logging
 app.use(morganMiddleware);
 
-// Secure headers
+// Secure headers & compression
 app.use(helmet());
+app.use(compression());
 
 // Performance & security
 app.use(corsOptions ? cors(corsOptions) : cors());
@@ -93,6 +96,7 @@ app.get('/', (req: Request, res: Response) => {
   const dbStatus = dbLabels[dbState] || 'unknown';
   const healthy = dbState === 1;
 
+
   res.status(healthy ? 200 : 503).json({
     success: healthy,
     message: healthy ? 'Cardbox B2B API is running' : 'API is degraded',
@@ -104,6 +108,14 @@ app.get('/', (req: Request, res: Response) => {
       server: 'healthy',
     },
   });
+});
+
+
+
+// CSRF token endpoint (for frontends that opt-in to CSRF protection)
+app.get('/api/v1/csrf-token', (req: Request, res: Response) => {
+  const token = generateCsrfToken(req, res);
+  res.json({ csrfToken: token });
 });
 
 // API Routes

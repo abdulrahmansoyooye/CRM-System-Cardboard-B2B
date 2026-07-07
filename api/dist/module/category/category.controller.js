@@ -17,12 +17,13 @@ exports.create = (0, asyncHandler_1.default)(async (req, res, next) => {
     });
 });
 exports.getAll = (0, asyncHandler_1.default)(async (req, res, next) => {
-    const categories = await category_service_1.CategoryService.getAllCategories();
+    const { result, meta } = await category_service_1.CategoryService.getAllCategories(req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
         message: "Categories fetched successfully",
-        data: categories
+        meta,
+        data: result
     });
 });
 exports.getBySlug = (0, asyncHandler_1.default)(async (req, res, next) => {

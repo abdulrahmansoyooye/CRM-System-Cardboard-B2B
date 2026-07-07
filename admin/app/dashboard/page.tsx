@@ -47,10 +47,10 @@ export default function DashboardPage() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-500 mb-2 flex items-center gap-2">
+          <div className="text-[10px] font-black uppercase tracking-[0.2em] text-accent-500 mb-2 flex items-center gap-2">
             <div className="w-1.5 h-1.5 bg-accent-500 rounded-full animate-pulse" />
             Industrial Backend Operational
-          </p>
+          </div>
           <h1 className="text-4xl font-display font-black text-slate-900 tracking-tight">
             Control Center
           </h1>

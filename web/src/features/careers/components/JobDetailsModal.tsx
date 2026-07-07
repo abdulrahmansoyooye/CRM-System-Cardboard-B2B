@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +31,13 @@ export function JobDetailsModal({ job }: { job: TJob }) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const nameId = useId();
+  const emailId = useId();
+  const phoneId = useId();
+  const linkedinId = useId();
+  const resumeId = useId();
+  const messageId = useId();
 
   const [formData, setFormData] = useState({
     jobId: job._id,
@@ -192,8 +199,9 @@ export function JobDetailsModal({ job }: { job: TJob }) {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Full Name *</label>
+                  <label htmlFor={nameId} className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Full Name *</label>
                   <Input 
+                    id={nameId}
                     name="name" 
                     required 
                     value={formData.name} 
@@ -202,8 +210,9 @@ export function JobDetailsModal({ job }: { job: TJob }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Email Address *</label>
+                  <label htmlFor={emailId} className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Email Address *</label>
                   <Input 
+                    id={emailId}
                     name="email" 
                     type="email" 
                     required 
@@ -216,8 +225,9 @@ export function JobDetailsModal({ job }: { job: TJob }) {
 
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Phone Number *</label>
+                  <label htmlFor={phoneId} className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Phone Number *</label>
                   <Input 
+                    id={phoneId}
                     name="phone" 
                     required 
                     value={formData.phone} 
@@ -226,8 +236,9 @@ export function JobDetailsModal({ job }: { job: TJob }) {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">LinkedIn / Portfolio URL</label>
+                  <label htmlFor={linkedinId} className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">LinkedIn / Portfolio URL</label>
                   <Input 
+                    id={linkedinId}
                     name="linkedin" 
                     value={formData.linkedin} 
                     onChange={handleChange}
@@ -237,9 +248,10 @@ export function JobDetailsModal({ job }: { job: TJob }) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Resume URL / Repository Link *</label>
+                <label htmlFor={resumeId} className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Resume URL / Repository Link *</label>
                 <div className="relative">
                   <Input 
+                    id={resumeId}
                     name="resume" 
                     required 
                     value={formData.resume} 
@@ -252,8 +264,9 @@ export function JobDetailsModal({ job }: { job: TJob }) {
               </div>
 
               <div className="space-y-2">
-                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Operational Statement (Cover Letter)</label>
+                <label htmlFor={messageId} className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Operational Statement (Cover Letter)</label>
                 <Textarea 
+                  id={messageId}
                   name="message" 
                   rows={4} 
                   value={formData.message} 

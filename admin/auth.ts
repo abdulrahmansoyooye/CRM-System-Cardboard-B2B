@@ -5,19 +5,19 @@ export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://crm-syst
 
 type LoginResponse =
   | {
-      success: true;
-      data: {
-        _id: string;
-        name: string;
-        email: string;
-        role: string;
-      };
-      token: string;
-    }
-  | {
-      success: false;
-      message?: string;
+    success: true;
+    data: {
+      _id: string;
+      name: string;
+      email: string;
+      role: string;
     };
+    token: string;
+  }
+  | {
+    success: false;
+    message?: string;
+  };
 
 
 
@@ -31,21 +31,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-
+        const payload = {
+          email: credentials.email as string,
+          password: credentials.password as string,
+        };
         try {
-          const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
-            method: "POST",
-            body: JSON.stringify(credentials),
-            headers: { "Content-Type": "application/json" },
-          });
-
+          let res: Response;
+          try {
+            res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+              method: "POST",
+              body: JSON.stringify(payload),
+              headers: { "Content-Type": "application/json" },
+            });
+          } catch {
+            throw new Error("Connection failed");
+          }
           const text = await res.text();
           let data: LoginResponse;
           try {
             data = JSON.parse(text) as LoginResponse;
           } catch {
             console.error("Auth error: API returned non-JSON response:", text.substring(0, 50));
-            throw new Error("Invalid API configuration");
+            throw new CredentialsSignin("Invalid API configuration");
           }
 
           if (res.ok && data.success) {
@@ -57,12 +64,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               accessToken: data.token,
             };
           }
-          throw new Error(!data.success ? (data.message || "Invalid credentials") : "Invalid credentials");
-        } catch (error: unknown) {
+          throw new CredentialsSignin(!data.success ? (data.message || "Invalid credentials") : "Invalid credentials");
+        } catch (error) {
           if (error instanceof CredentialsSignin) throw error;
-          const message = error instanceof Error ? error.message : "Unknown error";
-          console.error("Auth connection error", message);
-          throw new Error("Connection failed");
+          throw error;
         }
       },
     }),

@@ -5,16 +5,16 @@ export declare const assetSchema: Schema<any, import("mongoose").Model<any, any,
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -25,8 +25,8 @@ export declare const assetSchema: Schema<any, import("mongoose").Model<any, any,
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -39,8 +39,8 @@ export declare const assetSchema: Schema<any, import("mongoose").Model<any, any,
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
     createdAt: NativeDate;
@@ -54,8 +54,8 @@ export declare const Asset: import("mongoose").Model<{
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {}, {}, {
@@ -64,8 +64,8 @@ export declare const Asset: import("mongoose").Model<{
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -76,8 +76,8 @@ export declare const Asset: import("mongoose").Model<{
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -92,16 +92,16 @@ export declare const Asset: import("mongoose").Model<{
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, import("mongoose").Document<unknown, {}, {
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps, {
@@ -112,8 +112,8 @@ export declare const Asset: import("mongoose").Model<{
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
 } & import("mongoose").DefaultTimestampProps & {
@@ -126,8 +126,8 @@ export declare const Asset: import("mongoose").Model<{
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
     createdAt: NativeDate;
@@ -140,8 +140,8 @@ export declare const Asset: import("mongoose").Model<{
     name: string;
     category: string;
     url: string;
-    type?: string | null | undefined;
     size?: string | null | undefined;
+    type?: string | null | undefined;
     dimensions?: string | null | undefined;
     mimeType?: string | null | undefined;
     createdAt: NativeDate;

@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckCircle2, Send, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useId } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { submitInquiry } from "@/lib/api";
@@ -10,6 +10,13 @@ export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const companyId = useId();
+  const nameId = useId();
+  const emailId = useId();
+  const phoneId = useId();
+  const inquiryTypeId = useId();
+  const messageId = useId();
 
   const [formData, setFormData] = useState({
     companyName: "",
@@ -74,10 +81,11 @@ export function ContactForm() {
       <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor={companyId} className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Company Name *
             </label>
             <Input
+              id={companyId}
               name="companyName"
               required
               value={formData.companyName}
@@ -87,10 +95,11 @@ export function ContactForm() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor={nameId} className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Contact Person *
             </label>
             <Input
+              id={nameId}
               name="name"
               required
               value={formData.name}
@@ -103,10 +112,11 @@ export function ContactForm() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor={emailId} className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Email Address *
             </label>
             <Input
+              id={emailId}
               name="email"
               type="email"
               required
@@ -117,10 +127,11 @@ export function ContactForm() {
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor={phoneId} className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
               Phone Number *
             </label>
             <Input
+              id={phoneId}
               name="phone"
               type="tel"
               required
@@ -133,10 +144,11 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <label htmlFor={inquiryTypeId} className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Nature of Inquiry
           </label>
           <select
+            id={inquiryTypeId}
             name="inquiryType"
             value={formData.inquiryType}
             onChange={handleChange}
@@ -151,10 +163,11 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+          <label htmlFor={messageId} className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
             Message / Specifications *
           </label>
           <textarea
+            id={messageId}
             name="message"
             required
             rows={5}

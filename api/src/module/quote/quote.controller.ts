@@ -14,12 +14,13 @@ export const create = asyncHandler(async (req: Request, res: Response, next: Nex
 });
 
 export const getAll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const docs = await QuoteService.getAllQuotes();
+  const { result, meta } = await QuoteService.getAllQuotes(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'Success',
-    data: docs
+    meta,
+    data: result
   });
 });
 export const getById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

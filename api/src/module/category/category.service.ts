@@ -1,6 +1,7 @@
 import { Category, TCategory } from "./category.model";
 import { AppError } from "../../core/errors/AppError";
 import { generateSlug } from "../../utils/slug";
+import { getPaginationParams } from "../../utils/pagination";
 
 const createCategory = async (payload: TCategory) => {
     if (payload.name) payload.slug = generateSlug(payload.name);
@@ -9,8 +10,13 @@ const createCategory = async (payload: TCategory) => {
     return await Category.create(payload);
 };
 
-const getAllCategories = async () => {
-    return await Category.find();
+const getAllCategories = async (query: Record<string, unknown>) => {
+  const { page, limit, skip } = getPaginationParams(query);
+  const [result, total] = await Promise.all([
+    Category.find().skip(skip).limit(limit),
+    Category.countDocuments(),
+  ]);
+  return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
 };
 
 const getCategoryBySlug = async (slug: string) => {

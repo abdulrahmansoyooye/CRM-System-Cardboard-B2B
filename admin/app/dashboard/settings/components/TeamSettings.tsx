@@ -86,12 +86,12 @@ export function TeamSettings() {
       accessorKey: "name",
       cell: (u: any) => (
         <div className="flex items-center gap-4 py-1">
-          <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-all shadow-lg font-black text-sm">
+          <div className="w-10 h-10 bg-brand-950 rounded-xl flex items-center justify-center text-white shrink-0 group-hover:scale-105 transition-all shadow-lg font-black text-sm">
             {u.name[0]}
           </div>
           <div>
-            <h4 className="font-black text-slate-900 leading-tight">{u.name}</h4>
-            <span className="text-[10px] font-bold text-slate-400 truncate block max-w-40 uppercase tracking-widest">{u.email}</span>
+            <h4 className="font-black text-brand-950 leading-tight">{u.name}</h4>
+            <span className="text-[10px] font-bold text-brand-500 truncate block max-w-40 uppercase tracking-widest">{u.email}</span>
           </div>
         </div>
       ),
@@ -110,8 +110,8 @@ export function TeamSettings() {
         accessorKey: "isActive",
         cell: (u: any) => (
             <div className="flex items-center gap-2">
-                <div className={cn("w-2 h-2 rounded-full", u.isActive ? "bg-emerald-500 animate-pulse" : "bg-slate-300")} />
-                <span className={cn("text-[10px] font-black uppercase tracking-widest", u.isActive ? "text-emerald-600" : "text-slate-400")}>
+                <div className={cn("w-2 h-2 rounded-full", u.isActive ? "bg-emerald-500 animate-pulse" : "bg-brand-300")} />
+                <span className={cn("text-[10px] font-black uppercase tracking-widest", u.isActive ? "text-emerald-600" : "text-brand-500")}>
                     {u.isActive ? "Connected" : "Offline"}
                 </span>
             </div>
@@ -123,8 +123,8 @@ export function TeamSettings() {
       className: "text-right",
       cell: (u: any) => (
         <div className="flex items-center justify-end gap-1">
-          <button onClick={() => openFormModal(u)} className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-900 transition-all"><Edit2 className="w-4 h-4" /></button>
-          <button onClick={() => openDeleteModal(u)} className="p-2 rounded-lg hover:bg-rose-50 text-slate-400 hover:text-rose-500 transition-all"><Trash2 className="w-4 h-4" /></button>
+          <button onClick={() => openFormModal(u)} className="p-2 rounded-lg hover:bg-brand-100 text-brand-500 hover:text-brand-900 transition-all"><Edit2 className="w-4 h-4" /></button>
+          <button onClick={() => openDeleteModal(u)} className="p-2 rounded-lg hover:bg-rose-50 text-brand-500 hover:text-rose-500 transition-all"><Trash2 className="w-4 h-4" /></button>
         </div>
       ),
     },
@@ -134,15 +134,15 @@ export function TeamSettings() {
     <div className="premium-card p-8 space-y-8 min-h-[500px]">
        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-slate-950 rounded-2xl flex items-center justify-center text-white">
+            <div className="w-12 h-12 bg-brand-950 rounded-2xl flex items-center justify-center text-white">
                 <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-                <h2 className="text-xl font-display font-black text-slate-900 tracking-tight">Security Personnel</h2>
-                <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-0.5">Manage administrative hierarchy and system access</p>
+                <h2 className="text-xl font-display font-black text-brand-950 tracking-tight">Security Personnel</h2>
+                <p className="text-xs text-brand-500 font-bold uppercase tracking-widest mt-0.5">Manage administrative hierarchy and system access</p>
             </div>
         </div>
-        <button onClick={() => openFormModal()} className="btn-primary py-3 px-6 shadow-xl shadow-slate-950/20 bg-slate-950 hover:bg-slate-900">
+        <button onClick={() => openFormModal()} className="btn-primary py-3 px-6 shadow-xl shadow-brand-950/20 bg-brand-950 hover:bg-brand-900">
           <Plus className="w-4 h-4" /> Provision Operator
         </button>
       </div>
@@ -189,7 +189,7 @@ function UserForm({ initialData, onSubmit, isSubmitting }: { initialData?: any, 
                     <FormInput label="Access Key (Password)" type="password" placeholder="••••••••" error={errors.password?.message} {...register("password")} />
                 )}
                 <div className="flex flex-col gap-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Operational State</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-brand-500 px-1">Operational State</label>
                     <select {...register("isActive", { setValueAs: (v) => v === "true" })} className="glass-input">
                         <option value="true">Authorized (Active)</option>
                         <option value="false">Decommissioned (Inactive)</option>

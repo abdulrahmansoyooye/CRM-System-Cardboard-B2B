@@ -14,12 +14,13 @@ export const create = asyncHandler(async (req: Request, res: Response, next: Nex
 });
 
 export const getAll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const docs = await EventService.getAllEvents();
+  const { result, meta } = await EventService.getAllEvents(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'Success',
-    data: docs
+    meta,
+    data: result
   });
 });
 export const getById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

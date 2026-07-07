@@ -137,7 +137,7 @@
     width: 6px;
   }
   ::-webkit-scrollbar-track {
-    @apply bg-[#0A0F1A];
+    background: var(--color-background);
   }
   ::-webkit-scrollbar-thumb {
     @apply bg-accent transition-all duration-300;
@@ -163,5 +163,16 @@
 
 .perspective-1000 {
   perspective: 1000px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 

@@ -12,16 +12,16 @@ export declare const createUserSchema: z.ZodObject<{
             sales_manager: "sales_manager";
         }>;
     }, z.core.$strict>;
-}, z.core.$strict>;
+}, z.core.$strip>;
 export declare const loginSchema: z.ZodObject<{
     body: z.ZodObject<{
         email: z.ZodString;
         password: z.ZodString;
     }, z.core.$strict>;
-}, z.core.$strict>;
+}, z.core.$strip>;
 export declare const refreshTokenSchema: z.ZodObject<{
     body: z.ZodObject<{
         refreshToken: z.ZodString;
     }, z.core.$strict>;
-}, z.core.$strict>;
+}, z.core.$strip>;
 //# sourceMappingURL=user.validation.d.ts.map

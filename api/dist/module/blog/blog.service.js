@@ -5,6 +5,7 @@ const AppError_1 = require("../../core/errors/AppError");
 const slug_1 = require("../../utils/slug");
 const sanitize_1 = require("../../utils/sanitize");
 const blog_model_1 = require("./blog.model");
+const pagination_1 = require("../../utils/pagination");
 const createBlog = async (data) => {
     const sanitized = (0, sanitize_1.sanitizeContentData)(data);
     if (sanitized.title)
@@ -14,7 +15,14 @@ const createBlog = async (data) => {
     return await blog_model_1.Blog.create(sanitized);
 };
 exports.createBlog = createBlog;
-const getAllBlogs = async () => { return await blog_model_1.Blog.find(); };
+const getAllBlogs = async (query) => {
+    const { page, limit, skip } = (0, pagination_1.getPaginationParams)(query);
+    const [result, total] = await Promise.all([
+        blog_model_1.Blog.find().skip(skip).limit(limit),
+        blog_model_1.Blog.countDocuments(),
+    ]);
+    return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
+};
 exports.getAllBlogs = getAllBlogs;
 const getBlogBySlug = async (slug) => {
     const doc = await blog_model_1.Blog.findOne({ slug });

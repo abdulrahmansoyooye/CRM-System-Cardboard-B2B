@@ -25,8 +25,8 @@ exports.refresh = (0, asyncHandler_1.default)(async (req, res, next) => {
     res.status(200).json({ success: true, message: "Token refreshed successfully", ...result });
 });
 exports.getAll = (0, asyncHandler_1.default)(async (req, res, next) => {
-    const users = await user_service_1.UserService.getUsers();
-    (0, sendResponse_1.default)(res, { statusCode: 200, success: true, message: 'Success', data: users });
+    const { result, meta } = await user_service_1.UserService.getUsers(req.query);
+    (0, sendResponse_1.default)(res, { statusCode: 200, success: true, message: 'Success', meta, data: result });
 });
 exports.getById = (0, asyncHandler_1.default)(async (req, res, next) => {
     const id = req.params.id;

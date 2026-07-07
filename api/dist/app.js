@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
+const compression_1 = __importDefault(require("compression"));
 const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const rate_limit_mongo_1 = __importDefault(require("rate-limit-mongo"));
@@ -13,9 +14,11 @@ const error_middleware_1 = __importDefault(require("./middleware/error.middlewar
 const morgan_middleware_1 = __importDefault(require("./middleware/morgan.middleware"));
 const cache_middleware_1 = require("./middleware/cache.middleware");
 const requestId_middleware_1 = require("./middleware/requestId.middleware");
+const csrf_middleware_1 = require("./middleware/csrf.middleware");
 const routes_1 = __importDefault(require("./routes"));
 const config_1 = __importDefault(require("./config"));
 const app = (0, express_1.default)();
+app.set('trust proxy', 1);
 const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map((origin) => origin.trim())
     : ['http://localhost:3000', 'http://localhost:3001'];
@@ -35,8 +38,9 @@ const corsOptions = {
 app.use(requestId_middleware_1.requestIdMiddleware);
 // Request logging
 app.use(morgan_middleware_1.default);
-// Secure headers
+// Secure headers & compression
 app.use((0, helmet_1.default)());
+app.use((0, compression_1.default)());
 // Performance & security
 app.use(corsOptions ? (0, cors_1.default)(corsOptions) : (0, cors_1.default)());
 app.use(express_1.default.json());
@@ -90,6 +94,11 @@ app.get('/', (req, res) => {
             server: 'healthy',
         },
     });
+});
+// CSRF token endpoint (for frontends that opt-in to CSRF protection)
+app.get('/api/v1/csrf-token', (req, res) => {
+    const token = (0, csrf_middleware_1.generateCsrfToken)(req, res);
+    res.json({ csrfToken: token });
 });
 // API Routes
 app.use('/api/v1', routes_1.default);

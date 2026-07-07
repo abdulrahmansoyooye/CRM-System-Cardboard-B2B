@@ -14,12 +14,13 @@ export const create = asyncHandler(async (req: Request, res: Response, next: Nex
 });
 
 export const getAll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-  const docs = await IndustryService.getAllIndustrys();
+  const { result, meta } = await IndustryService.getAllIndustrys(req.query);
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: 'Success',
-    data: docs
+    meta,
+    data: result
   });
 });
 export const getBySlug = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

@@ -43,4 +43,5 @@ export default {
   jwt_access_expires_in: process.env.JWT_ACCESS_EXPIRES_IN || '1d',
   jwt_refresh_secret: getSecretEnv('JWT_REFRESH_SECRET'),
   jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
+  csrf_secret: process.env.CSRF_SECRET || process.env.JWT_ACCESS_SECRET || 'csrf-fallback-dev-only',
 };

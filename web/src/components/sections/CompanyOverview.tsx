@@ -63,7 +63,7 @@ export function CompanyOverview({ settings }: { settings?: TSettings }) {
               className="relative group aspect-[4/5] overflow-hidden border-l border-t border-accent/20"
             >
               <div className="absolute inset-0 bg-accent/10 mix-blend-overlay z-10" />
-              <motion.div style={{ scale: imgScale, y: imgY }} className="w-full h-full">
+              <motion.div style={{ scale: imgScale, y: imgY }} className="relative w-full h-full">
                 <Image
                   src={getPlaceholderImage('hero')}
                   alt="Corrugated Box Manufacturing Plant"

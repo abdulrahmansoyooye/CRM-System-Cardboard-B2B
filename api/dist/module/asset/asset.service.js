@@ -4,6 +4,7 @@ exports.AssetService = void 0;
 const asset_model_1 = require("./asset.model");
 const AppError_1 = require("../../core/errors/AppError");
 const storage_1 = require("../../utils/storage");
+const pagination_1 = require("../../utils/pagination");
 exports.AssetService = {
     createAsset: async (data, file) => {
         (0, storage_1.ensureUploadDir)();
@@ -25,8 +26,13 @@ exports.AssetService = {
             mimeType,
         });
     },
-    getAllAssets: async () => {
-        return await asset_model_1.Asset.find().sort({ createdAt: -1 });
+    getAllAssets: async (query) => {
+        const { page, limit, skip } = (0, pagination_1.getPaginationParams)(query);
+        const [result, total] = await Promise.all([
+            asset_model_1.Asset.find().sort({ createdAt: -1 }).skip(skip).limit(limit),
+            asset_model_1.Asset.countDocuments(),
+        ]);
+        return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
     },
     deleteAsset: async (id) => {
         const doc = await asset_model_1.Asset.findById(id);

@@ -3,6 +3,7 @@ import { generateToken } from "../../utils/jwt";
 import { issueTokens, refreshAccessToken as refreshTokenSvc, blacklistToken } from "./token.service";
 import { CreateUserDTO, LoginPayloadDTO, UpdateUserDTO } from "../../types/dtos";
 import { User } from "./user.model";
+import { getPaginationParams } from '../../utils/pagination';
 
 export const createUser = async (data: CreateUserDTO) => {
     const exists = await User.findOne({email: data.email})
@@ -41,9 +42,13 @@ export const refreshToken = async (refreshTokenStr: string) => {
     return refreshTokenSvc(refreshTokenStr);
 }
 
-export const getUsers = async () => {
-    const users = await User.find().select('-password')
-    return users
+export const getUsers = async (query: Record<string, unknown>) => {
+    const { page, limit, skip } = getPaginationParams(query);
+    const [result, total] = await Promise.all([
+      User.find().select('-password').skip(skip).limit(limit),
+      User.countDocuments(),
+    ]);
+    return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
 }
 
 export const getUserById = async (id: string) => {

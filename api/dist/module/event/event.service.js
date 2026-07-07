@@ -4,12 +4,20 @@ exports.EventService = exports.deleteEvent = exports.updateEvent = exports.getEv
 const AppError_1 = require("../../core/errors/AppError");
 const sanitize_1 = require("../../utils/sanitize");
 const event_model_1 = require("./event.model");
+const pagination_1 = require("../../utils/pagination");
 const createEvent = async (data) => {
     const sanitized = (0, sanitize_1.sanitizeContentData)(data);
     return await event_model_1.Event.create(sanitized);
 };
 exports.createEvent = createEvent;
-const getAllEvents = async () => { return await event_model_1.Event.find(); };
+const getAllEvents = async (query) => {
+    const { page, limit, skip } = (0, pagination_1.getPaginationParams)(query);
+    const [result, total] = await Promise.all([
+        event_model_1.Event.find().skip(skip).limit(limit),
+        event_model_1.Event.countDocuments(),
+    ]);
+    return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
+};
 exports.getAllEvents = getAllEvents;
 const getEventById = async (id) => {
     const doc = await event_model_1.Event.findById(id);

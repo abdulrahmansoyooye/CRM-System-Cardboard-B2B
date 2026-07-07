@@ -1,9 +1,17 @@
 import { AppError } from '../../core/errors/AppError';
 import { CreateJobApplicationDTO, UpdateJobApplicationDTO } from '../../types/dtos';
 import { JobApplication } from './job_application.model';
+import { getPaginationParams } from '../../utils/pagination';
 
 export const createJobApplication = async (data: CreateJobApplicationDTO) => { return await JobApplication.create(data); };
-export const getAllJobApplications = async () => { return await JobApplication.find(); };
+export const getAllJobApplications = async (query: Record<string, unknown>) => {
+  const { page, limit, skip } = getPaginationParams(query);
+  const [result, total] = await Promise.all([
+    JobApplication.find().skip(skip).limit(limit),
+    JobApplication.countDocuments(),
+  ]);
+  return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
+};
 export const getJobApplicationById = async (id: string) => {
   const doc = await JobApplication.findById(id);
   if (!doc) throw new AppError('Not found', 404);

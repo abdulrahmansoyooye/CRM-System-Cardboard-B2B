@@ -3,9 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.JobApplicationService = exports.deleteJobApplication = exports.updateJobApplication = exports.getJobApplicationById = exports.getAllJobApplications = exports.createJobApplication = void 0;
 const AppError_1 = require("../../core/errors/AppError");
 const job_application_model_1 = require("./job_application.model");
+const pagination_1 = require("../../utils/pagination");
 const createJobApplication = async (data) => { return await job_application_model_1.JobApplication.create(data); };
 exports.createJobApplication = createJobApplication;
-const getAllJobApplications = async () => { return await job_application_model_1.JobApplication.find(); };
+const getAllJobApplications = async (query) => {
+    const { page, limit, skip } = (0, pagination_1.getPaginationParams)(query);
+    const [result, total] = await Promise.all([
+        job_application_model_1.JobApplication.find().skip(skip).limit(limit),
+        job_application_model_1.JobApplication.countDocuments(),
+    ]);
+    return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
+};
 exports.getAllJobApplications = getAllJobApplications;
 const getJobApplicationById = async (id) => {
     const doc = await job_application_model_1.JobApplication.findById(id);

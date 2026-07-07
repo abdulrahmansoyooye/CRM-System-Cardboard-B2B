@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { TSettings, TCategory, TIndustry } from "@/types";
 import { cn } from "@/lib/utils";
+import { FocusTrap } from "@/components/FocusTrap";
 
 interface NavItem {
   label: string;
@@ -383,6 +384,7 @@ export function Navbar({
       {/* Mobile Command Center - Refactored */}
       <AnimatePresence mode="wait">
         {isMobileMenuOpen && (
+          <FocusTrap>
           <motion.div
             id="mobile-navigation-menu"
             role="dialog"
@@ -537,6 +539,7 @@ export function Navbar({
                 </div>
             </div>
           </motion.div>
+        </FocusTrap>
         )}
       </AnimatePresence>
     </>

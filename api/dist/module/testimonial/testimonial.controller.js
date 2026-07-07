@@ -17,12 +17,13 @@ exports.create = (0, asyncHandler_1.default)(async (req, res, next) => {
     });
 });
 exports.getAll = (0, asyncHandler_1.default)(async (req, res, next) => {
-    const docs = await testimonial_service_1.TestimonialService.getAllTestimonials();
+    const { result, meta } = await testimonial_service_1.TestimonialService.getAllTestimonials(req.query);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,
         message: 'Success',
-        data: docs
+        meta,
+        data: result
     });
 });
 exports.getById = (0, asyncHandler_1.default)(async (req, res, next) => {

@@ -24,8 +24,8 @@ export const refresh = asyncHandler(async (req: Request, res: Response, next: Ne
 })
 
 export const getAll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const users = await UserService.getUsers()
-    sendResponse(res, { statusCode: 200, success: true, message: 'Success', data: users });
+    const { result, meta } = await UserService.getUsers(req.query)
+    sendResponse(res, { statusCode: 200, success: true, message: 'Success', meta, data: result });
 })
 
 export const getById = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {

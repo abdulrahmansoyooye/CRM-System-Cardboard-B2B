@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useModal } from "@/lib/store/useModalStore";
 import { AnimatePresence, motion } from "framer-motion";
+import { FocusTrap } from "@/components/dashboard/shared/FocusTrap";
 
 const sizeMap = {
   sm: "max-w-md",
@@ -46,6 +47,7 @@ export default function GlobalModal() {
           />
 
           {/* Modal Content */}
+          <FocusTrap>
           <motion.div
             ref={modalRef}
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
@@ -88,6 +90,7 @@ export default function GlobalModal() {
               {view}
             </div>
           </motion.div>
+          </FocusTrap>
         </div>
       )}
     </AnimatePresence>

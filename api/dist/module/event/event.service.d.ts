@@ -22,29 +22,37 @@ export declare const createEvent: (data: CreateEventDTO) => Promise<import("mong
 }, "id"> & {
     id: string;
 }>;
-export declare const getAllEvents: () => Promise<(import("mongoose").Document<unknown, {}, {
-    isFeatured: boolean;
-    images: string[];
-    title: string;
-    description?: string | null | undefined;
-    eventDate?: NativeDate | null | undefined;
-} & import("mongoose").DefaultTimestampProps, {
-    id: string;
-}, {
-    timestamps: true;
-}> & Omit<{
-    isFeatured: boolean;
-    images: string[];
-    title: string;
-    description?: string | null | undefined;
-    eventDate?: NativeDate | null | undefined;
-} & import("mongoose").DefaultTimestampProps & {
-    _id: import("mongoose").Types.ObjectId;
-} & {
-    __v: number;
-}, "id"> & {
-    id: string;
-})[]>;
+export declare const getAllEvents: (query: Record<string, unknown>) => Promise<{
+    result: (import("mongoose").Document<unknown, {}, {
+        isFeatured: boolean;
+        images: string[];
+        title: string;
+        description?: string | null | undefined;
+        eventDate?: NativeDate | null | undefined;
+    } & import("mongoose").DefaultTimestampProps, {
+        id: string;
+    }, {
+        timestamps: true;
+    }> & Omit<{
+        isFeatured: boolean;
+        images: string[];
+        title: string;
+        description?: string | null | undefined;
+        eventDate?: NativeDate | null | undefined;
+    } & import("mongoose").DefaultTimestampProps & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    })[];
+    meta: {
+        page: number;
+        limit: number;
+        total: number;
+        totalPage: number;
+    };
+}>;
 export declare const getEventById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
     isFeatured: boolean;
     images: string[];
@@ -138,29 +146,37 @@ export declare const EventService: {
     }, "id"> & {
         id: string;
     }>;
-    getAllEvents: () => Promise<(import("mongoose").Document<unknown, {}, {
-        isFeatured: boolean;
-        images: string[];
-        title: string;
-        description?: string | null | undefined;
-        eventDate?: NativeDate | null | undefined;
-    } & import("mongoose").DefaultTimestampProps, {
-        id: string;
-    }, {
-        timestamps: true;
-    }> & Omit<{
-        isFeatured: boolean;
-        images: string[];
-        title: string;
-        description?: string | null | undefined;
-        eventDate?: NativeDate | null | undefined;
-    } & import("mongoose").DefaultTimestampProps & {
-        _id: import("mongoose").Types.ObjectId;
-    } & {
-        __v: number;
-    }, "id"> & {
-        id: string;
-    })[]>;
+    getAllEvents: (query: Record<string, unknown>) => Promise<{
+        result: (import("mongoose").Document<unknown, {}, {
+            isFeatured: boolean;
+            images: string[];
+            title: string;
+            description?: string | null | undefined;
+            eventDate?: NativeDate | null | undefined;
+        } & import("mongoose").DefaultTimestampProps, {
+            id: string;
+        }, {
+            timestamps: true;
+        }> & Omit<{
+            isFeatured: boolean;
+            images: string[];
+            title: string;
+            description?: string | null | undefined;
+            eventDate?: NativeDate | null | undefined;
+        } & import("mongoose").DefaultTimestampProps & {
+            _id: import("mongoose").Types.ObjectId;
+        } & {
+            __v: number;
+        }, "id"> & {
+            id: string;
+        })[];
+        meta: {
+            page: number;
+            limit: number;
+            total: number;
+            totalPage: number;
+        };
+    }>;
     getEventById: (id: string) => Promise<import("mongoose").Document<unknown, {}, {
         isFeatured: boolean;
         images: string[];

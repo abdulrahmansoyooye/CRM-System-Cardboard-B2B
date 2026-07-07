@@ -3,9 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.QuoteService = exports.deleteQuote = exports.updateQuote = exports.getQuoteById = exports.getAllQuotes = exports.createQuote = void 0;
 const AppError_1 = require("../../core/errors/AppError");
 const quote_model_1 = require("./quote.model");
+const pagination_1 = require("../../utils/pagination");
 const createQuote = async (data) => { return await quote_model_1.Quote.create(data); };
 exports.createQuote = createQuote;
-const getAllQuotes = async () => { return await quote_model_1.Quote.find(); };
+const getAllQuotes = async (query) => {
+    const { page, limit, skip } = (0, pagination_1.getPaginationParams)(query);
+    const [result, total] = await Promise.all([
+        quote_model_1.Quote.find().skip(skip).limit(limit),
+        quote_model_1.Quote.countDocuments(),
+    ]);
+    return { result, meta: { page, limit, total, totalPage: Math.ceil(total / limit) } };
+};
 exports.getAllQuotes = getAllQuotes;
 const getQuoteById = async (id) => {
     const doc = await quote_model_1.Quote.findById(id);

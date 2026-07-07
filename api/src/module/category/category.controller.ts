@@ -14,12 +14,13 @@ export const create = asyncHandler(async (req: Request, res: Response, next: Nex
 });
 
 export const getAll = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const categories = await CategoryService.getAllCategories();
+    const { result, meta } = await CategoryService.getAllCategories(req.query);
     sendResponse(res, {
         statusCode: 200,
         success: true,
         message: "Categories fetched successfully",
-        data: categories
+        meta,
+        data: result
     });
 });
 
