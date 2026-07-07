@@ -13,7 +13,7 @@ const createProductSchema = z.object({
     moq: z.number().min(1).default(1),
     deliveryTimeline: z.string().optional(),
     isFeatured: z.boolean().default(false),
-    images: z.array(z.string()).min(1, 'At least one image is required'),
+    images: z.array(z.string()).optional(),
     seo: z
       .object({
         metaTitle: z.string().optional(),

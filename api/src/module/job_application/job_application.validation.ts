@@ -8,7 +8,7 @@ export const createJob_applicationSchema = z.object({
     phone: z.string().optional(),
     resumeFile: z.string().optional(),
     notes: z.string().optional(),
-    status: z.enum(['new', 'reviewed', 'shortlisted', 'rejected']).default('new'),
+    status: z.enum(['new', 'reviewed', 'shortlisted', 'rejected', 'hired']).default('new'),
   }).strict(),
 });
 
@@ -19,7 +19,7 @@ export const updateJob_applicationSchema = z.object({
     email: z.string().email().optional(),
     phone: z.string().optional(),
     resumeFile: z.string().optional(),
-    status: z.enum(['new', 'reviewed', 'shortlisted', 'rejected']).optional(),
+    status: z.enum(['new', 'reviewed', 'shortlisted', 'rejected', 'hired']).optional(),
     notes: z.string().optional(),
   }).strict(),
 });

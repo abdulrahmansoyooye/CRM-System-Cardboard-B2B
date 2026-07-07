@@ -64,12 +64,10 @@ export default function SettingsPage() {
   const handleSave = async () => {
     setIsSaving(true);
     const payload = {
-      companyName: branding.companyName,
-      tagline: branding.tagline,
       contactEmail: contact.email,
       contactPhone: contact.phone,
       address: contact.address,
-      defaultSEO: { metaDesc: seo.metaDesc },
+      defaultSEO: { metaDescription: seo.metaDesc },
       socialLinks: { linkedin: seo.linkedin, twitter: seo.twitter, facebook: seo.facebook }
     };
     

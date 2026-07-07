@@ -39,13 +39,16 @@ export default function BlogPage() {
   );
 
   const handleCreate = async (formData: any) => {
-    // Convert isPublished to status for backend if needed, or handle it in service
-    await createMutation.mutateAsync(formData);
+    const { slug, author, isPublished, ...rest } = formData;
+    const payload = { ...rest, status: isPublished ? 'published' : 'draft' };
+    await createMutation.mutateAsync(payload);
     closeModal();
   };
 
   const handleUpdate = async (id: string, formData: any) => {
-    await updateMutation.mutateAsync({ id, data: formData });
+    const { slug, author, isPublished, ...rest } = formData;
+    const payload = { ...rest, status: isPublished ? 'published' : 'draft' };
+    await updateMutation.mutateAsync({ id, data: payload });
     closeModal();
   };
 

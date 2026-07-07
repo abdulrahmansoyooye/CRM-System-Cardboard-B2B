@@ -47,7 +47,8 @@ export default function InquiriesPage() {
   );
 
   const handleCreate = async (formData: any) => {
-    await createMutation.mutateAsync(formData);
+    const { subject, ...payload } = formData;
+    await createMutation.mutateAsync(payload);
     closeModal();
   };
 

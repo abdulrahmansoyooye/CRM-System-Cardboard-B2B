@@ -49,8 +49,10 @@ export function TeamSettings() {
             isSubmitting={createMutation.isPending || updateMutation.isPending}
             onSubmit={(data) => {
                 if (user) {
-                    updateMutation.mutate({ id: user._id, data });
+                    const { password: _, ...updateData } = data;
+                    updateMutation.mutate({ id: user._id, data: updateData });
                 } else {
+                    if (!data.password) return;
                     createMutation.mutate(data);
                 }
                 closeModal();

@@ -39,12 +39,14 @@ export default function IndustriesPage() {
   );
 
   const handleCreate = async (formData: any) => {
-    await createMutation.mutateAsync(formData);
+    const { slug, ...payload } = formData;
+    await createMutation.mutateAsync(payload);
     closeModal();
   };
 
   const handleUpdate = async (id: string, formData: any) => {
-    await updateMutation.mutateAsync({ id, data: formData });
+    const { slug, ...payload } = formData;
+    await updateMutation.mutateAsync({ id, data: payload });
     closeModal();
   };
 
