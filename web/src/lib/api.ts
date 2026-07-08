@@ -1,6 +1,4 @@
-import { unstable_cache } from "next/cache";
 import { cache } from "react";
-import { CACHE_DURATIONS } from "./api-config";
 
 import {
   getProducts as getProductsSvc,
@@ -21,18 +19,11 @@ import {
   submitApplication as submitApplicationSvc,
 } from "@/services";
 
-const ISR_60 = CACHE_DURATIONS.PRODUCTS;
-const ISR_300 = CACHE_DURATIONS.SETTINGS;
-
-function createCachedGetter<T>(key: string, fn: () => Promise<T>, revalidate: number) {
-  return unstable_cache(cache(fn), [key], { revalidate });
-}
-
-const getCachedCategories = createCachedGetter("categories", () => getCategoriesSvc(), ISR_300);
-const getCachedIndustries = createCachedGetter("industries", () => getIndustriesSvc(), ISR_60);
-const getCachedJobs = createCachedGetter("jobs", () => getJobsSvc(), ISR_60);
-const getCachedTestimonials = createCachedGetter("testimonials", () => getTestimonialsSvc(), ISR_300);
-const getCachedSettings = createCachedGetter("settings", () => getSettingsSvc(), ISR_300);
+const getCachedCategories = cache(() => getCategoriesSvc());
+const getCachedIndustries = cache(() => getIndustriesSvc());
+const getCachedJobs = cache(() => getJobsSvc());
+const getCachedTestimonials = cache(() => getTestimonialsSvc());
+const getCachedSettings = cache(() => getSettingsSvc());
 
 const getCachedProducts = cache(async (
   query?: Record<string, string | number | boolean | undefined | null>

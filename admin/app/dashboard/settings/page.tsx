@@ -46,7 +46,7 @@ export default function SettingsPage() {
         address: s.address || "" 
       });
       setSeo({ 
-        metaDesc: s.defaultSEO?.metaDesc || "", 
+        metaDesc: s.defaultSEO?.metaDescription || "", 
         linkedin: s.socialLinks?.linkedin || "", 
         twitter: s.socialLinks?.twitter || "", 
         facebook: s.socialLinks?.facebook || "" 

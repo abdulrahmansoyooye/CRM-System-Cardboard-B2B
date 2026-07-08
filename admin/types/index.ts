@@ -223,7 +223,7 @@ export interface ISettings {
   contactPhone?: string;
   defaultSEO?: {
     metaTitle?: string;
-    metaDesc?: string;
+    metaDescription?: string;
     ogImage?: string;
   };
   socialLinks?: {
@@ -253,7 +253,7 @@ export interface IContactSettings {
 export interface ISEOSettings {
   defaultSEO?: {
     metaTitle?: string;
-    metaDesc?: string;
+    metaDescription?: string;
     ogImage?: string;
   };
 }
