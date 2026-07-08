@@ -26,19 +26,22 @@ export default function ProductsPage() {
   const createMutation = useDashboardMutation(
     createProduct,
     "Product provisioned successfully",
-    [["products"]]
+    [["products"]],
+    ["products"]
   );
 
   const updateMutation = useDashboardMutation(
     ({ id, data }: { id: string; data: any }) => updateProduct(id, data),
     "Product updated successfully",
-    [["products"]]
+    [["products"]],
+    ["products"]
   );
 
   const deleteMutation = useDashboardMutation(
     deleteProduct,
     "Product decommissioned successfully",
-    [["products"]]
+    [["products"]],
+    ["products"]
   );
 
   const handleCreate = async (formData: any) => {

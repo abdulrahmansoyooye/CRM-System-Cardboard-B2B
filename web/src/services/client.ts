@@ -22,9 +22,13 @@ function buildQueryString(query?: Record<string, string | number | boolean | und
     : "";
 }
 
-export async function fetchJson<T>(path: string, revalidate?: number): Promise<T> {
+export async function fetchJson<T>(path: string, revalidate?: number, tags?: string[]): Promise<T> {
+  const next: Record<string, unknown> = {};
+  if (revalidate) next.revalidate = revalidate;
+  if (tags) next.tags = tags;
+
   const res = await fetchWithTimeout(`${API_BASE_URL}${path}`, {
-    ...(revalidate ? { next: { revalidate } } : {}),
+    ...(Object.keys(next).length ? { next } : {}),
     headers: { Accept: "application/json" },
   });
   if (!res.ok) throw new Error(`Failed to fetch ${path}`);
@@ -32,10 +36,15 @@ export async function fetchJson<T>(path: string, revalidate?: number): Promise<T
   return data?.data ?? data;
 }
 
-export async function getWithQuery<T>(path: string, query: Record<string, string | number | boolean | undefined | null>, revalidate?: number): Promise<T[]> {
+export async function getWithQuery<T>(path: string, query: Record<string, string | number | boolean | undefined | null>, revalidate?: number, tags?: string[]): Promise<T[]> {
   const queryString = buildQueryString(query);
+
+  const next: Record<string, unknown> = {};
+  if (revalidate) next.revalidate = revalidate;
+  if (tags) next.tags = tags;
+
   const res = await fetchWithTimeout(`${API_BASE_URL}${path}${queryString}`, {
-    ...(revalidate ? { next: { revalidate } } : {}),
+    ...(Object.keys(next).length ? { next } : {}),
     headers: { Accept: "application/json" },
   });
   if (!res.ok) throw new Error(`Failed to fetch ${path}`);

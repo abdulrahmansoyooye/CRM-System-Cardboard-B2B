@@ -22,19 +22,22 @@ export default function TestimonialsPage() {
   const createMutation = useDashboardMutation(
     createTestimonial,
     "Endorsement synchronized successfully",
-    [["testimonials"]]
+    [["testimonials"]],
+    ["testimonials"]
   );
 
   const updateMutation = useDashboardMutation(
     ({ id, data }: { id: string; data: any }) => updateTestimonial(id, data),
     "Statement updated",
-    [["testimonials"]]
+    [["testimonials"]],
+    ["testimonials"]
   );
 
   const deleteMutation = useDashboardMutation(
     deleteTestimonial,
     "Social proof decommissioned",
-    [["testimonials"]]
+    [["testimonials"]],
+    ["testimonials"]
   );
 
   const handleCreate = async (formData: any) => {

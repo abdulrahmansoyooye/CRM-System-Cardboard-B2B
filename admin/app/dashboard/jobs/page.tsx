@@ -23,19 +23,22 @@ export default function JobsPage() {
   const createMutation = useDashboardMutation(
     createJob,
     "Career opening deployed successfully",
-    [["jobs"]]
+    [["jobs"]],
+    ["jobs"]
   );
 
   const updateMutation = useDashboardMutation(
     ({ id, data }: { id: string; data: any }) => updateJob(id, data),
     "Mission parameters updated",
-    [["jobs"]]
+    [["jobs"]],
+    ["jobs"]
   );
 
   const deleteMutation = useDashboardMutation(
     deleteJob,
     "Position archived successfully",
-    [["jobs"]]
+    [["jobs"]],
+    ["jobs"]
   );
 
   const handleCreate = async (formData: any) => {

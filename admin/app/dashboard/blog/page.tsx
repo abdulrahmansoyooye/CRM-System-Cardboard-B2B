@@ -23,19 +23,22 @@ export default function BlogPage() {
   const createMutation = useDashboardMutation<any>(
     createBlog,
     "Article published successfully",
-    [["blogs"]]
+    [["blogs"]],
+    ["blogs"]
   );
 
   const updateMutation = useDashboardMutation<{ id: string; data: any }>(
     ({ id, data }) => updateBlog(id, data),
     "Article updated successfully",
-    [["blogs"]]
+    [["blogs"]],
+    ["blogs"]
   );
 
   const deleteMutation = useDashboardMutation<string>(
     deleteBlog,
     "Article purged successfully",
-    [["blogs"]]
+    [["blogs"]],
+    ["blogs"]
   );
 
   const handleCreate = async (formData: any) => {

@@ -23,19 +23,22 @@ export default function IndustriesPage() {
   const createMutation = useDashboardMutation(
     createIndustry,
     "Sector established successfully",
-    [["industries"]]
+    [["industries"]],
+    ["industries"]
   );
 
   const updateMutation = useDashboardMutation(
     ({ id, data }: { id: string; data: any }) => updateIndustry(id, data),
     "Sector documentation updated",
-    [["industries"]]
+    [["industries"]],
+    ["industries"]
   );
 
   const deleteMutation = useDashboardMutation(
     deleteIndustry,
     "Sector decommissioned successfully",
-    [["industries"]]
+    [["industries"]],
+    ["industries"]
   );
 
   const handleCreate = async (formData: any) => {

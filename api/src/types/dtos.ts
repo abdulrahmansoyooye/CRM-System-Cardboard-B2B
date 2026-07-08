@@ -93,10 +93,10 @@ export interface UpdateProductDTO {
 
 export interface CreateBlogDTO {
   title: string;
-  slug?: string;
+  slug: string;
   category?: string;
   excerpt?: string;
-  content: string;
+  content?: string;
   featuredImage?: string;
   tags?: string[];
   seo?: Record<string, unknown>;

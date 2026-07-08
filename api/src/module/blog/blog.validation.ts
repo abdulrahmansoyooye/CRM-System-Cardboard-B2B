@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const createBlogSchema = z.object({
   body: z.object({
     title: z.string({ message: 'Title is required' }),
+    slug: z.string({ message: 'Slug is required' }),
     category: z.string().optional(),
     excerpt: z.string().optional(),
     content: z.string().optional(),
@@ -19,6 +20,7 @@ export const createBlogSchema = z.object({
 export const updateBlogSchema = z.object({
   body: z.object({
     title: z.string().optional(),
+    slug: z.string().optional(),
     category: z.string().optional(),
     excerpt: z.string().optional(),
     content: z.string().optional(),

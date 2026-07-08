@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 const blogSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
+  slug: z.string().min(1, "Slug is required"),
   category: z.string().min(1, "Category is required"),
   content: z.string().min(10, "Content must be at least 10 characters"),
   isPublished: z.boolean(),
@@ -19,6 +20,7 @@ const blogSchema = z.object({
 
 interface BlogFormValues {
   title: string;
+  slug: string;
   category: string;
   content: string;
   isPublished: boolean;
@@ -43,6 +45,7 @@ export function BlogForm({ initialData, onSubmit, isSubmitting }: BlogFormProps)
     resolver: zodResolver(blogSchema),
     defaultValues: {
       title: initialData?.title || "",
+      slug: initialData?.slug || "",
       category: initialData?.category || "Industrial",
       content: initialData?.content || "",
       isPublished: !!initialData?.isPublished || initialData?.status === "published",
@@ -51,7 +54,18 @@ export function BlogForm({ initialData, onSubmit, isSubmitting }: BlogFormProps)
     },
   });
 
+  const title = watch("title");
   const isPublished = watch("isPublished");
+
+  useEffect(() => {
+    if (!initialData && title) {
+      const slug = title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+      setValue("slug", slug);
+    }
+  }, [title, initialData, setValue]);
 
   return (
     <FormLayout onSubmit={handleSubmit(onSubmit)} isSubmitting={isSubmitting} submitLabel={initialData ? "Update Publication" : "Authorize Publication"}>
@@ -73,6 +87,12 @@ export function BlogForm({ initialData, onSubmit, isSubmitting }: BlogFormProps)
             </option>
           ))}
         </FormSelect>
+        <FormInput
+          label="Mission Slug"
+          placeholder="impact-report-2026"
+          error={errors.slug?.message}
+          {...register("slug")}
+        />
       </FormSection>
 
       <FormSection title="Publication Metadata">

@@ -23,19 +23,22 @@ export default function EventsPage() {
   const createMutation = useDashboardMutation<any>(
     createEvent,
     "Event logic established",
-    [["events"]]
+    [["events"]],
+    ["events"]
   );
 
   const updateMutation = useDashboardMutation<{ id: string; data: any }>(
     ({ id, data }) => updateEvent(id, data),
     "Event updated successfully",
-    [["events"]]
+    [["events"]],
+    ["events"]
   );
 
   const deleteMutation = useDashboardMutation<string>(
     deleteEvent,
     "Event purged from archive",
-    [["events"]]
+    [["events"]],
+    ["events"]
   );
 
   const handleCreate = async (formData: any) => {

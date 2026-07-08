@@ -58,7 +58,8 @@ export default function SettingsPage() {
   const updateMutation = useDashboardMutation(
     (data: any) => settingsId ? updateSettings(settingsId, data) : createSettings(data),
     "System configuration synchronized",
-    [["settings"]]
+    [["settings"]],
+    ["settings"]
   );
 
   const handleSave = async () => {

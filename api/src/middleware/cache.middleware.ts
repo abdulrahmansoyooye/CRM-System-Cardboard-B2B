@@ -61,6 +61,13 @@ export const cacheMiddleware = (req: Request, res: Response, next: NextFunction)
     res.set('Vary', 'Accept-Encoding');
   }
 
+  // Add Cache-Tag header for targeted invalidation
+  if (cacheControl !== CACHE_DURATIONS.NO_CACHE) {
+    const segments = path.split('/').filter(Boolean);
+    const resource = segments[0] || 'default';
+    res.set('Cache-Tag', resource);
+  }
+
   res.set('Cache-Control', cacheControl);
   next();
 };

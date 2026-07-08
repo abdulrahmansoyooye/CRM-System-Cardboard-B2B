@@ -28,10 +28,25 @@ export function useDashboardQuery<TQueryFnData, TData = TQueryFnData, TError = E
   });
 }
 
+const revalidateWebCache = async (tags: string[]) => {
+  const webUrl = process.env.NEXT_PUBLIC_WEB_URL;
+  const secret = process.env.NEXT_PUBLIC_REVALIDATION_SECRET;
+  if (!webUrl || !secret) return;
+
+  try {
+    await fetch(`${webUrl}/api/revalidate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tags, secret }),
+    });
+  } catch {}
+};
+
 export function useDashboardMutation<TVariables, TData = unknown, TError = unknown>(
   mutationFn: (data: TVariables) => Promise<TData>,
   successMessage: string,
-  queryKeyToInvalidate: string[][]
+  queryKeyToInvalidate: string[][],
+  cacheTags?: string[]
 ) {
   const queryClient = useQueryClient();
 
@@ -41,6 +56,7 @@ export function useDashboardMutation<TVariables, TData = unknown, TError = unkno
       queryKeyToInvalidate.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: key });
       });
+      if (cacheTags) revalidateWebCache(cacheTags);
       toast.success(successMessage);
     },
     onError: (error: TError) => {

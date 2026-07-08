@@ -22,19 +22,22 @@ export default function CategoriesPage() {
   const createMutation = useDashboardMutation(
     createCategory,
     "Taxonomic node established successfully",
-    [["categories"]]
+    [["categories"]],
+    ["categories"]
   );
 
   const updateMutation = useDashboardMutation(
     ({ id, data }: { id: string; data: any }) => updateCategory(id, data),
     "Category logic recalibrated",
-    [["categories"]]
+    [["categories"]],
+    ["categories"]
   );
 
   const deleteMutation = useDashboardMutation(
     deleteCategory,
     "Taxonomy signal decommissioned",
-    [["categories"]]
+    [["categories"]],
+    ["categories"]
   );
 
   const handleCreate = async (formData: any) => {
