@@ -10,22 +10,18 @@
 // ──────────────────────────────────────────────────────────────────────────────
 
 export interface CreateUserDTO {
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   password: string;
   role?: 'super_admin' | 'admin' | 'content_manager' | 'hr_manager' | 'sales_manager';
-  phone?: string;
   isActive?: boolean;
 }
 
 export interface UpdateUserDTO {
-  firstName?: string;
-  lastName?: string;
+  name?: string;
   email?: string;
   password?: string;
   role?: 'super_admin' | 'admin' | 'content_manager' | 'hr_manager' | 'sales_manager';
-  phone?: string;
   isActive?: boolean;
 }
 
@@ -36,12 +32,11 @@ export interface LoginPayloadDTO {
 
 export interface UserResponseDTO {
   _id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   role: string;
-  phone?: string;
   isActive: boolean;
+  lastLogin: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -55,13 +50,20 @@ export interface CreateProductDTO {
   slug?: string;
   shortDescription?: string;
   fullDescription?: string;
-  ply?: string;
-  categoryId?: string;
-  images?: string[];
+  categoryId: string;
   specifications?: string[];
-  sizes?: string[];
-  isActive?: boolean;
+  materialDetails?: string;
+  strengthDetails?: string;
+  availableSizes?: string[];
+  moq?: number;
+  deliveryTimeline?: string;
   isFeatured?: boolean;
+  images?: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  isActive?: boolean;
 }
 
 export interface UpdateProductDTO {
@@ -69,13 +71,20 @@ export interface UpdateProductDTO {
   slug?: string;
   shortDescription?: string;
   fullDescription?: string;
-  ply?: string;
   categoryId?: string;
-  images?: string[];
   specifications?: string[];
-  sizes?: string[];
-  isActive?: boolean;
+  materialDetails?: string;
+  strengthDetails?: string;
+  availableSizes?: string[];
+  moq?: number;
+  deliveryTimeline?: string;
   isFeatured?: boolean;
+  images?: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  isActive?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -116,7 +125,11 @@ export interface CreateCategoryDTO {
   name: string;
   slug?: string;
   description?: string;
-  image?: string;
+  coverImage?: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
   isActive?: boolean;
 }
 
@@ -124,7 +137,11 @@ export interface UpdateCategoryDTO {
   name?: string;
   slug?: string;
   description?: string;
-  image?: string;
+  coverImage?: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
   isActive?: boolean;
 }
 
@@ -136,20 +153,16 @@ export interface CreateEventDTO {
   title: string;
   description?: string;
   eventDate?: Date;
-  location?: string;
   images?: string[];
   isFeatured?: boolean;
-  isActive?: boolean;
 }
 
 export interface UpdateEventDTO {
   title?: string;
   description?: string;
   eventDate?: Date;
-  location?: string;
   images?: string[];
   isFeatured?: boolean;
-  isActive?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -160,18 +173,26 @@ export interface CreateIndustryDTO {
   name: string;
   slug?: string;
   overview?: string;
-  description?: string;
   images?: string[];
   relatedProducts?: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  isActive?: boolean;
 }
 
 export interface UpdateIndustryDTO {
   name?: string;
   slug?: string;
   overview?: string;
-  description?: string;
   images?: string[];
   relatedProducts?: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  isActive?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -182,9 +203,8 @@ export interface CreateInquiryDTO {
   name: string;
   email: string;
   phone?: string;
-  message: string;
-  subject?: string;
-  status?: 'new' | 'in_progress' | 'resolved' | 'closed';
+  message?: string;
+  productInterested?: string;
 }
 
 export interface UpdateInquiryDTO {
@@ -192,8 +212,10 @@ export interface UpdateInquiryDTO {
   email?: string;
   phone?: string;
   message?: string;
-  subject?: string;
-  status?: 'new' | 'in_progress' | 'resolved' | 'closed';
+  productInterested?: string;
+  status?: 'new' | 'contacted' | 'quoted' | 'closed';
+  assignedTo?: string;
+  notes?: string;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -203,21 +225,23 @@ export interface UpdateInquiryDTO {
 export interface CreateJobDTO {
   title: string;
   department?: string;
+  experience?: string;
   location?: string;
-  type?: string;
+  type?: 'Full-Time' | 'Part-Time' | 'Shift Basis' | 'Contract';
+  salary?: string;
   description?: string;
-  requirements?: string[];
-  isActive?: boolean;
+  status?: 'open' | 'closed';
 }
 
 export interface UpdateJobDTO {
   title?: string;
   department?: string;
+  experience?: string;
   location?: string;
-  type?: string;
+  type?: 'Full-Time' | 'Part-Time' | 'Shift Basis' | 'Contract';
+  salary?: string;
   description?: string;
-  requirements?: string[];
-  isActive?: boolean;
+  status?: 'open' | 'closed';
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -226,23 +250,22 @@ export interface UpdateJobDTO {
 
 export interface CreateJobApplicationDTO {
   jobId: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   phone: string;
-  resume?: string;
-  coverLetter?: string;
-  status?: 'submitted' | 'reviewed' | 'shortlisted' | 'rejected';
+  resumeFile?: string;
+  status?: 'new' | 'reviewed' | 'shortlisted' | 'rejected' | 'hired';
+  notes?: string;
 }
 
 export interface UpdateJobApplicationDTO {
-  firstName?: string;
-  lastName?: string;
+  jobId?: string;
+  name?: string;
   email?: string;
   phone?: string;
-  resume?: string;
-  coverLetter?: string;
-  status?: 'submitted' | 'reviewed' | 'shortlisted' | 'rejected';
+  resumeFile?: string;
+  status?: 'new' | 'reviewed' | 'shortlisted' | 'rejected' | 'hired';
+  notes?: string;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -250,25 +273,26 @@ export interface UpdateJobApplicationDTO {
 // ──────────────────────────────────────────────────────────────────────────────
 
 export interface CreateQuoteDTO {
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
+  productId?: string;
   quantity?: number;
-  specifications?: string;
-  message?: string;
-  status?: 'new' | 'sent' | 'accepted' | 'rejected';
+  customizationDetails?: string;
+  deliveryLocation?: string;
+  name: string;
+  phone?: string;
+  email: string;
+  notes?: string;
 }
 
 export interface UpdateQuoteDTO {
-  name?: string;
-  email?: string;
-  phone?: string;
-  company?: string;
+  productId?: string;
   quantity?: number;
-  specifications?: string;
-  message?: string;
-  status?: 'new' | 'sent' | 'accepted' | 'rejected';
+  customizationDetails?: string;
+  deliveryLocation?: string;
+  name?: string;
+  phone?: string;
+  email?: string;
+  status?: string;
+  notes?: string;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -276,47 +300,65 @@ export interface UpdateQuoteDTO {
 // ──────────────────────────────────────────────────────────────────────────────
 
 export interface CreateSettingDTO {
-  companyName: string;
+  companyName?: string;
   tagline?: string;
   logo?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
+  favicon?: string;
   contactEmail?: string;
   contactPhone?: string;
-  defaultSEO?: {
-    metaTitle?: string;
-    metaDesc?: string;
-    ogImage?: string;
-  };
+  address?: string;
   socialLinks?: {
     linkedin?: string;
     twitter?: string;
     facebook?: string;
     instagram?: string;
   };
+  defaultSEO?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  homepageHero?: {
+    title?: string;
+    subtitle?: string;
+    image?: string;
+  };
+  ctaBanner?: {
+    title?: string;
+    buttonText?: string;
+    buttonLink?: string;
+  };
+  analyticsId?: string;
 }
 
 export interface UpdateSettingDTO {
   companyName?: string;
   tagline?: string;
   logo?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
+  favicon?: string;
   contactEmail?: string;
   contactPhone?: string;
-  defaultSEO?: {
-    metaTitle?: string;
-    metaDesc?: string;
-    ogImage?: string;
-  };
+  address?: string;
   socialLinks?: {
     linkedin?: string;
     twitter?: string;
     facebook?: string;
     instagram?: string;
   };
+  defaultSEO?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  homepageHero?: {
+    title?: string;
+    subtitle?: string;
+    image?: string;
+  };
+  ctaBanner?: {
+    title?: string;
+    buttonText?: string;
+    buttonLink?: string;
+  };
+  analyticsId?: string;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -324,23 +366,19 @@ export interface UpdateSettingDTO {
 // ──────────────────────────────────────────────────────────────────────────────
 
 export interface CreateTestimonialDTO {
-  name: string;
+  clientName: string;
   company?: string;
-  role?: string;
-  message: string;
+  feedback: string;
   rating?: number;
-  image?: string;
-  isActive?: boolean;
+  isPublished?: boolean;
 }
 
 export interface UpdateTestimonialDTO {
-  name?: string;
+  clientName?: string;
   company?: string;
-  role?: string;
-  message?: string;
+  feedback?: string;
   rating?: number;
-  image?: string;
-  isActive?: boolean;
+  isPublished?: boolean;
 }
 
 // ──────────────────────────────────────────────────────────────────────────────
@@ -349,18 +387,20 @@ export interface UpdateTestimonialDTO {
 
 export interface CreateAssetDTO {
   name: string;
-  type: 'image' | 'video' | 'document';
+  category?: string;
   url: string;
-  size?: number;
+  size?: string;
+  dimensions?: string;
+  type?: string;
   mimeType?: string;
-  metadata?: Record<string, unknown>;
 }
 
 export interface UpdateAssetDTO {
   name?: string;
-  type?: 'image' | 'video' | 'document';
+  category?: string;
   url?: string;
-  size?: number;
+  size?: string;
+  dimensions?: string;
+  type?: string;
   mimeType?: string;
-  metadata?: Record<string, unknown>;
 }

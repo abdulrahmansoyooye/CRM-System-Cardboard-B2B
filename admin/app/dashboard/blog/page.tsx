@@ -7,7 +7,7 @@ import { DataTable } from "@/components/dashboard/shared/DataTable";
 import { ConfirmDialog } from "@/components/dashboard/shared/ConfirmDialog";
 import { BlogForm } from "./components/BlogForm";
 import { useModal } from "@/lib/store/useModalStore";
-import { Plus, Newspaper, Globe, FileText, Edit2, Trash2, Clock, Tag, ArrowUpRight } from "lucide-react";
+import { Plus, Newspaper, Edit2, Trash2, Clock, Tag, ArrowUpRight } from "lucide-react";
 import { Blog } from "@/types/dashboard";
 import { cn } from "@/lib/utils";
 
@@ -39,16 +39,14 @@ export default function BlogPage() {
   );
 
   const handleCreate = async (formData: any) => {
-    const { slug, author, isPublished, ...rest } = formData;
-    const payload = { ...rest, status: isPublished ? 'published' : 'draft' };
-    await createMutation.mutateAsync(payload);
+    const { isPublished, ...rest } = formData;
+    await createMutation.mutateAsync({ ...rest, status: isPublished ? 'published' : 'draft' });
     closeModal();
   };
 
   const handleUpdate = async (id: string, formData: any) => {
-    const { slug, author, isPublished, ...rest } = formData;
-    const payload = { ...rest, status: isPublished ? 'published' : 'draft' };
-    await updateMutation.mutateAsync({ id, data: payload });
+    const { isPublished, ...rest } = formData;
+    await updateMutation.mutateAsync({ id, data: { ...rest, status: isPublished ? 'published' : 'draft' } });
     closeModal();
   };
 
@@ -111,16 +109,17 @@ export default function BlogPage() {
       ),
     },
     {
-      header: "Author",
-      accessorKey: "author",
-      cell: (b: Blog) => (
-        <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-black text-slate-500">
-                {b.author?.[0]?.toUpperCase() || 'A'}
-            </div>
-            <span className="text-xs font-bold text-slate-600">{b.author || "Admin"}</span>
-        </div>
-      ),
+      header: "Status",
+      accessorKey: "status",
+      cell: (b: Blog) => {
+        const isLive = b.isPublished || b.status === "published";
+        return (
+          <span className={cn("status-badge", isLive ? "badge-success" : "badge-neutral")}>
+            <div className={cn("w-1.5 h-1.5 rounded-full", isLive ? "bg-emerald-500" : "bg-slate-400")} />
+            {isLive ? "Live" : "Draft"}
+          </span>
+        );
+      },
     },
     {
       header: "Published Date",
@@ -133,19 +132,7 @@ export default function BlogPage() {
         </div>
       ),
     },
-    {
-      header: "Status",
-      accessorKey: "isPublished",
-      cell: (b: Blog) => {
-        const isLive = !!(b as any).isPublished || (b as any).status === "published";
-        return (
-            <span className={cn("status-badge", isLive ? "badge-success" : "badge-neutral")}>
-                {isLive ? <Globe className="w-3.5 h-3.5" /> : <FileText className="w-3.5 h-3.5" />}
-                {isLive ? "Live" : "Draft"}
-            </span>
-        )
-      },
-    },
+
     {
       header: "Actions",
       accessorKey: "actions",

@@ -20,11 +20,9 @@ export interface IProduct {
   availableSizes?: string[];
   moq?: number;
   deliveryTimeline?: string;
-  ply?: string;
   categoryId?: { _id: string; name: string } | string;
   images?: string[];
   specifications?: string[];
-  sizes?: string[];
   seo?: { metaTitle?: string; metaDescription?: string };
   isActive?: boolean;
   isFeatured?: boolean;
@@ -39,8 +37,7 @@ export interface IProduct {
 export interface IBlog {
   _id: string;
   title: string;
-  slug: string;
-  author?: string;
+  slug?: string;
   category?: string;
   excerpt?: string;
   content: string;
@@ -64,7 +61,7 @@ export interface ICategory {
   slug: string;
   description?: string;
   coverImage?: string;
-  image?: string;
+  seo?: { metaTitle?: string; metaDescription?: string };
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -79,10 +76,8 @@ export interface IEvent {
   title: string;
   description?: string;
   eventDate?: string | Date;
-  location?: string;
   images?: string[];
   isFeatured?: boolean;
-  isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -94,11 +89,11 @@ export interface IEvent {
 export interface IIndustry {
   _id: string;
   name: string;
-  slug: string;
+  slug?: string;
   overview?: string;
-  description?: string;
   images?: string[];
-  relatedProducts?: IProduct[];
+  relatedProducts?: string[];
+  seo?: { metaTitle?: string; metaDescription?: string };
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -112,14 +107,12 @@ export interface IJob {
   _id: string;
   title: string;
   department?: string;
+  experience?: string;
   location?: string;
   type?: string;
-  description?: string;
-  requirements?: string[];
   salary?: string;
+  description?: string;
   status?: string;
-  experience?: string;
-  isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -131,13 +124,12 @@ export interface IJob {
 export interface IJobApplication {
   _id: string;
   jobId: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
   phone: string;
-  resume?: string;
-  coverLetter?: string;
-  status?: 'submitted' | 'reviewed' | 'shortlisted' | 'rejected';
+  resumeFile?: string;
+  status?: string;
+  notes?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -151,9 +143,9 @@ export interface IInquiry {
   name: string;
   email: string;
   phone?: string;
-  message: string;
-  subject?: string;
-  status?: 'new' | 'in_progress' | 'resolved' | 'closed';
+  message?: string;
+  productInterested?: string;
+  status?: 'new' | 'contacted' | 'quoted' | 'closed';
   createdAt?: string;
   updatedAt?: string;
 }
@@ -164,14 +156,15 @@ export interface IInquiry {
 
 export interface IQuote {
   _id: string;
-  name: string;
-  email: string;
-  phone?: string;
-  company?: string;
+  productId?: string;
   quantity?: number;
-  specifications?: string;
-  message?: string;
-  status?: 'new' | 'sent' | 'accepted' | 'rejected';
+  customizationDetails?: string;
+  deliveryLocation?: string;
+  name: string;
+  phone?: string;
+  email: string;
+  status?: string;
+  notes?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -198,11 +191,12 @@ export interface ITestimonial {
 export interface IAsset {
   _id: string;
   name: string;
-  type: 'image' | 'video' | 'document';
+  category?: string;
   url: string;
-  size?: number;
+  size?: string;
+  dimensions?: string;
+  type?: string;
   mimeType?: string;
-  metadata?: Record<string, unknown>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -213,18 +207,16 @@ export interface IAsset {
 
 export interface ISettings {
   _id: string;
-  companyName: string;
+  companyName?: string;
   tagline?: string;
   logo?: string;
-  email?: string;
-  phone?: string;
-  address?: string;
+  favicon?: string;
   contactEmail?: string;
   contactPhone?: string;
+  address?: string;
   defaultSEO?: {
     metaTitle?: string;
     metaDescription?: string;
-    ogImage?: string;
   };
   socialLinks?: {
     linkedin?: string;
@@ -232,6 +224,17 @@ export interface ISettings {
     facebook?: string;
     instagram?: string;
   };
+  homepageHero?: {
+    title?: string;
+    subtitle?: string;
+    image?: string;
+  };
+  ctaBanner?: {
+    title?: string;
+    buttonText?: string;
+    buttonLink?: string;
+  };
+  analyticsId?: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -243,18 +246,15 @@ export interface IBrandingSettings {
 }
 
 export interface IContactSettings {
-  email?: string;
-  phone?: string;
-  address?: string;
   contactEmail?: string;
   contactPhone?: string;
+  address?: string;
 }
 
 export interface ISEOSettings {
   defaultSEO?: {
     metaTitle?: string;
     metaDescription?: string;
-    ogImage?: string;
   };
 }
 

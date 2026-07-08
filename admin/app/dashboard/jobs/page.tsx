@@ -39,14 +39,12 @@ export default function JobsPage() {
   );
 
   const handleCreate = async (formData: any) => {
-    const { type, salary, ...payload } = formData;
-    await createMutation.mutateAsync(payload);
+    await createMutation.mutateAsync(formData);
     closeModal();
   };
 
   const handleUpdate = async (id: string, formData: any) => {
-    const { type, salary, ...payload } = formData;
-    await updateMutation.mutateAsync({ id, data: payload });
+    await updateMutation.mutateAsync({ id, data: formData });
     closeModal();
   };
 

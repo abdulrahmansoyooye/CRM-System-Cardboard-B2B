@@ -11,7 +11,6 @@ const inquirySchema = z.object({
   company: z.string().optional(),
   email: z.string().email("Invalid email address"),
   phone: z.string().optional(),
-  subject: z.string().optional(),
   productInterested: z.string().optional(),
   message: z.string().min(5, "Message is too short"),
 });
@@ -35,7 +34,6 @@ export function InquiryForm({ onSubmit, isSubmitting }: InquiryFormProps) {
       company: "",
       email: "",
       phone: "",
-      subject: "Manual Entry Lead",
       productInterested: "",
       message: "",
     },

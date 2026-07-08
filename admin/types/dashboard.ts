@@ -8,98 +8,133 @@ export interface BaseEntity {
 
 export interface Product extends BaseEntity {
   name: string;
+  slug?: string;
   categoryId: Category | string;
-  moq: number;
-  deliveryTimeline: string;
-  isFeatured: boolean;
-  isActive: boolean;
   shortDescription?: string;
   fullDescription?: string;
   materialDetails?: string;
+  strengthDetails?: string;
+  availableSizes?: string[];
+  moq: number;
+  deliveryTimeline?: string;
+  isFeatured: boolean;
+  isActive: boolean;
   specifications?: string[];
   images?: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
 }
 
 export interface Category extends BaseEntity {
   name: string;
-  description?: string;
   slug: string;
+  description?: string;
+  coverImage?: string;
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  isActive?: boolean;
 }
 
 export interface Blog extends BaseEntity {
   title: string;
-  slug: string;
+  slug?: string;
+  category?: string;
+  excerpt?: string;
   content: string;
-  author: string;
-  category: string;
-  image?: string;
-  isPublished: boolean;
+  featuredImage?: string;
+  tags?: string[];
+  seo?: Record<string, unknown>;
+  status?: 'draft' | 'published';
+  isPublished?: boolean;
+  publishedAt?: string;
 }
 
 export interface Event extends BaseEntity {
   title: string;
-  description: string;
-  location: string;
-  startDate: string;
-  endDate: string;
-  image?: string;
-  isActive: boolean;
+  description?: string;
+  eventDate?: string;
+  images?: string[];
+  isFeatured?: boolean;
 }
 
 export interface Industry extends BaseEntity {
   name: string;
-  description: string;
-  slug: string;
-  image?: string;
-  isActive: boolean;
+  slug?: string;
+  overview?: string;
+  images?: string[];
+  relatedProducts?: string[];
+  seo?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  isActive?: boolean;
 }
 
 export interface Job extends BaseEntity {
   title: string;
-  department: string;
-  location: string;
-  type: "Full-time" | "Part-time" | "Contract" | "Internship";
-  description: string;
-  requirements: string[];
-  isActive: boolean;
+  department?: string;
+  experience?: string;
+  location?: string;
+  type?: 'Full-Time' | 'Part-Time' | 'Shift Basis' | 'Contract';
+  salary?: string;
+  description?: string;
+  status?: 'open' | 'closed';
 }
 
 export interface Inquiry extends BaseEntity {
   name: string;
   company?: string;
   email: string;
-  phone: string;
-  subject: string;
-  message: string;
-  status: "Pending" | "InProgress" | "Resolved" | "Archived";
+  phone?: string;
+  message?: string;
+  productInterested?: string;
+  status?: 'new' | 'contacted' | 'quoted' | 'closed';
 }
 
 export interface Gallery extends BaseEntity {
-  title: string;
-  image: string;
+  name: string;
+  url: string;
   category: string;
-  isActive: boolean;
+  type?: string;
+  size?: string;
+  dimensions?: string;
 }
 
 export interface Testimonial extends BaseEntity {
-  name: string;
-  position: string;
-  company: string;
-  content: string;
-  image?: string;
-  rating: number;
-  isActive: boolean;
+  clientName: string;
+  company?: string;
+  feedback: string;
+  rating?: number;
+  isPublished?: boolean;
 }
 
 export interface Setting extends BaseEntity {
-  key: string;
-  value: unknown;
-  description?: string;
+  companyName?: string;
+  tagline?: string;
+  logo?: string;
+  favicon?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  address?: string;
+  defaultSEO?: {
+    metaTitle?: string;
+    metaDescription?: string;
+  };
+  socialLinks?: {
+    linkedin?: string;
+    twitter?: string;
+    facebook?: string;
+    instagram?: string;
+  };
 }
 
 export type ApplicationStatus = "New" | "Reviewed" | "Shortlisted" | "Rejected" | "Hired";
 
-export interface Application extends Omit<IJobApplication, "firstName" | "lastName" | "jobId" | "status"> {
+export interface Application extends Omit<IJobApplication, "jobId" | "status"> {
   name: string;
   jobId: {
     _id: string;
@@ -110,13 +145,13 @@ export interface Application extends Omit<IJobApplication, "firstName" | "lastNa
 }
 
 export interface Quote extends BaseEntity {
+  productId?: string;
+  quantity?: number;
+  customizationDetails?: string;
+  deliveryLocation?: string;
   name: string;
+  phone?: string;
   email: string;
-  phone: string;
-  companyName: string;
-  productType: string;
-  quantity: string;
-  details: string;
-  status: string;
-  internalNotes?: string;
+  status?: string;
+  notes?: string;
 }

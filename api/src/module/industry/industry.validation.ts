@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const createIndustrySchema = z.object({
   body: z.object({
     name: z.string({ message: 'Name is required' }),
+    slug: z.string().optional(),
     overview: z.string().optional(),
     relatedProducts: z.array(z.string()).optional(),
     images: z.array(z.string()).optional(),
@@ -17,6 +18,7 @@ export const createIndustrySchema = z.object({
 export const updateIndustrySchema = z.object({
   body: z.object({
     name: z.string().optional(),
+    slug: z.string().optional(),
     overview: z.string().optional(),
     relatedProducts: z.array(z.string()).optional(),
     images: z.array(z.string()).optional(),

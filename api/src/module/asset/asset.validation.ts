@@ -9,5 +9,5 @@ export const createAssetSchema = z.object({
     dimensions: z.string().optional(),
     type: z.string().optional(),
     mimeType: z.string().optional(),
-  }),
-}).strict();
+  }).strict(),
+});

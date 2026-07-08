@@ -33,7 +33,6 @@ export default function ApplicationsPage() {
     if (!Array.isArray(apiData?.data)) return [];
     return apiData.data.map((a: IJobApplication) => ({
       ...a,
-      name: `${a.firstName} ${a.lastName}`.trim(),
       jobId:
         typeof a.jobId === "string"
           ? { _id: a.jobId, title: "General Operations" }
